@@ -9,21 +9,24 @@ const Search = () => {
     JSON.parse(localStorage.getItem("keywords") || "[]")
   );
 
-  const handleKeyword = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setKeyword(e.target.value);
-  };
+  const handleKeyword = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setKeyword(e.target.value);
+    },
+    []
+  );
 
-  const handleAddKeyword = (text: string) => {
+  const handleAddKeyword = useCallback((text: string) => {
     const newKeyword = {
       id: Date.now(),
       text: text,
     };
     setKeywords([newKeyword, ...keywords]);
-  };
+  }, []);
 
   const handleClick = useCallback(() => {
     handleAddKeyword(keyword);
-    console.log("클릭이요");
+    console.log("여기 검색 api 자리");
   }, []);
 
   useEffect(() => {
