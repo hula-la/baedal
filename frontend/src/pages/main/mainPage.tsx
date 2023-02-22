@@ -1,4 +1,5 @@
-import React from "react";
+import React, { Suspense } from "react";
+import { ErrorBoundary } from "react-error-boundary";
 import styled from "styled-components";
 import Adress from "./components/Adress";
 import Menu from "./components/Menu";
@@ -9,7 +10,11 @@ const mainPage = () => {
     <div>
       <Search />
       <Adress />
-      <Menu />
+      <ErrorBoundary fallback={<div>실패요</div>}>
+        <Suspense fallback={<div>로딩중입니당...</div>}>
+          <Menu />
+        </Suspense>
+      </ErrorBoundary>
     </div>
   );
 };
