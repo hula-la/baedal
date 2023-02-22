@@ -33,7 +33,7 @@ const BasketPage = () => {
           })}
         </ul>
         <div>
-          <Link to="./order">
+          <Link to="/order">
             <button>주문하기</button>
           </Link>
         </div>
