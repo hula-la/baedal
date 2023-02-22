@@ -1,10 +1,12 @@
 import React, { Suspense } from "react";
 import { ErrorBoundary } from "react-error-boundary";
+import { Link } from "react-router-dom";
 import StoreDetail from "./components/StoreDetail";
 import StoreHeader from "./components/StoreHeader";
 import StoreInfo from "./components/StoreInfo";
 
 const storeDetailPage = () => {
+
   return (
     <div>
       <header>
@@ -24,6 +26,11 @@ const storeDetailPage = () => {
         </div>
         <StoreDetail />
       </main>
+      <div>
+        <Link to="/basket">
+          <button>장바구니로</button>
+        </Link>
+      </div>
     </div>
   )
 }

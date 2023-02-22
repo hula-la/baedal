@@ -45,11 +45,11 @@ const StoreMenu = () => {
       {
         tmpMenu.map(item => {
           return (
-            <div>
+            <div key={item.menuGroupId} >
               <div>
                 {item.groupName}
               </div>
-              <MenuGroup key={item.menuGroupId} menus={item.items} />
+              <MenuGroup menus={item.items} />
             </div>
           )
         })
