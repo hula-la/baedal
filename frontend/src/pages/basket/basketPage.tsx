@@ -16,7 +16,7 @@ const tmpOrderList = [
 // const tmpOrderList:Array<any> = []
 
 const BasketPage = () => {
-  const [cookies, setCookie, removeCookie] = useCookies()
+  const [cookies, setCookie] = useCookies()
   
   useEffect(() => {
     setCookie('basket', tmpOrderList, {path: '/'})

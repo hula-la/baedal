@@ -2,7 +2,7 @@ import { useState, useCallback } from "react"
 import { useCookies } from "react-cookie"
 
 const OrderPage = () => {
-  const [cookies, setCookie, removeCookie] = useCookies()
+  const [cookies, removeCookie] = useCookies()
   // 주문 정보
   interface orderInfoType {
     disposableReq: boolean,
@@ -45,7 +45,7 @@ const OrderPage = () => {
       setOrderInfo((state) => {
         return {...state, [item]: checked}
       })
-    }, [orderInfo]) 
+    }, []) 
   
   // 텍스트 핸들링
   const handleTextItem = useCallback(
@@ -53,7 +53,7 @@ const OrderPage = () => {
       setOrderInfo((state) => {
         return {...state, [item]: text}
       })
-    }, [orderInfo])
+    }, [])
 
   return (
     <main>
