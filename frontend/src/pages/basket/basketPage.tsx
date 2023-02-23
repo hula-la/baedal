@@ -1,37 +1,31 @@
-import BasketItem from "./components/basketItem"
-import EmptyBasket from "./components/emptyBasket"
 import { useCookies } from "react-cookie"
 import { Link } from "react-router-dom"
-import { useEffect } from "react"
-
-const tmpOrderList = [
-  {
-    "id": 1,
-    "name": "가게",
-    "menuSummary": "마라탕 외 2개",
-    "totalPrice": 23000,
-  }
-]
-
-// const tmpOrderList:Array<any> = []
+import { useNavigate } from "react-router-dom"
+import { useCallback } from "react"
+import BasketItem from "./components/basketItem"
+import EmptyBasket from "./components/emptyBasket"
 
 const BasketPage = () => {
-  const [cookies, setCookie, removeCookie] = useCookies()
-  
-  useEffect(() => {
-    setCookie('basket', tmpOrderList, {path: '/'})
-  },[])
+  const [cookies] = useCookies()
+  const navigate = useNavigate()
 
-  if(cookies.basket.length){
+  const goToBack = useCallback(() => {
+    navigate(-1)
+  }, [])
+
+  if(cookies.basket && Object.keys(cookies.basket).length){
     return (
       <div>
         <ul>
-          {tmpOrderList.map(item => {
+          {Object.keys(cookies.basket).map((key:string) => {
             return (
-              <BasketItem key={item.id} item={item} />
+              <BasketItem key={key} item={key} />
             )
           })}
         </ul>
+        <div>
+          <button onClick={goToBack}>더 담으러 가기</button>
+        </div>
         <div>
           <Link to="/order">
             <button>주문하기</button>
@@ -41,7 +35,12 @@ const BasketPage = () => {
     )
   } else {
     return (
-      <EmptyBasket />
+      <div>
+        <EmptyBasket />
+        <div>
+          <button onClick={goToBack}>더 담으러 가기</button>
+        </div>
+      </div>
     )
   }
 }
