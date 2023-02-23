@@ -1,0 +1,66 @@
+package com.baedal.monolithic.domain.store.application;
+
+import com.baedal.monolithic.domain.account.entity.Account;
+import com.baedal.monolithic.domain.account.exception.AccountException;
+import com.baedal.monolithic.domain.account.exception.AccountExceptionCode;
+import com.baedal.monolithic.domain.account.repository.AccountRepository;
+import com.baedal.monolithic.domain.store.api.StoreController;
+import com.baedal.monolithic.domain.store.dto.PageVO;
+import com.baedal.monolithic.domain.store.dto.StoreCategoryFindAllDto;
+import com.baedal.monolithic.domain.store.dto.StoreFindAllDto;
+import com.baedal.monolithic.domain.store.dto.StoreFindDto;
+import com.baedal.monolithic.domain.store.entity.Store;
+import com.baedal.monolithic.domain.store.exception.StoreException;
+import com.baedal.monolithic.domain.store.exception.StoreStatusCode;
+import com.baedal.monolithic.domain.store.repository.StoreCategoryRepository;
+import com.baedal.monolithic.domain.store.repository.StoreRepository;
+import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+@RequiredArgsConstructor
+@Service
+public class StoreService {
+
+    private final StoreRepository storeRepository;
+    private final AccountRepository accountRepository;
+    private final ModelMapper modelMapper;
+
+    public List<StoreFindAllDto> findAllStores(StoreController.StoreReq storeReq) {
+
+        return storeRepository.findAllByAddressIdAndCategoryId(
+                                storeReq.getAddressId(),
+                                storeReq.getCategoryId(),
+                                storeReq.getPageVO().getLastIdx(),
+                                storeReq.getPageVO().getPageNum())
+                .stream()
+                .map(store -> modelMapper.map(store, StoreFindAllDto.class))
+                .collect(Collectors.toList());
+    }
+
+    public StoreFindDto findStore(Long storeId) {
+        Store store = storeRepository.findById(storeId)
+                .orElseThrow(()->new StoreException(StoreStatusCode.NO_STORE));
+
+
+        StoreFindDto storeFindDto = modelMapper.map(store, StoreFindDto.class);
+
+        String ownerName = accountRepository.findById(store.getOwnerId())
+                .orElseThrow(()-> new AccountException(AccountExceptionCode.NO_USER))
+                .getName();
+
+        storeFindDto.setOwnerName(ownerName);
+        return storeFindDto;
+    }
+
+    public Long countStores(StoreController.StoreReq storeReq) {
+        return storeRepository.countAllByAddressIdAndCategoryId(
+                storeReq.getAddressId(),
+                storeReq.getCategoryId());
+    }
+
+}
