@@ -7,6 +7,7 @@ import com.baedal.monolithic.domain.store.dto.StoreFindDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -34,12 +35,13 @@ public class StoreController {
     }
 
     @GetMapping("/{storeId}")
-    public ResponseEntity<StoreFindDto> find (@RequestParam Long storeId) {
+    public ResponseEntity<StoreFindDto> find (@PathVariable Long storeId) {
         return ResponseEntity.ok(storeService.findStore(storeId));
     }
 
 
     @Getter
+    @Setter
     public static class StoreReq {
 
         @NotNull(message = "{notnull}")
@@ -48,12 +50,13 @@ public class StoreController {
         @NotNull(message = "{notnull}")
         private Long addressId;
 
-        private PageVO pageVO;
+        private PageVO pageVO = new PageVO();
 
 
     }
 
     @AllArgsConstructor
+    @Getter
     private static class StoreFindAllRes {
 
         private Long results; // 총 갯수
