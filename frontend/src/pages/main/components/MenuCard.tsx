@@ -1,6 +1,9 @@
 import React from "react";
 
-const MenuCard = () => {
+interface MenuCardProps {
+  name: string;
+}
+const MenuCard = ({ name }: MenuCardProps) => {
   return (
     <div>
       <p>메뉴카드</p>
