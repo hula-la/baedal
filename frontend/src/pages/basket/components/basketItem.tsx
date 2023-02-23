@@ -1,29 +1,13 @@
 import { useCallback } from "react";
 import { useCookies } from "react-cookie";
 
-interface ItemProps {
-  id: number;
-  name: string;
-  menuSummary: string;
-  totalPrice: number;
-  count: number;
-}
-
-const BasketItem = ({ item }: { item: ItemProps }) => {
+const BasketItem = ({ item }: { item: string }) => {
 
   const [cookies, setCookie] = useCookies()
-
+  // 장바구니 쿠키에서 삭제
   const deleteCookie = useCallback(() => {
     const tmpBasket = cookies.basket
-    let idx = -1
-    for (let index = 0; index < tmpBasket.length; index++) {
-      if(tmpBasket[index].id === item.id) {
-        idx = index
-        break
-      }
-    }
-    console.log(idx)
-    tmpBasket.splice(idx, 1)
+    delete tmpBasket[item]
     setCookie('basket', tmpBasket, {path: '/'})
   }, [])
 
@@ -31,16 +15,13 @@ const BasketItem = ({ item }: { item: ItemProps }) => {
     <li>
       <div>
         <div>
-          {item.name}
+          {item}
         </div>
         <div>
-          {item.menuSummary}
+          {cookies.basket[item][0]} 개
         </div>
         <div>
-          {item.totalPrice}
-        </div>
-        <div>
-          {item.count}
+          {cookies.basket[item][1]} 원
         </div>
       </div>
       <div>

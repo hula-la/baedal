@@ -5,14 +5,6 @@ import { useCallback } from "react"
 import BasketItem from "./components/basketItem"
 import EmptyBasket from "./components/emptyBasket"
 
-interface menuInfo {
-  "id": number,
-  "name": string,
-  "menuSummary": string,
-  "totalPrice": number,
-  "count": number
-}
-
 const BasketPage = () => {
   const [cookies] = useCookies()
   const navigate = useNavigate()
@@ -21,13 +13,13 @@ const BasketPage = () => {
     navigate(-1)
   }, [])
 
-  if(cookies.basket.length){
+  if(cookies.basket && Object.keys(cookies.basket).length){
     return (
       <div>
         <ul>
-          {cookies.basket.map((item:menuInfo) => {
+          {Object.keys(cookies.basket).map((key:string) => {
             return (
-              <BasketItem key={item.id} item={item} />
+              <BasketItem key={key} item={key} />
             )
           })}
         </ul>
