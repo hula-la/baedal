@@ -1,5 +1,9 @@
 package com.baedal.monolithic.domain.store.dto;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
 public class MenuDto {
 
     private Long id;

@@ -5,6 +5,7 @@ import com.baedal.monolithic.domain.store.dto.StoreCategoryFindAllDto;
 import com.baedal.monolithic.domain.store.dto.StoreFindAllDto;
 import com.baedal.monolithic.domain.store.entity.StoreCategory;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -29,6 +30,7 @@ public class CategoryController {
     }
 
     @AllArgsConstructor
+    @Getter
     private static class StoreCategoryFindAllRes {
 
         private Long results;

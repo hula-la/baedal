@@ -15,7 +15,7 @@ public interface StoreRepository extends JpaRepository<Store,Long> {
             "where d.address_id = :addressId and s.category_id = :categoryId" , nativeQuery = true)
     Long countAllByAddressIdAndCategoryId(Long addressId, Long categoryId);
 
-    @Query(value = "select count(*) from store s " +
+    @Query(value = "select * from store s " +
             "join delivery_address d on s.id = d.store_id " +
             "where d.address_id = :addressId and s.category_id = :categoryId " +
             "and s.id>:lastIdx limit :pageNum" , nativeQuery = true)

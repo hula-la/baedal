@@ -1,5 +1,6 @@
 package com.baedal.monolithic.domain.store.entity;
 
+import com.baedal.monolithic.domain.store.dto.StoreMenuStatus;
 import lombok.Getter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -23,7 +24,11 @@ public class StoreMenu {
     private String name;
     @NotNull
     private Integer priority;
-    private String detail;
+    private String img;
+    private String price;
+    private String expDetail;
+    private String expIntro;
+    private StoreMenuStatus status;
 
     @CreationTimestamp
     private Timestamp createdAt;
