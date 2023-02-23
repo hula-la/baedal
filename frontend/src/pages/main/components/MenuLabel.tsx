@@ -1,9 +1,12 @@
 import React from "react";
 
-const MenuLabel = () => {
+interface MenuCardProps {
+  name: string;
+}
+const MenuLabel = ({ name }: MenuCardProps) => {
   return (
     <div>
-      <div>메뉴라벨</div>
+      <div>{name}</div>
     </div>
   );
 };
