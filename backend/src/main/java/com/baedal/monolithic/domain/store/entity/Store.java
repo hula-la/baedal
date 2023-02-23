@@ -31,7 +31,7 @@ public class Store {
     @NotNull
     private int minPrice;
     @NotNull
-    private String deliveryTypByPrice;
+    private String deliveryTipByPrice;
     private int recentOrder;
     private int recentReview;
     private int heartNum;

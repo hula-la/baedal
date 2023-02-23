@@ -54,6 +54,7 @@ public class StoreService {
                 .getName();
 
         storeFindDto.setOwnerName(ownerName);
+        // 지역별배달팁 추가
         return storeFindDto;
     }
 
