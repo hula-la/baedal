@@ -77,9 +77,6 @@ const OrderPage = () => {
           handleTextItem(e.target.value, e.target.id)
         }} />
       </div>
-      <div>
-        가격 : {cookies.basket[0].totalPrice}
-      </div>
     </main>
   )
 };
