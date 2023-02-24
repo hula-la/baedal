@@ -1,7 +1,18 @@
 import { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCookies } from "react-cookie";
+import _ from 'lodash'
 
+interface cookieItem {
+  "storeId": number,
+  "menuId": number,
+  "name": string,
+  "price": number,
+  "count": number,
+  "options": {
+   [key: number] : number[]
+  }
+}
 // 메뉴 상세정보에서 가게 이름도 필요
 const tmpMenu = {
   "id": 3,
@@ -9,7 +20,8 @@ const tmpMenu = {
   "price": 4,
   "image": "https://amazon.com",
   "detail": "맛있음",
-  "status": "SOLD"
+  "status": "SOLD",
+  "options": {2:[1, 4]}
 }
 
 const MenuDetail = () => {
@@ -19,24 +31,36 @@ const MenuDetail = () => {
 
   const handleAddCookie = useCallback(
     () => {
+      // 쿠키 불러오기
       let tmpBasket = cookies.basket
-      let key:string = String(tmpMenu.name)
-      // 쿠키 값이 있다
-      if (tmpBasket) {
-        // 같은 키값이 있으면 count 늘려줌
-        if (Object.keys(tmpBasket).includes(key)) {
-          tmpBasket[key][0] += 1
-          tmpBasket[key][1] += tmpMenu.price
-          setCookie('basket', tmpBasket, {path: '/'})
-        // 같은 키값이 없다면 하나 추가
-        } else {
-          tmpBasket[key] = [1, tmpMenu.price]
-          setCookie('basket', tmpBasket, {path: '/'})
+      // 쿠키가 있는지 없는지 확인 없으면 빈 배열 줌
+      if (!tmpBasket) {
+        tmpBasket = []
+      }
+      // 같은게 있는지 알기 위한 flag
+      let flag: number = 0
+      // 메뉴 같은지 -> 옵션 같은지 비교
+      tmpBasket.map((e:cookieItem) => {
+        if(e.menuId === tmpMenu.id) {
+          if (_.isEqual(e.options, tmpMenu.options)){
+            e.count += 1
+            e.price += tmpMenu.price
+            flag = 1
+          }
+      }});
+      // 같은 메뉴, 옵션이 없다면 추가
+      if(flag === 0) {
+        const addMenu: cookieItem = {
+          storeId: 1,
+          menuId: tmpMenu.id,
+          name: tmpMenu.name,
+          price: tmpMenu.price,
+          count: 1,
+          options: tmpMenu.options
         }
-      // 쿠키값이 없으면 오브젝트로 만들고 값 넣어줌
-      } else {
-        tmpBasket = {}
-        tmpBasket[key] = [1, tmpMenu.price]
+        const basket = tmpBasket.concat([addMenu])
+        setCookie('basket', basket, {path: '/'})
+      } else{
         setCookie('basket', tmpBasket, {path: '/'})
       }
     }, [])
