@@ -24,6 +24,7 @@ public class Account {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private Long userAddressId;
 
     private String name;
     private String nickname;

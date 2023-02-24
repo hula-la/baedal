@@ -52,4 +52,15 @@ public class MenuGroupService {
         return menuDetailDto;
     }
 
+//    public String findMenuName(Long menuId) {
+//        StoreMenu storeMenu = storeMenuRepository.findById(menuId)
+//                .orElseThrow(() -> new StoreException(StoreStatusCode.NO_MENU));
+//        return storeMenu.getName();
+//    }
+
+    public StoreMenu findMenuEntity(Long menuId) {
+        return storeMenuRepository.findById(menuId)
+                .orElseThrow(() -> new StoreException(StoreStatusCode.NO_MENU));
+    }
+
 }

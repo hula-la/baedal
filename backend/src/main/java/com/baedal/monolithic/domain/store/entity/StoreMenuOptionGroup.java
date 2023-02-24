@@ -2,14 +2,14 @@ package com.baedal.monolithic.domain.store.entity;
 
 import lombok.Getter;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 @Entity
 @Getter
+@Table(indexes = {
+        @Index(name = "IX_store_menu_option_group_01",columnList = "menuId")
+})
 public class StoreMenuOptionGroup {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

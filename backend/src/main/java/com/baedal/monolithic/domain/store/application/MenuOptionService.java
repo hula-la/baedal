@@ -4,6 +4,10 @@ import com.baedal.monolithic.domain.store.dto.MenuDto;
 import com.baedal.monolithic.domain.store.dto.MenuGroupFindAllDto;
 import com.baedal.monolithic.domain.store.dto.MenuOptionDto;
 import com.baedal.monolithic.domain.store.dto.MenuOptionGroupDto;
+import com.baedal.monolithic.domain.store.entity.StoreMenuOption;
+import com.baedal.monolithic.domain.store.entity.StoreMenuOptionGroup;
+import com.baedal.monolithic.domain.store.exception.StoreException;
+import com.baedal.monolithic.domain.store.exception.StoreStatusCode;
 import com.baedal.monolithic.domain.store.repository.StoreMenuGroupRepository;
 import com.baedal.monolithic.domain.store.repository.StoreMenuOptionGroupRepository;
 import com.baedal.monolithic.domain.store.repository.StoreMenuOptionRepository;
@@ -38,6 +42,18 @@ public class MenuOptionService {
                 .stream()
                 .map(group -> modelMapper.map(group, MenuOptionDto.class))
                 .collect(Collectors.toList());
+    }
+
+    public StoreMenuOption findMenuOptionEntity(Long optionId) {
+        return storeMenuOptionRepository.findById(optionId)
+                .orElseThrow(()->
+                        new StoreException(StoreStatusCode.NO_OPTION));
+    }
+
+    public StoreMenuOptionGroup findMenuOptionGroupEntity(Long groupId) {
+        return storeMenuOptionGroupRepository.findById(groupId)
+                .orElseThrow(()->
+                        new StoreException(StoreStatusCode.NO_OPTION_GROUP));
     }
 
 }
