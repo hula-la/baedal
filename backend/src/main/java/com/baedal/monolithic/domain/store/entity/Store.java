@@ -30,8 +30,6 @@ public class Store {
     private String name;
     @NotNull
     private int minPrice;
-    @NotNull
-    private String deliveryTipByPrice;
     private int recentOrder;
     private int recentReview;
     private int heartNum;

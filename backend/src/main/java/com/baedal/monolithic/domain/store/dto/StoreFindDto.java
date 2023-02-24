@@ -17,7 +17,6 @@ public class StoreFindDto {
     private String ownerName;
     private String name;
     private int minPrice;
-    private String deliveryTipByPrice;
     private int recentOrder;
     private int recentReview;
     private int heartNum;

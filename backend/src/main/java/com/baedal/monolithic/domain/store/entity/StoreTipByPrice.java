@@ -2,30 +2,25 @@ package com.baedal.monolithic.domain.store.entity;
 
 import lombok.Getter;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
 
 @Entity
 @Getter
-@Table(indexes = {
-        @Index(name = "IX_store_menu_option_01",columnList = "groupId")
-})
-public class StoreMenuOption {
+public class StoreTipByPrice {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @NotNull
-    private Long groupId;
 
     @NotNull
-    private String name;
-
+    private Long storeId;
     @NotNull
     private Long price;
-
     @NotNull
-    private Integer priority;
-
+    private Long tip;
 
 }

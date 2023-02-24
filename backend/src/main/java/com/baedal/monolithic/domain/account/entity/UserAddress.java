@@ -1,6 +1,9 @@
-package com.baedal.monolithic.domain.store.entity;
+package com.baedal.monolithic.domain.account.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -11,23 +14,21 @@ import java.sql.Timestamp;
 @Entity
 @Getter
 @Table(indexes = {
-        @Index(name = "IX_store_menu_group_01",columnList = "storeId")
-})
-public class StoreMenuGroup {
+                @Index(name = "IX_user_address_01",columnList = "accountId,addressId")
+        })
+public class UserAddress {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @NotNull
-    private Long storeId;
-    @NotNull
-    private String name;
-    @NotNull
-    private Integer priority;
-    private String detail;
 
-    @CreationTimestamp
-    private Timestamp createdAt;
-    @UpdateTimestamp
-    private Timestamp updatedAt;
+    @NotNull
+    private Long accountId;
+    @NotNull
+    private Long addressId;
+    @NotNull
+    private String addressDetail;
+
+
 
 }
