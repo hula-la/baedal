@@ -22,7 +22,6 @@ import java.util.List;
 public class StoreController {
 
     private final StoreService storeService;
-    private final ModelMapper modelMapper;
 
     @GetMapping
     public ResponseEntity<StoreFindAllRes> findAll (@Valid @ModelAttribute StoreReq storeReq) {
@@ -36,9 +35,8 @@ public class StoreController {
 
     @GetMapping("/{storeId}")
     public ResponseEntity<StoreFindDto> find (@PathVariable Long storeId) {
-        return ResponseEntity.ok(storeService.findStore(storeId));
+        return ResponseEntity.ok(storeService.findStoreDetail(storeId));
     }
-
 
     @Getter
     @Setter
