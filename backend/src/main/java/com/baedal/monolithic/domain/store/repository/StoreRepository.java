@@ -21,4 +21,6 @@ public interface StoreRepository extends JpaRepository<Store,Long> {
             "and s.id>:lastIdx limit :pageNum" , nativeQuery = true)
     List<Store> findAllByAddressIdAndCategoryId(Long addressId, Long categoryId, Long lastIdx, Long pageNum);
 
+
+
 }
