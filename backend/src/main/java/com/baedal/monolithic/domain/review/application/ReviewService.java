@@ -9,12 +9,9 @@ import com.baedal.monolithic.domain.review.entity.Review;
 import com.baedal.monolithic.domain.review.exception.ReviewException;
 import com.baedal.monolithic.domain.review.exception.ReviewStatusCode;
 import com.baedal.monolithic.domain.review.repository.ReviewRepository;
-import com.baedal.monolithic.domain.store.application.MenuGroupService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.transaction.Transactional;
 import java.util.List;
