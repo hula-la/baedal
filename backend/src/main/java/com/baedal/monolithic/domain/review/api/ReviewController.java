@@ -2,6 +2,7 @@ package com.baedal.monolithic.domain.review.api;
 
 import com.baedal.monolithic.domain.review.application.ReviewService;
 import com.baedal.monolithic.domain.review.dto.ReviewDto;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -9,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.net.URI;
 import java.util.List;
@@ -21,12 +23,13 @@ public class ReviewController {
     private final ReviewService reviewService;
 
     @GetMapping("/stores/{storeId}")
-    public ResponseEntity<List<ReviewDto>> findAll(@PathVariable Long storeId) {
-        return ResponseEntity.ok().body(reviewService.findReviews(storeId));
+    public ResponseEntity<ReviewGetRes> findAll(@PathVariable Long storeId) {
+        return ResponseEntity.ok()
+                .body(new ReviewGetRes(reviewService.findReviews(storeId)));
     }
 
     @PostMapping("/stores/{storeId}")
-    public ResponseEntity<Void> create(@PathVariable Long storeId, @RequestBody ReviewPostReq reviewPostReq) {
+    public ResponseEntity<Void> create(@PathVariable Long storeId, @Valid @RequestBody ReviewPostReq reviewPostReq) {
         Long accountId = 1L;
         Long reviewId = reviewService.createReview(accountId,storeId, reviewPostReq);
 
@@ -38,7 +41,7 @@ public class ReviewController {
     }
 
     @PutMapping("/{reviewId}")
-    public ResponseEntity<Void> update(@PathVariable Long reviewId, @RequestBody ReviewPostReq reviewPostReq) {
+    public ResponseEntity<Void> update(@PathVariable Long reviewId, @Valid @RequestBody ReviewPostReq reviewPostReq) {
         Long accountId = 1L;
         reviewService.updateReview(accountId, reviewId, reviewPostReq);
         return ResponseEntity.noContent().build();
@@ -53,16 +56,19 @@ public class ReviewController {
     @Setter
     @Getter
     public static class ReviewPostReq {
-        @NotNull
+        @NotNull(message = "{notnull}")
         private Long orderId;
-        @NotNull
+        @NotNull(message = "{notnull}")
         private Integer rating;
-        @NotNull
+        @NotNull(message = "{notnull}")
         private String content;
     }
 
-
-
-
+    @AllArgsConstructor
+    @Getter
+    public static class ReviewGetRes {
+//        private Long results; // 총 갯수
+        private List<ReviewDto> reviews;
+    }
 
 }

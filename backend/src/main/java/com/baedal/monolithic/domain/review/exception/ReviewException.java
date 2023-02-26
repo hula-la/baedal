@@ -1,12 +1,16 @@
 package com.baedal.monolithic.domain.review.exception;
 
+import com.baedal.monolithic.global.exception.ExceptionCode;
+import lombok.Getter;
+
+@Getter
 public class ReviewException extends RuntimeException{
 
-    private final ReviewStatusCode storeStatusCode;
+    private final ExceptionCode exceptionCode;
 
-    public ReviewException(ReviewStatusCode storeStatusCode) {
-        super(storeStatusCode.getMessage());
-        this.storeStatusCode = storeStatusCode;
+    public ReviewException(ExceptionCode exceptionCode) {
+        super(exceptionCode.getMessage());
+        this.exceptionCode = exceptionCode;
     }
 
 }

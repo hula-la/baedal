@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.net.URI;
 import java.util.List;
@@ -41,7 +42,7 @@ public class OrderController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> create(@RequestBody OrderPostRes orderPostRes){
+    public ResponseEntity<Void> create(@Valid @RequestBody OrderPostRes orderPostRes){
         Long accountId = 1L;
         Long orderId = orderService.createOrder(accountId, orderPostRes);
 
@@ -63,13 +64,13 @@ public class OrderController {
     @Getter
     public static class OrderPostRes {
 
-        @NotNull
+        @NotNull(message = "{notnull}")
         private Long storeId;
 
-        @NotNull
+        @NotNull(message = "{notnull}")
         private Boolean disposableReq;
 
-        @NotNull
+        @NotNull(message = "{notnull}")
         private Boolean kimchiReq;
 
         private String riderMsg;
