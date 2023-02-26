@@ -1,12 +1,16 @@
 package com.baedal.monolithic.domain.store.exception;
 
+import com.baedal.monolithic.global.exception.ExceptionCode;
+import lombok.Getter;
+
+@Getter
 public class StoreException extends RuntimeException{
 
-    private final StoreStatusCode storeStatusCode;
+    private final ExceptionCode exceptionCode;
 
-    public StoreException(StoreStatusCode storeStatusCode) {
-        super(storeStatusCode.getMessage());
-        this.storeStatusCode = storeStatusCode;
+    public StoreException(ExceptionCode exceptionCode) {
+        super(exceptionCode.getMessage());
+        this.exceptionCode = exceptionCode;
     }
 
 }

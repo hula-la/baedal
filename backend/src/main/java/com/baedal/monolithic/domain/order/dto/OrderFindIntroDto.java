@@ -2,9 +2,6 @@ package com.baedal.monolithic.domain.order.dto;
 
 import lombok.*;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
 
@@ -19,7 +16,7 @@ public class OrderFindIntroDto {
     private String menuSummary;
     private Long totalPrice;
 
-    @NotNull
+    @NotNull(message = "{notnull}")
     private Timestamp orderAt;
     private Timestamp exArrivalTime;
 

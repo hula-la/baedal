@@ -1,12 +1,13 @@
 package com.baedal.monolithic.domain.account.exception;
 
+import com.baedal.monolithic.global.exception.ExceptionCode;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
 @AllArgsConstructor
 @Getter
-public enum AccountExceptionCode {
+public enum AccountExceptionCode implements ExceptionCode {
     NO_USER(HttpStatus.BAD_REQUEST, "user.no-user","해당 유저가 존재하지 않습니다."),
     NO_ADDRESS(HttpStatus.BAD_REQUEST, "user.no-address","해당 주소가 존재하지 않습니다."),
     ID_PWD_MISMATCH(HttpStatus.BAD_REQUEST, "user.id-pwd-mismatch","해당 유저가 존재하지 않습니다."),
@@ -15,5 +16,5 @@ public enum AccountExceptionCode {
 
     private final HttpStatus status;
     private final String code;
-    private final String msg;
+    private final String message;
 }
