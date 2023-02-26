@@ -3,13 +3,11 @@ package com.baedal.monolithic.domain.store.application;
 import com.baedal.monolithic.domain.store.dto.MenuDetailDto;
 import com.baedal.monolithic.domain.store.dto.MenuDto;
 import com.baedal.monolithic.domain.store.dto.MenuGroupFindAllDto;
-import com.baedal.monolithic.domain.store.dto.MenuOptionDto;
 import com.baedal.monolithic.domain.store.entity.StoreMenu;
 import com.baedal.monolithic.domain.store.exception.StoreException;
 import com.baedal.monolithic.domain.store.exception.StoreStatusCode;
 import com.baedal.monolithic.domain.store.repository.StoreMenuGroupRepository;
 import com.baedal.monolithic.domain.store.repository.StoreMenuRepository;
-import com.baedal.monolithic.domain.store.repository.StoreRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -51,12 +49,6 @@ public class MenuGroupService {
         menuDetailDto.setOptionGroup(menuOptionService.findAllMenuOptionGroupsByMenuId(menuId));
         return menuDetailDto;
     }
-
-//    public String findMenuName(Long menuId) {
-//        StoreMenu storeMenu = storeMenuRepository.findById(menuId)
-//                .orElseThrow(() -> new StoreException(StoreStatusCode.NO_MENU));
-//        return storeMenu.getName();
-//    }
 
     public StoreMenu findMenuEntity(Long menuId) {
         return storeMenuRepository.findById(menuId)

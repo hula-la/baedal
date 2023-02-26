@@ -1,10 +1,8 @@
 package com.baedal.monolithic.domain.account.application;
 
-import com.baedal.monolithic.domain.account.entity.Address;
 import com.baedal.monolithic.domain.account.entity.UserAddress;
 import com.baedal.monolithic.domain.account.exception.AccountException;
 import com.baedal.monolithic.domain.account.exception.AccountExceptionCode;
-import com.baedal.monolithic.domain.account.repository.AccountRepository;
 import com.baedal.monolithic.domain.account.repository.AddressRepository;
 import com.baedal.monolithic.domain.account.repository.UserAddressRepository;
 import lombok.RequiredArgsConstructor;

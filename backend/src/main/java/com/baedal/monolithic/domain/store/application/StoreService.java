@@ -62,10 +62,7 @@ public class StoreService {
         Store store = storeRepository.findById(storeId)
                 .orElseThrow(()->new StoreException(StoreStatusCode.NO_STORE));
 
-        StoreFindAllDto storeFindDto = modelMapper.map(store, StoreFindAllDto.class);
-
-        // 지역별배달팁 추가
-        return storeFindDto;
+        return modelMapper.map(store, StoreFindAllDto.class);
     }
 
     public Long countStores(StoreController.StoreReq storeReq) {

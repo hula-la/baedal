@@ -41,7 +41,7 @@ public class OrderController {
     }
 
     @PostMapping
-    public ResponseEntity<OrderFindDetailDto> create(@RequestBody OrderPostRes orderPostRes){
+    public ResponseEntity<Void> create(@RequestBody OrderPostRes orderPostRes){
         Long accountId = 1L;
         Long orderId = orderService.createOrder(accountId, orderPostRes);
 
