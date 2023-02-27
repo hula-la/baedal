@@ -5,6 +5,7 @@ import BasketPage from "./pages/basket/basketPage";
 import OrderPage from "./pages/order/orderPage";
 import StoreDetailPage from "./pages/storeDetail/storeDetailPage";
 import MenuDetail from "./pages/menuDetail/components/MenuDetail";
+import MakeReviewPage from "./pages/makeReview/makeReviewPage";
 
 const Home = lazy(() => import("./pages/main/mainPage"));
 
@@ -17,6 +18,7 @@ function App() {
         <Route path="/order" element={<OrderPage />}></Route>
         <Route path="/storeDetail" element={<StoreDetailPage />}></Route>
         <Route path="/storeDetail/:id" element={<MenuDetail />}></Route>
+        <Route path="/review" element={<MakeReviewPage />}></Route>
       </Routes>
     </Router>
   );
