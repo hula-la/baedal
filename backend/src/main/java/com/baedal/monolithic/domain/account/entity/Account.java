@@ -25,21 +25,27 @@ public class Account {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Long userAddressId;
-
+    private String socialId;
+    private String provider;
     private String name;
     private String nickname;
     private String email;
-
     private String tel;
-    private String socialId;
     private String profile;
-    private String role;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Role role;
 
     @CreationTimestamp
     private Timestamp createdAt;
 
     @UpdateTimestamp
     private Timestamp updatedAt;
+
+    public String getRoleKey(){
+        return role.getKey();
+    }
 
 
 }

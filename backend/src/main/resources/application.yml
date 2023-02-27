@@ -1,4 +1,6 @@
 spring:
+  profiles:
+    include: hide
   jpa:
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
     open-in-view: false
