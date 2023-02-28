@@ -18,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -33,6 +34,7 @@ public class StoreService {
     private final ModelMapper modelMapper;
 
     @Transactional(readOnly = true)
+    @Cacheable(key = "#storeReq", cacheNames = "stores")
     public List<StoreFindAllDto> findAllStores(StoreController.StoreReq storeReq) {
 
         return storeRepository.findAllByAddressIdAndCategoryId(
@@ -71,6 +73,7 @@ public class StoreService {
     }
 
     @Transactional(readOnly = true)
+    @Cacheable(key = "#storeReq", cacheNames = "storeCnt")
     public Long countStores(StoreController.StoreReq storeReq) {
         return storeRepository.countAllByAddressIdAndCategoryId(
                 storeReq.getAddressId(),

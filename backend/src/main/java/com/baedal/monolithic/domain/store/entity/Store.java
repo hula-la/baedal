@@ -5,6 +5,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 
 @Entity
 @Builder
@@ -14,7 +15,7 @@ import javax.validation.constraints.NotNull;
 @Table(indexes = {
         @Index(name = "IX_store_01",columnList = "ownerId")
 })
-public class Store {
+public class Store implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
