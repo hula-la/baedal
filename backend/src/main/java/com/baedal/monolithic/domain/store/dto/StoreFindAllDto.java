@@ -6,12 +6,13 @@ import lombok.Setter;
 import lombok.ToString;
 
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 
 @Getter
 @Setter
 @ToString
 @EqualsAndHashCode(of = {"id"})
-public class StoreFindAllDto {
+public class StoreFindAllDto implements Serializable {
 
     private Long id;
     private String name;

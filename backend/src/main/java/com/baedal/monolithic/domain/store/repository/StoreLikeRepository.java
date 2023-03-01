@@ -1,9 +1,7 @@
 package com.baedal.monolithic.domain.store.repository;
 
-import com.baedal.monolithic.domain.store.entity.Store;
 import com.baedal.monolithic.domain.store.entity.StoreLike;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 import java.util.Optional;

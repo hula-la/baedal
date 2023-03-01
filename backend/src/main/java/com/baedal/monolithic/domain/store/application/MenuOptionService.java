@@ -11,6 +11,7 @@ import com.baedal.monolithic.domain.store.repository.StoreMenuOptionRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -23,6 +24,7 @@ public class MenuOptionService {
     private final StoreMenuOptionGroupRepository storeMenuOptionGroupRepository;
     private final ModelMapper modelMapper;
 
+    @Transactional(readOnly = true)
     public List<MenuOptionGroupDto> findAllMenuOptionGroupsByMenuId(Long menuId) {
         return storeMenuOptionGroupRepository.findAllByMenuIdOrderByPriority(menuId)
                 .stream()
@@ -34,6 +36,7 @@ public class MenuOptionService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public List<MenuOptionDto> findAllMenuOptionsByGroupId(Long groupId) {
         return storeMenuOptionRepository.findAllByGroupIdOrderByGroupId(groupId)
                 .stream()
@@ -41,12 +44,14 @@ public class MenuOptionService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public StoreMenuOption findMenuOptionEntity(Long optionId) {
         return storeMenuOptionRepository.findById(optionId)
                 .orElseThrow(()->
                         new StoreException(StoreStatusCode.NO_OPTION));
     }
 
+    @Transactional(readOnly = true)
     public StoreMenuOptionGroup findMenuOptionGroupEntity(Long groupId) {
         return storeMenuOptionGroupRepository.findById(groupId)
                 .orElseThrow(()->

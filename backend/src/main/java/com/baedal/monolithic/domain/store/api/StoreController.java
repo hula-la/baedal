@@ -4,16 +4,15 @@ import com.baedal.monolithic.domain.store.application.StoreService;
 import com.baedal.monolithic.domain.store.dto.PageVO;
 import com.baedal.monolithic.domain.store.dto.StoreFindAllDto;
 import com.baedal.monolithic.domain.store.dto.StoreFindDto;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.modelmapper.ModelMapper;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 import java.util.List;
 
 @RestController
@@ -24,6 +23,7 @@ public class StoreController {
     private final StoreService storeService;
 
     @GetMapping
+
     public ResponseEntity<StoreFindAllRes> findAll (@Valid @ModelAttribute StoreReq storeReq) {
         return ResponseEntity.ok(
                 new StoreFindAllRes(
@@ -40,6 +40,8 @@ public class StoreController {
 
     @Getter
     @Setter
+    @ToString
+    @EqualsAndHashCode(of = {"categoryId","addressId","pageVO"})
     public static class StoreReq {
 
         @NotNull(message = "{notnull}")

@@ -5,6 +5,7 @@ import com.baedal.monolithic.domain.store.entity.StoreLike;
 import com.baedal.monolithic.domain.store.repository.StoreLikeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -17,7 +18,7 @@ public class StoreLikeService {
     private final StoreLikeRepository storeLikeRepository;
     private final StoreService storeService;
 
-
+    @Transactional(readOnly = true)
     public Boolean checkLike(Long accountId, Long storeId) {
         return storeLikeRepository.existsByAccountIdAndStoreId(accountId, storeId);
     }
@@ -43,6 +44,7 @@ public class StoreLikeService {
         storeLikeRepository.deleteById(storeLikeId);
     }
 
+    @Transactional(readOnly = true)
     public List<StoreFindAllDto> findAllLikeStores(Long accountId) {
         return storeLikeRepository.findByAccountId(accountId)
                 .stream()
@@ -50,6 +52,7 @@ public class StoreLikeService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public Long countLikes(Long accountId) {
         return storeLikeRepository.countByAccountId(accountId);
     }

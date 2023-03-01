@@ -16,7 +16,9 @@ import com.baedal.monolithic.domain.store.repository.StoreRepository;
 import com.baedal.monolithic.domain.store.repository.StoreTipByPriceRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -31,6 +33,8 @@ public class StoreService {
     private final StoreTipByPriceRepository storeTipByPriceRepository;
     private final ModelMapper modelMapper;
 
+    @Transactional(readOnly = true)
+    @Cacheable(key = "#storeReq", cacheNames = "stores")
     public List<StoreFindAllDto> findAllStores(StoreController.StoreReq storeReq) {
 
         return storeRepository.findAllByAddressIdAndCategoryId(
@@ -43,6 +47,7 @@ public class StoreService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public StoreFindDto findStoreDetail(Long storeId) {
         Store store = storeRepository.findById(storeId)
                 .orElseThrow(()->new StoreException(StoreStatusCode.NO_STORE));
@@ -58,6 +63,8 @@ public class StoreService {
         // 지역별배달팁 추가
         return storeFindDto;
     }
+
+    @Transactional(readOnly = true)
     public StoreFindAllDto findStoreIntro(Long storeId) {
         Store store = storeRepository.findById(storeId)
                 .orElseThrow(()->new StoreException(StoreStatusCode.NO_STORE));
@@ -65,18 +72,22 @@ public class StoreService {
         return modelMapper.map(store, StoreFindAllDto.class);
     }
 
+    @Transactional(readOnly = true)
+    @Cacheable(key = "#storeReq", cacheNames = "storeCnt")
     public Long countStores(StoreController.StoreReq storeReq) {
         return storeRepository.countAllByAddressIdAndCategoryId(
                 storeReq.getAddressId(),
                 storeReq.getCategoryId());
     }
 
+    @Transactional(readOnly = true)
     public Long getTipByAddressId(Long storeId, Long addressId) {
         DeliveryAddress deliveryAddress = deliveryAddressRepository.findByStoreIdAndAddressId(storeId, addressId)
                 .orElseThrow(() -> new StoreException(StoreStatusCode.NO_DELIVERY_REGION));
         return deliveryAddress.getTip();
     }
 
+    @Transactional(readOnly = true)
     public Long getTipByPrice(Long storeId, Long price) {
         List<StoreTipByPrice> deliveryAddress = storeTipByPriceRepository.findByStoreIdOrderByPriceDesc(storeId);
         for (StoreTipByPrice tipByPrice:deliveryAddress) {
