@@ -32,6 +32,8 @@ public class Account {
     private String email;
     private String tel;
     private String profile;
+    private String refreshToken;
+    private String password;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -47,5 +49,8 @@ public class Account {
         return role.getKey();
     }
 
+    public void updateRefreshToken(String refreshToken){
+        this.refreshToken = refreshToken;
+    }
 
 }

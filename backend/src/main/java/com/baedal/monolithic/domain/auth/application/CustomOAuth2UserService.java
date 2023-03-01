@@ -36,9 +36,9 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
 
         Account user = saveIfNewUser(socialId);
 
-        return new DefaultOAuth2User(Collections.singleton(new SimpleGrantedAuthority(user.getRoleKey())),
-                oAuth2User.getAttributes(),
-                userNameAttributeName);
+        return new UserPrincipal(user,
+                Collections.singleton(new SimpleGrantedAuthority(user.getRoleKey())),
+                oAuth2User.getAttributes());
     }
 
     private Account saveIfNewUser(String socialId) {
@@ -55,6 +55,5 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
         Long userIdFromProvider = (Long) oAuth2User.getAttributes().get(userNameAttributeName);
         return registrationId + "_" + userIdFromProvider;
     }
-
 
 }
