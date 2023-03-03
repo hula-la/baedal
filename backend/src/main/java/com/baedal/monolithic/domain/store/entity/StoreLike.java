@@ -1,6 +1,5 @@
 package com.baedal.monolithic.domain.store.entity;
 
-import com.baedal.monolithic.domain.store.dto.StoreStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

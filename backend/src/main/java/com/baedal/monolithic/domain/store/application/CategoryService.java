@@ -1,6 +1,6 @@
 package com.baedal.monolithic.domain.store.application;
 
-import com.baedal.monolithic.domain.store.dto.StoreCategoryFindAllDto;
+import com.baedal.monolithic.domain.store.dto.StoreCategoryDto;
 import com.baedal.monolithic.domain.store.repository.StoreCategoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -18,10 +18,10 @@ public class CategoryService {
     private final ModelMapper modelMapper;
 
     @Transactional(readOnly = true)
-    public List<StoreCategoryFindAllDto> findAllCategory() {
+    public List<StoreCategoryDto.Info> findAllCategory() {
         return storeCategoryRepository.findAll()
                 .stream()
-                .map(category -> modelMapper.map(category, StoreCategoryFindAllDto.class))
+                .map(category -> modelMapper.map(category, StoreCategoryDto.Info.class))
                 .collect(Collectors.toList());
     }
 

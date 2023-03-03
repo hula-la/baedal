@@ -2,8 +2,7 @@ package com.baedal.monolithic.domain.review.application;
 
 import com.baedal.monolithic.domain.account.application.AccountService;
 import com.baedal.monolithic.domain.order.application.OrderService;
-import com.baedal.monolithic.domain.order.dto.OrderMenuDto;
-import com.baedal.monolithic.domain.review.api.ReviewController;
+import com.baedal.monolithic.domain.order.dto.OrderDto;
 import com.baedal.monolithic.domain.review.dto.ReviewDto;
 import com.baedal.monolithic.domain.review.entity.Review;
 import com.baedal.monolithic.domain.review.exception.ReviewException;
@@ -26,14 +25,14 @@ public class ReviewService {
     private final ReviewRepository reviewRepository;
     private final ModelMapper modelMapper;
 
-    public List<ReviewDto> findReviews(Long storeId) {
+    public List<ReviewDto.Info> findReviews(Long storeId) {
         return reviewRepository.findByStoreIdOrderByIdDesc(storeId).stream()
                 .map(review -> {
-                    ReviewDto reviewDto = modelMapper.map(review, ReviewDto.class);
+                    ReviewDto.Info reviewDto = modelMapper.map(review, ReviewDto.Info.class);
                     reviewDto.setNickName(accountService.getUserEntity(review.getAccountId()).getNickname());
                     reviewDto.setMenus(orderService
                             .findMenusByOrderId(review.getOrderId()).stream()
-                            .map(OrderMenuDto::getMenuName)
+                            .map(OrderDto.Menu::getMenuName)
                             .collect(Collectors.toList()));
                     return reviewDto;
                 })
@@ -41,7 +40,7 @@ public class ReviewService {
     }
 
     @Transactional
-    public Long createReview(Long accountId, Long storeId, ReviewController.ReviewPostReq reviewPostReq) {
+    public Long createReview(Long accountId, Long storeId, ReviewDto.PostReq reviewPostReq) {
         Review review = modelMapper.map(reviewPostReq, Review.class);
         review.setAccountId(accountId);
         review.setStoreId(storeId);
@@ -50,7 +49,7 @@ public class ReviewService {
     }
 
     @Transactional
-    public void updateReview(Long accountId, Long reviewId, ReviewController.ReviewPostReq reviewPostReq) {
+    public void updateReview(Long accountId, Long reviewId, ReviewDto.PostReq reviewPostReq) {
         Review review = reviewRepository.findById(reviewId)
                 .orElseThrow(() -> new ReviewException(ReviewStatusCode.NO_ORDER));
         if (!review.getAccountId().equals(accountId)) throw new ReviewException(ReviewStatusCode.NO_ACCESS);

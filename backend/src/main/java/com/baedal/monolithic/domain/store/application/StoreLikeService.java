@@ -1,6 +1,6 @@
 package com.baedal.monolithic.domain.store.application;
 
-import com.baedal.monolithic.domain.store.dto.StoreFindAllDto;
+import com.baedal.monolithic.domain.store.dto.StoreDto;
 import com.baedal.monolithic.domain.store.entity.StoreLike;
 import com.baedal.monolithic.domain.store.repository.StoreLikeRepository;
 import lombok.RequiredArgsConstructor;
@@ -45,7 +45,7 @@ public class StoreLikeService {
     }
 
     @Transactional(readOnly = true)
-    public List<StoreFindAllDto> findAllLikeStores(Long accountId) {
+    public List<StoreDto.SummarizedInfo> findAllLikeStores(Long accountId) {
         return storeLikeRepository.findByAccountId(accountId)
                 .stream()
                 .map(storeLike -> storeService.findStoreIntro(storeLike.getStoreId()))

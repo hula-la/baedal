@@ -1,6 +1,5 @@
 package com.baedal.monolithic.domain.store.entity;
 
-import com.baedal.monolithic.domain.store.dto.StoreMenuStatus;
 import lombok.Getter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;

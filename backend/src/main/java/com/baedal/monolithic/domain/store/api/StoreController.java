@@ -1,19 +1,12 @@
 package com.baedal.monolithic.domain.store.api;
 
 import com.baedal.monolithic.domain.store.application.StoreService;
-import com.baedal.monolithic.domain.store.dto.PageVO;
-import com.baedal.monolithic.domain.store.dto.StoreFindAllDto;
-import com.baedal.monolithic.domain.store.dto.StoreFindDto;
+import com.baedal.monolithic.domain.store.dto.StoreDto;
 import lombok.*;
-import org.modelmapper.ModelMapper;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-import java.io.Serializable;
-import java.util.List;
 
 @RestController
 @RequestMapping("/stores")
@@ -24,9 +17,9 @@ public class StoreController {
 
     @GetMapping
 
-    public ResponseEntity<StoreFindAllRes> findAll (@Valid @ModelAttribute StoreReq storeReq) {
+    public ResponseEntity<StoreDto.GetRes> findAll (@Valid @ModelAttribute StoreDto.GetReq storeReq) {
         return ResponseEntity.ok(
-                new StoreFindAllRes(
+                new StoreDto.GetRes(
                         storeService.countStores(storeReq),
                         storeService.findAllStores(storeReq)
                 )
@@ -34,34 +27,8 @@ public class StoreController {
     }
 
     @GetMapping("/{storeId}")
-    public ResponseEntity<StoreFindDto> find (@PathVariable Long storeId) {
+    public ResponseEntity<StoreDto.DetailedInfo> find (@PathVariable Long storeId) {
         return ResponseEntity.ok(storeService.findStoreDetail(storeId));
-    }
-
-    @Getter
-    @Setter
-    @ToString
-    @EqualsAndHashCode(of = {"categoryId","addressId","pageVO"})
-    public static class StoreReq {
-
-        @NotNull(message = "{notnull}")
-        private Long categoryId;
-
-        @NotNull(message = "{notnull}")
-        private Long addressId;
-
-        private PageVO pageVO = new PageVO();
-
-
-    }
-
-    @AllArgsConstructor
-    @Getter
-    private static class StoreFindAllRes {
-
-        private Long results; // 총 갯수
-        private List<StoreFindAllDto> stores; // 가게 목록
-
     }
 
 

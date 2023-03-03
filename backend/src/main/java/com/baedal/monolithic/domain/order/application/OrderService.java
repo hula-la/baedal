@@ -2,11 +2,8 @@ package com.baedal.monolithic.domain.order.application;
 
 import com.baedal.monolithic.domain.account.application.AccountService;
 import com.baedal.monolithic.domain.account.application.AddressService;
-import com.baedal.monolithic.domain.order.api.OrderController;
-import com.baedal.monolithic.domain.order.dto.OrderFindDetailDto;
-import com.baedal.monolithic.domain.order.dto.OrderFindIntroDto;
-import com.baedal.monolithic.domain.order.dto.OrderMenuDto;
-import com.baedal.monolithic.domain.order.dto.OrderStatus;
+import com.baedal.monolithic.domain.order.dto.OrderDto;
+import com.baedal.monolithic.domain.order.entity.OrderStatus;
 import com.baedal.monolithic.domain.order.entity.Order;
 import com.baedal.monolithic.domain.order.entity.OrderMenu;
 import com.baedal.monolithic.domain.order.exception.OrderException;
@@ -16,7 +13,7 @@ import com.baedal.monolithic.domain.order.repository.OrderRepository;
 import com.baedal.monolithic.domain.store.application.MenuGroupService;
 import com.baedal.monolithic.domain.store.application.MenuOptionService;
 import com.baedal.monolithic.domain.store.application.StoreService;
-import com.baedal.monolithic.domain.store.dto.StoreFindAllDto;
+import com.baedal.monolithic.domain.store.dto.StoreDto;
 import com.baedal.monolithic.domain.store.entity.StoreMenuOption;
 import com.baedal.monolithic.domain.store.entity.StoreMenuOptionGroup;
 import lombok.RequiredArgsConstructor;
@@ -24,12 +21,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.sql.Date;
-import java.sql.Time;
 import java.sql.Timestamp;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -47,17 +39,17 @@ public class OrderService {
     private final ModelMapper modelMapper;
 
 
-    public Map<OrderStatus, List<OrderFindIntroDto>> findAllOrders(Long accountId) {
-        Map<OrderStatus, List<OrderFindIntroDto>> map = new EnumMap<>(OrderStatus.class);
+    public Map<OrderStatus, List<OrderDto.SummarizedInfo>> findAllOrders(Long accountId) {
+        Map<OrderStatus, List<OrderDto.SummarizedInfo>> map = new EnumMap<>(OrderStatus.class);
 
         List<Order> orders = orderRepository.findAllByAccountIdOrderByOrderAtDesc(accountId);
 
         for (Order order:orders){
-            StoreFindAllDto store = storeService.findStoreIntro(order.getStoreId());
+            StoreDto.SummarizedInfo store = storeService.findStoreIntro(order.getStoreId());
 
             if (!map.containsKey(order.getStatus())) map.put(order.getStatus(),new ArrayList<>());
 
-            OrderFindIntroDto orderIntro = modelMapper.map(order,OrderFindIntroDto.class);
+            OrderDto.SummarizedInfo orderIntro = modelMapper.map(order, OrderDto.SummarizedInfo.class);
             orderIntro.setName(store.getName());
 
             map.get(order.getStatus()).add(orderIntro);
@@ -66,12 +58,12 @@ public class OrderService {
         return map;
     }
 
-    public OrderFindDetailDto findOrder(Long accountId, Long orderId) {
+    public OrderDto.DetailedInfo findOrder(Long accountId, Long orderId) {
         Order order = orderRepository.findById(orderId).orElseThrow(()->new OrderException(OrderStatusCode.NO_ORDER));
         if (!Objects.equals(accountId, order.getAccountId())) throw new OrderException(OrderStatusCode.NO_ACCESS);
 
-        StoreFindAllDto store = storeService.findStoreIntro(order.getStoreId());
-        OrderFindDetailDto orderDto = modelMapper.map(order, OrderFindDetailDto.class);
+        StoreDto.SummarizedInfo store = storeService.findStoreIntro(order.getStoreId());
+        OrderDto.DetailedInfo orderDto = modelMapper.map(order, OrderDto.DetailedInfo.class);
 
         // 추후에 address Id로 추가하기
         orderDto.setStoreName(store.getName());
@@ -82,10 +74,10 @@ public class OrderService {
 
     }
 
-    public List<OrderMenuDto> findMenusByOrderId(Long orderId) {
+    public List<OrderDto.Menu> findMenusByOrderId(Long orderId) {
         return orderMenuRepository.findAllByOrderId(orderId).stream()
                 .map(menu -> {
-                    OrderMenuDto menuDto = modelMapper.map(menu, OrderMenuDto.class);
+                    OrderDto.Menu menuDto = modelMapper.map(menu, OrderDto.Menu.class);
                     menuDto.setMenuName(menuGroupService.findMenuEntity(orderId).getName());
                     return menuDto;
                 })
@@ -106,14 +98,14 @@ public class OrderService {
     }
 
     @Transactional
-    public Long createOrder(Long accountId, OrderController.OrderPostRes orderPostRes) {
+    public Long createOrder(Long accountId, OrderDto.PostReq orderPostReq) {
 
-        Order order = modelMapper.map(orderPostRes, Order.class);
-        Long orderPrice = calculatePrice(orderPostRes.getMenus());
+        Order order = modelMapper.map(orderPostReq, Order.class);
+        Long orderPrice = calculatePrice(orderPostReq.getMenus());
         Long userAddressId = accountService.getUserEntity(accountId).getUserAddressId();
         Long addressId = addressService.getAddressId(userAddressId);
         Long deliveryTip = calculateTip(order.getStoreId(),orderPrice, addressId);
-        String menuSummary = summaryMenu(orderPostRes.getMenus());
+        String menuSummary = summaryMenu(orderPostReq.getMenus());
 
         order.setAccountId(accountId);
         order.setAddressId(addressId);
@@ -127,7 +119,7 @@ public class OrderService {
 
         Long orderId = orderRepository.save(order).getId();
 
-        createOrderMenus(orderId,orderPostRes.getMenus());
+        createOrderMenus(orderId, orderPostReq.getMenus());
 
         return orderId;
     }
@@ -139,7 +131,7 @@ public class OrderService {
         return new Timestamp(cal.getTime().getTime());
     }
 
-    private String summaryMenu(List<OrderController.OrderMenuPostRes> menus) {
+    private String summaryMenu(List<OrderDto.MenuPostReq> menus) {
         String menuName = menuGroupService.findMenuEntity(menus.get(0).getMenuId()).getName();
         String extra = menus.size()==1?" 1개": " 외 " + (menus.size()-1) +"개";
 
@@ -153,10 +145,10 @@ public class OrderService {
 
     }
 
-    public Long calculatePrice(List<OrderController.OrderMenuPostRes> menus) {
+    public Long calculatePrice(List<OrderDto.MenuPostReq> menus) {
         Long price = 0L;
 
-        for(OrderController.OrderMenuPostRes menu: menus){
+        for(OrderDto.MenuPostReq menu: menus){
 
             price += menuGroupService.findMenuEntity(menu.getMenuId()).getPrice()
                     * menu.getCount();
@@ -183,9 +175,9 @@ public class OrderService {
     }
 
     @Transactional
-    public void createOrderMenus(Long orderId, List<OrderController.OrderMenuPostRes> menus) {
+    public void createOrderMenus(Long orderId, List<OrderDto.MenuPostReq> menus) {
 
-        for (OrderController.OrderMenuPostRes menu:menus) {
+        for (OrderDto.MenuPostReq menu:menus) {
             OrderMenu orderMenu = modelMapper.map(menu, OrderMenu.class);
             orderMenu.setOrderId(orderId);
 
