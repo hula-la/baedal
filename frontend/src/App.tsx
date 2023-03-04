@@ -5,6 +5,7 @@ import LoginPage from "./pages/login/loginPage";
 import RedirectPage from "./pages/login/redirectPage";
 import BasketPage from "./pages/basket/basketPage";
 import OrderPage from "./pages/order/orderPage";
+import StoreListPage from "./pages/storeList/storeListPage";
 import StoreDetailPage from "./pages/storeDetail/storeDetailPage";
 import MenuDetail from "./pages/menuDetail/components/MenuDetail";
 import MakeReviewPage from "./pages/makeReview/makeReviewPage";
@@ -23,6 +24,7 @@ function App() {
           <Route path="/oauth2/redirect" element={<RedirectPage />}></Route>
           <Route path="/basket" element={<BasketPage />}></Route>
           <Route path="/order" element={<OrderPage />}></Route>
+          <Route path="/store" element={<StoreListPage />}></Route>
           <Route path="/storeDetail" element={<StoreDetailPage />}></Route>
           <Route path="/storeDetail/:id" element={<MenuDetail />}></Route>
           <Route path="/review" element={<MakeReviewPage />}></Route>
