@@ -4,11 +4,13 @@ import com.baedal.monolithic.domain.account.entity.Account;
 import com.baedal.monolithic.domain.account.exception.AccountException;
 import com.baedal.monolithic.domain.account.exception.AccountExceptionCode;
 import com.baedal.monolithic.domain.account.repository.AccountRepository;
+import com.baedal.monolithic.domain.auth.application.UserPrincipal;
 import com.baedal.monolithic.domain.auth.exception.OAuthProcessingException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,6 +22,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Collections;
 
 @RequiredArgsConstructor
 @Component
@@ -67,11 +70,19 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
                 .filter(jwtProvider::isTokenValid)
                 .flatMap(jwtProvider::extractUserId)
                 .map(Long::valueOf)
-                .flatMap(accountRepository::findById)
+                .map(accountId -> accountRepository.findById(accountId)
+                        .orElseThrow(() ->  new AccountException(AccountExceptionCode.NO_USER)))
                 .ifPresent(this::saveAuthentication);
     }
 
     public void saveAuthentication(Account myUser) {
+//        UserPrincipal userPrincipal = new UserPrincipal(myUser,
+//                Collections.singleton(new SimpleGrantedAuthority(myUser.getRoleKey())),
+//                        null);
+        // SecurityContextHolder에 들어가는 Authentication 도 기존과 통일해서 UserPrincipal로 할지
+        // 고민
+        // 우선은 JWT 에서 사용자 정보 추출해서 contextHolder에 넣을 땐
+        // UserDetails 타입으로 Authentication 에 담는 걸로 구현
         UserDetails userDetails = User.builder()
                 .username(String.valueOf(myUser.getId()))
                 .password("")

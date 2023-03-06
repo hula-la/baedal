@@ -2,8 +2,10 @@ package com.baedal.monolithic.domain.review.api;
 
 import com.baedal.monolithic.domain.review.application.ReviewService;
 import com.baedal.monolithic.domain.review.dto.ReviewDto;
+import com.baedal.monolithic.global.util.AccountId;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -24,8 +26,9 @@ public class ReviewController {
     }
 
     @PostMapping("/stores/{storeId}")
-    public ResponseEntity<Void> create(@PathVariable Long storeId, @Valid @RequestBody ReviewDto.PostReq reviewPostReq) {
-        Long accountId = 1L;
+    public ResponseEntity<Void> create(@AccountId Long accountId,
+                                       @PathVariable Long storeId,
+                                       @Valid @RequestBody ReviewDto.PostReq reviewPostReq) {
         Long reviewId = reviewService.createReview(accountId,storeId, reviewPostReq);
 
         URI location = ServletUriComponentsBuilder
@@ -36,8 +39,9 @@ public class ReviewController {
     }
 
     @PutMapping("/{reviewId}")
-    public ResponseEntity<Void> update(@PathVariable Long reviewId, @Valid @RequestBody ReviewDto.PostReq reviewPostReq) {
-        Long accountId = 1L;
+    public ResponseEntity<Void> update(@AccountId Long accountId,
+                                       @PathVariable Long reviewId,
+                                       @Valid @RequestBody ReviewDto.PostReq reviewPostReq) {
         reviewService.updateReview(accountId, reviewId, reviewPostReq);
         return ResponseEntity.noContent().build();
     }

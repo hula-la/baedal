@@ -3,6 +3,7 @@ package com.baedal.monolithic.domain.order.api;
 import com.baedal.monolithic.domain.order.application.OrderService;
 import com.baedal.monolithic.domain.order.dto.OrderDto;
 import com.baedal.monolithic.domain.order.entity.OrderStatus;
+import com.baedal.monolithic.global.util.AccountId;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,22 +22,21 @@ public class OrderController {
     private final OrderService orderService;
 
     @GetMapping
-    public ResponseEntity<Map<OrderStatus,List<OrderDto.SummarizedInfo>>> findAll(){
-        Long accountId = 1L;
+    public ResponseEntity<Map<OrderStatus,List<OrderDto.SummarizedInfo>>> findAll(@AccountId Long accountId){
         return ResponseEntity.ok()
                 .body(orderService.findAllOrders(accountId));
     }
 
     @GetMapping("/{orderId}")
-    public ResponseEntity<OrderDto.DetailedInfo> find(@PathVariable Long orderId){
-        Long accountId = 1L;
+    public ResponseEntity<OrderDto.DetailedInfo> find(@AccountId Long accountId,
+                                                      @PathVariable Long orderId){
         return ResponseEntity.ok()
                 .body(orderService.findOrder(accountId, orderId));
     }
 
     @PostMapping
-    public ResponseEntity<Void> create(@Valid @RequestBody OrderDto.PostReq orderPostReq){
-        Long accountId = 1L;
+    public ResponseEntity<Void> create(@AccountId Long accountId,
+                                       @Valid @RequestBody OrderDto.PostReq orderPostReq){
         Long orderId = orderService.createOrder(accountId, orderPostReq);
 
         URI location = ServletUriComponentsBuilder
@@ -47,8 +47,8 @@ public class OrderController {
     }
 
     @DeleteMapping("/{orderId}")
-    public ResponseEntity<Void> delete(@PathVariable Long orderId){
-        Long accountId = 1L;
+    public ResponseEntity<Void> delete(@AccountId Long accountId,
+                                       @PathVariable Long orderId){
         orderService.deleteOrder(accountId, orderId);
         return ResponseEntity.noContent().build();
     }
