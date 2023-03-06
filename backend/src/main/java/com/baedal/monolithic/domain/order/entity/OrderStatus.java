@@ -1,4 +1,4 @@
-package com.baedal.monolithic.domain.order.dto;
+package com.baedal.monolithic.domain.order.entity;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;

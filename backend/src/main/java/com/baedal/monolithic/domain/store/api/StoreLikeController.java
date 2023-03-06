@@ -1,7 +1,7 @@
 package com.baedal.monolithic.domain.store.api;
 
 import com.baedal.monolithic.domain.store.application.StoreLikeService;
-import com.baedal.monolithic.domain.store.dto.StoreFindAllDto;
+import com.baedal.monolithic.domain.store.dto.StoreDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -48,7 +48,7 @@ public class StoreLikeController {
     @Getter
     private static class StoreLikeFindAllRes {
         private Long results;
-        private List<StoreFindAllDto> stores;
+        private List<StoreDto.SummarizedInfo> stores;
     }
 
 

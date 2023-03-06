@@ -1,8 +1,6 @@
 package com.baedal.monolithic.domain.store.application;
 
-import com.baedal.monolithic.domain.store.dto.MenuDetailDto;
 import com.baedal.monolithic.domain.store.dto.MenuDto;
-import com.baedal.monolithic.domain.store.dto.MenuGroupFindAllDto;
 import com.baedal.monolithic.domain.store.entity.StoreMenu;
 import com.baedal.monolithic.domain.store.exception.StoreException;
 import com.baedal.monolithic.domain.store.exception.StoreStatusCode;
@@ -26,11 +24,11 @@ public class MenuGroupService {
     private final ModelMapper modelMapper;
 
     @Transactional(readOnly = true)
-    public List<MenuGroupFindAllDto> findAllMenuGroups(Long storeId) {
+    public List<MenuDto.Group> findAllMenuGroups(Long storeId) {
         return storeMenuGroupRepository.findByStoreIdOrderByPriority(storeId)
                 .stream()
                 .map(group -> {
-                    MenuGroupFindAllDto menuGroupDto = modelMapper.map(group, MenuGroupFindAllDto.class);
+                    MenuDto.Group menuGroupDto = modelMapper.map(group, MenuDto.Group.class);
                     menuGroupDto.setMenus(findAllMenuByGroupId(menuGroupDto.getId()));
                     return menuGroupDto;
                 })
@@ -38,18 +36,18 @@ public class MenuGroupService {
     }
 
     @Transactional(readOnly = true)
-    public List<MenuDto> findAllMenuByGroupId(Long groupId) {
+    public List<MenuDto.SummarizedInfo> findAllMenuByGroupId(Long groupId) {
         return storeMenuRepository.findByGroupIdOrderByPriority(groupId)
                 .stream()
-                .map(group -> modelMapper.map(group, MenuDto.class))
+                .map(group -> modelMapper.map(group, MenuDto.SummarizedInfo.class))
                 .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
-    public MenuDetailDto findMenuDetail(Long menuId) {
+    public MenuDto.DetailedInfo findMenuDetail(Long menuId) {
         StoreMenu storeMenu = storeMenuRepository.findById(menuId)
                 .orElseThrow(() -> new StoreException(StoreStatusCode.NO_MENU));
-        MenuDetailDto menuDetailDto = modelMapper.map(storeMenu, MenuDetailDto.class);
+        MenuDto.DetailedInfo menuDetailDto = modelMapper.map(storeMenu, MenuDto.DetailedInfo.class);
         menuDetailDto.setOptionGroup(menuOptionService.findAllMenuOptionGroupsByMenuId(menuId));
         return menuDetailDto;
     }

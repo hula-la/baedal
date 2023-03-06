@@ -1,6 +1,5 @@
 package com.baedal.monolithic.domain.order.entity;
 
-import com.baedal.monolithic.domain.order.dto.OrderStatus;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;

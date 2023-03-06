@@ -1,7 +1,6 @@
 package com.baedal.monolithic.domain.store.application;
 
-import com.baedal.monolithic.domain.store.dto.MenuOptionDto;
-import com.baedal.monolithic.domain.store.dto.MenuOptionGroupDto;
+import com.baedal.monolithic.domain.store.dto.MenuDto;
 import com.baedal.monolithic.domain.store.entity.StoreMenuOption;
 import com.baedal.monolithic.domain.store.entity.StoreMenuOptionGroup;
 import com.baedal.monolithic.domain.store.exception.StoreException;
@@ -25,11 +24,11 @@ public class MenuOptionService {
     private final ModelMapper modelMapper;
 
     @Transactional(readOnly = true)
-    public List<MenuOptionGroupDto> findAllMenuOptionGroupsByMenuId(Long menuId) {
+    public List<MenuDto.OptionGroup> findAllMenuOptionGroupsByMenuId(Long menuId) {
         return storeMenuOptionGroupRepository.findAllByMenuIdOrderByPriority(menuId)
                 .stream()
                 .map(group -> {
-                    MenuOptionGroupDto menuOptionGroupDto = modelMapper.map(group, MenuOptionGroupDto.class);
+                    MenuDto.OptionGroup menuOptionGroupDto = modelMapper.map(group, MenuDto.OptionGroup.class);
                     menuOptionGroupDto.setOptions(findAllMenuOptionsByGroupId(menuOptionGroupDto.getId()));
                     return menuOptionGroupDto;
                 })
@@ -37,10 +36,10 @@ public class MenuOptionService {
     }
 
     @Transactional(readOnly = true)
-    public List<MenuOptionDto> findAllMenuOptionsByGroupId(Long groupId) {
+    public List<MenuDto.Option> findAllMenuOptionsByGroupId(Long groupId) {
         return storeMenuOptionRepository.findAllByGroupIdOrderByGroupId(groupId)
                 .stream()
-                .map(group -> modelMapper.map(group, MenuOptionDto.class))
+                .map(group -> modelMapper.map(group, MenuDto.Option.class))
                 .collect(Collectors.toList());
     }
 

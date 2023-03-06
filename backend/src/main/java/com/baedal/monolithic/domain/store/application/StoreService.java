@@ -3,9 +3,7 @@ package com.baedal.monolithic.domain.store.application;
 import com.baedal.monolithic.domain.account.exception.AccountException;
 import com.baedal.monolithic.domain.account.exception.AccountExceptionCode;
 import com.baedal.monolithic.domain.account.repository.AccountRepository;
-import com.baedal.monolithic.domain.store.api.StoreController;
-import com.baedal.monolithic.domain.store.dto.StoreFindAllDto;
-import com.baedal.monolithic.domain.store.dto.StoreFindDto;
+import com.baedal.monolithic.domain.store.dto.StoreDto;
 import com.baedal.monolithic.domain.store.entity.DeliveryAddress;
 import com.baedal.monolithic.domain.store.entity.Store;
 import com.baedal.monolithic.domain.store.entity.StoreTipByPrice;
@@ -35,7 +33,7 @@ public class StoreService {
 
     @Transactional(readOnly = true)
     @Cacheable(key = "#storeReq", cacheNames = "stores")
-    public List<StoreFindAllDto> findAllStores(StoreController.StoreReq storeReq) {
+    public List<StoreDto.SummarizedInfo> findAllStores(StoreDto.GetReq storeReq) {
 
         return storeRepository.findAllByAddressIdAndCategoryId(
                                 storeReq.getAddressId(),
@@ -43,17 +41,17 @@ public class StoreService {
                                 storeReq.getPageVO().getLastIdx(),
                                 storeReq.getPageVO().getPageNum())
                 .stream()
-                .map(store -> modelMapper.map(store, StoreFindAllDto.class))
+                .map(store -> modelMapper.map(store, StoreDto.SummarizedInfo.class))
                 .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
-    public StoreFindDto findStoreDetail(Long storeId) {
+    public StoreDto.DetailedInfo findStoreDetail(Long storeId) {
         Store store = storeRepository.findById(storeId)
                 .orElseThrow(()->new StoreException(StoreStatusCode.NO_STORE));
 
 
-        StoreFindDto storeFindDto = modelMapper.map(store, StoreFindDto.class);
+        StoreDto.DetailedInfo storeFindDto = modelMapper.map(store, StoreDto.DetailedInfo.class);
 
         String ownerName = accountRepository.findById(store.getOwnerId())
                 .orElseThrow(()-> new AccountException(AccountExceptionCode.NO_USER))
@@ -65,16 +63,16 @@ public class StoreService {
     }
 
     @Transactional(readOnly = true)
-    public StoreFindAllDto findStoreIntro(Long storeId) {
+    public StoreDto.SummarizedInfo findStoreIntro(Long storeId) {
         Store store = storeRepository.findById(storeId)
                 .orElseThrow(()->new StoreException(StoreStatusCode.NO_STORE));
 
-        return modelMapper.map(store, StoreFindAllDto.class);
+        return modelMapper.map(store, StoreDto.SummarizedInfo.class);
     }
 
     @Transactional(readOnly = true)
     @Cacheable(key = "#storeReq", cacheNames = "storeCnt")
-    public Long countStores(StoreController.StoreReq storeReq) {
+    public Long countStores(StoreDto.GetReq storeReq) {
         return storeRepository.countAllByAddressIdAndCategoryId(
                 storeReq.getAddressId(),
                 storeReq.getCategoryId());
