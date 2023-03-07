@@ -3,7 +3,7 @@ pipeline {
 
     stages {
         stage('build') {
-            steps {
+            steps { 
                sh ''' 
                 echo 'start bootJar' 
 	   cd ./backend/
