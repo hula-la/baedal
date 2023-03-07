@@ -1,7 +1,16 @@
 import React, { useCallback, useEffect, useState } from "react";
+import styled from "styled-components";
 import SearchBar from "./SearchBar";
 import SearchButton from "./SearchButton";
 import SearchHistory from "./SearchHistory";
+
+const Wrapper = styled.div`
+  width: 600px;
+  height: 50px;
+  border-radius: 25px;
+  position: absolute;
+  margin-top: 100px;
+`
 
 const Search = () => {
   const [keyword, setKeyword] = useState("");
@@ -34,13 +43,13 @@ const Search = () => {
   }, [keywords]);
 
   return (
-    <div>
+    <Wrapper>
       <div>
         <SearchBar type="text" value={keyword} onChange={handleKeyword} />
         <SearchButton onClick={handleClick} />
       </div>
       <SearchHistory keywords={keywords} />
-    </div>
+    </Wrapper>
   );
 };
 
