@@ -16,7 +16,6 @@ public class StoreController {
     private final StoreService storeService;
 
     @GetMapping
-
     public ResponseEntity<StoreDto.GetRes> findAll (@Valid @ModelAttribute StoreDto.GetReq storeReq) {
         return ResponseEntity.ok(
                 new StoreDto.GetRes(

@@ -1,8 +1,7 @@
 package com.baedal.monolithic.domain.review.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import com.baedal.monolithic.domain.store.dto.PageVO;
+import lombok.*;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
@@ -27,6 +26,15 @@ public class ReviewDto {
     public static class GetRes {
 //        private Long results; // 총 갯수
         private List<Info> reviews;
+    }
+
+    @Getter
+    @Setter
+    @ToString
+    public static class GetReq {
+
+        private PageVO pageVO = new PageVO();
+
     }
 
     @Setter
