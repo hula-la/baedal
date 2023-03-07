@@ -6,6 +6,7 @@ pipeline {
             steps {
                sh ''' 
                 echo 'start bootJar' 
+	   cd ./backend/
                 chmod +x gradlew
                 ./gradlew clean bootJar
                 '''
