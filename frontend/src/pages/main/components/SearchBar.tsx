@@ -1,4 +1,5 @@
 import React from "react";
+import styled from "styled-components";
 
 interface InputProps {
   type?: string;
@@ -6,16 +7,26 @@ interface InputProps {
   onChange?: React.ChangeEventHandler<HTMLInputElement>;
 }
 
+const Wrapper = styled.div`
+  input{
+    width: 520px;
+    height: 50px;
+    border-radius: 25px;
+    padding-left: 20px;
+    padding-right: 100px;
+  }
+`
+
 const SearchBar = ({ type, value, onChange }: InputProps) => {
   return (
-    <div>
+    <Wrapper>
       <input
         type={type}
         value={value}
-        placeholder="검색어를 입력해주세요."
+        placeholder="가게 이름을 입력해주세요."
         onChange={onChange}
       />
-    </div>
+    </Wrapper>
   );
 };
 
