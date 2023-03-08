@@ -36,6 +36,8 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
+        if (request.getRequestURI().equals("/actuator/prometheus")) return;
+
         String refreshToken = jwtProvider.extractRefreshTokenFromHeader(request)
                 .filter(jwtProvider::isTokenValid)
                 .orElse(null);
@@ -65,7 +67,7 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
     }
 
     public void checkAccessTokenAndAuthentication(HttpServletRequest request) {
-        log.info("checkAccessTokenAndAuthentication() 호출");
+        log.info(request.getRequestURI()+" checkAccessTokenAndAuthentication() 호출");
         jwtProvider.extractAccessTokenFromHeader(request)
                 .filter(jwtProvider::isTokenValid)
                 .flatMap(jwtProvider::extractUserId)

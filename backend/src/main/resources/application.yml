@@ -15,11 +15,20 @@ spring:
     port: 6379 #설정한 포트번호
     host: 127.0.0.1
 
+
 management:
   endpoints:
     web:
       exposure:
         include: prometheus
+server:
+  tomcat:
+    mbeanregistry:
+      enabled: true
+
+
 
 store:
   pageNum: 10
+
+
