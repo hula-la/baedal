@@ -2,9 +2,9 @@ name: baedal BE server CI/CD
 
 on:
   push:
-    branches: [ master ]
+    branches: [ dev-BE ]
   pull_request:
-    branches: [ master ]
+    branches: [ dev-BE ]
 
 jobs:
   build:
