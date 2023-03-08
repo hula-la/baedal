@@ -2,10 +2,7 @@ spring:
   config:
     activate:
       on-profile: prod
-#  datasource:
-#    driver-class-name: com.mysql.cj.jdbc.Driver
-#    url: jdbc:mysql://localhost:3306/baedal
-#    username: ssafy
-#    password: ssafy
-
+#  redis:
+#    port: 6379 #설정한 포트번호
+#    host: 13.125.242.100
 

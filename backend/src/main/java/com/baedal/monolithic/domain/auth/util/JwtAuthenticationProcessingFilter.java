@@ -36,7 +36,7 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
-        if (request.getRequestURI().equals("/actuator/prometheus")) return;
+//        if (request.getRequestURI().equals("/actuator/prometheus")) return;
 
         String refreshToken = jwtProvider.extractRefreshTokenFromHeader(request)
                 .filter(jwtProvider::isTokenValid)
