@@ -34,14 +34,17 @@ jobs:
     # 디렉토리 생성
     - name: Make Directory
       run: mkdir -p deploy
+      working-directory: ${{ env.working-directory }}
         
     # Jar 파일 복사
     - name: Copy Jar
       run: cp ./build/libs/*.jar ./deploy
+      working-directory: ${{ env.working-directory }}
 
     - name: Make zip file
       run: zip -r ./baedal.zip ./deploy
       shell: bash
+      working-directory: ${{ env.working-directory }}
 
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
@@ -52,3 +55,4 @@ jobs:
 
     - name: Upload to S3
       run: aws s3 cp --region ap-northeast-2 ./baedal.zip s3://$S3_BUCKET_NAME/
+      working-directory: ${{ env.working-directory }}
