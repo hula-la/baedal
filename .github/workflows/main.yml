@@ -78,5 +78,5 @@ jobs:
         --application-name baedal \
         --deployment-group-name baedal-group \
         --file-exists-behavior OVERWRITE \
-        --s3-location bucket=baedal-deploy,bundleType=zip,key=baedal.zip\ 
+        --s3-location bucket=baedal-deploy,bundleType=zip,key=baedal.zip \ 
         --region ap-northeast-2
