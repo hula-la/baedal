@@ -1,16 +1,19 @@
 package com.baedal.monolithic.domain.auth.util;
 
+import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.baedal.monolithic.domain.account.entity.Account;
 import com.baedal.monolithic.domain.account.exception.AccountException;
 import com.baedal.monolithic.domain.account.exception.AccountExceptionCode;
 import com.baedal.monolithic.domain.account.repository.AccountRepository;
-import com.baedal.monolithic.domain.auth.application.UserPrincipal;
+import com.baedal.monolithic.domain.auth.exception.AuthStatusCode;
 import com.baedal.monolithic.domain.auth.exception.OAuthProcessingException;
+import com.baedal.monolithic.global.exception.ExceptionResponse;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,7 +25,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Collections;
 
 @RequiredArgsConstructor
 @Component
@@ -31,24 +33,24 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
 
     private final JwtProvider jwtProvider;
     private final AccountRepository accountRepository;
+    private final ObjectMapper objectMapper;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
-//        if (request.getRequestURI().equals("/actuator/prometheus")) return;
 
-        String refreshToken = jwtProvider.extractRefreshTokenFromHeader(request)
-                .filter(jwtProvider::isTokenValid)
-                .orElse(null);
+            String refreshToken = jwtProvider.extractRefreshTokenFromHeader(request)
+                    .filter(jwtProvider::isTokenValid)
+                    .orElse(null);
 
-        if (refreshToken != null) {
-            checkRefreshTokenAndReIssueAccessToken(response, refreshToken);
-            return;
-        }
+            if (refreshToken != null) {
+                checkRefreshTokenAndReIssueAccessToken(response, refreshToken);
+                return;
+            }
 
-        checkAccessTokenAndAuthentication(request);
-        filterChain.doFilter(request, response);
+            checkAccessTokenAndAuthentication(request);
+            filterChain.doFilter(request, response);
 
     }
 
@@ -63,7 +65,7 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
         if (!account.getRefreshToken().equals(refreshToken))
             throw new OAuthProcessingException("RefreshToken not match");
 
-        jwtProvider.refreshAccessAndRefreshToken(response, userId);
+        jwtProvider.refreshRefreshToken(response, userId);
     }
 
     public void checkAccessTokenAndAuthentication(HttpServletRequest request) {

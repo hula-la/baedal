@@ -3,6 +3,7 @@ package com.baedal.monolithic.global.config;
 import com.baedal.monolithic.domain.account.repository.AccountRepository;
 import com.baedal.monolithic.domain.account.repository.AddressRepository;
 import com.baedal.monolithic.domain.auth.application.CustomOAuth2UserService;
+import com.baedal.monolithic.domain.auth.exception.ExceptionHandlerFilter;
 import com.baedal.monolithic.domain.auth.exception.JwtAccessDeniedHandler;
 import com.baedal.monolithic.domain.auth.exception.JwtAuthenticationEntryPoint;
 import com.baedal.monolithic.domain.auth.util.*;
@@ -43,6 +44,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                     .authorizeRequests()
                 .antMatchers("/actuator/**").permitAll()
+                .antMatchers("/auth/**").permitAll()
                     .anyRequest().authenticated()
                 .and()
                     .logout()
@@ -65,6 +67,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .accessDeniedHandler(jwtAccessDeniedHandler);
 
         http.addFilterBefore(jwtAuthenticationProcessingFilter, UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(new ExceptionHandlerFilter(), JwtAuthenticationProcessingFilter.class);
 
     }
 
