@@ -1,5 +1,6 @@
 package com.baedal.monolithic.domain.auth.exception;
 
+import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Data;
@@ -29,7 +30,7 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
             //토큰의 유효기간 만료
             log.error("만료된 토큰입니다. {}", e.getMessage());
             setErrorResponse(response, AuthStatusCode.ACCESS_TOKEN_EXPIRED);
-        }catch (JwtException | IllegalArgumentException e){
+        }catch (JwtException | IllegalArgumentException | JWTVerificationException e){
             //유효하지 않은 토큰
             log.error("유효하지 않은 토큰입니다. {}", e.getMessage());
             setErrorResponse(response, AuthStatusCode.NO_VALID_TOKEN);

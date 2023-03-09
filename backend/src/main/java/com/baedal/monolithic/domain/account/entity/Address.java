@@ -14,6 +14,11 @@ public class Address {
     private Long id;
 
     @NotNull
-    private String name;
+    private String sido;
+    @NotNull
+    private String sigungu;
+    private String dong;
+//    private String roadName;
+//    private String name;
 
 }
