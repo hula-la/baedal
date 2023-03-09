@@ -1,18 +1,15 @@
 package com.baedal.monolithic.domain.account.entity;
 
-import com.baedal.monolithic.domain.store.entity.Store;
+import com.baedal.monolithic.domain.account.dto.AccountDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import org.springframework.data.annotation.CreatedBy;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Builder
@@ -51,6 +48,12 @@ public class Account {
 
     public void updateRefreshToken(String refreshToken){
         this.refreshToken = refreshToken;
+    }
+
+    public void updateInfo(AccountDto.PutReq accountPutReq){
+        this.nickname = accountPutReq.getNickname();
+        this.tel = accountPutReq.getTel();
+        this.profile = accountPutReq.getProfile();
     }
 
 }
