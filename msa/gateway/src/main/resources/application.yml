@@ -14,13 +14,21 @@ spring:
   cloud:
     gateway:
       routes:
-#        - id: auth-service
-#          uri: lb://ACCOUNT-SERVICE
-#          predicates:
-#            - Path=/auth-service/**
-#            - Method=GET,POST,PUT,DELETE
-#          filters:
-#            - RewritePath=/auth-service/(?<segment>.*), /$\{segment}
+        - id: auth-service
+          uri: lb://ACCOUNT-SERVICE
+          predicates:
+            - Path=/auth-service/**
+            - Method=GET,POST,PUT,DELETE
+          filters:
+            - RewritePath=/auth-service/(?<segment>.*), /$\{segment}
+        - id: account-service
+          uri: lb://ACCOUNT-SERVICE
+          predicates:
+            - Path=/account-service/**
+            - Method=GET,POST,PUT,DELETE
+          filters:
+            - RewritePath=/account-service/(?<segment>.*), /$\{segment}
+            - AuthorizationHeaderFilter
         - id: store-service
           uri: lb://STORE-SERVICE
           predicates:
