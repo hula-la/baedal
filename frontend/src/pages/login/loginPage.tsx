@@ -1,6 +1,6 @@
 const LoginPage = () => {
   const redirectURI:string = 'http://localhost:3000/oauth2/redirect'
-  const AUTH_URL:string = `http://localhost:8080/oauth2/authorization/kakao?redirect_uri=${redirectURI}`;
+  const AUTH_URL:string = `http://13.125.242.100:8080/oauth2/authorization/kakao?redirect_uri=${redirectURI}`;
   const socialLogin = () => {
     window.location.href = AUTH_URL
   }
