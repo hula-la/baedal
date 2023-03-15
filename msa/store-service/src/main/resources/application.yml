@@ -2,6 +2,13 @@ server:
   port: 0
 
 spring:
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    open-in-view: false
+    show-sql: true
+    hibernate:
+      format_sql: true
+      ddl-auto: update
   application:
     name: store-service
   datasource:
@@ -25,3 +32,12 @@ management:
     web:
       exposure:
         include: refresh, health, beans, busrefresh
+
+
+jwt:
+  user-id:
+    header: X-Authorization-Id
+
+logging:
+  level:
+    com.baedal.storeService.application.feign: DEBUG
