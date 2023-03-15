@@ -2,6 +2,7 @@ package com.baedal.storeService.api;
 
 import com.baedal.storeService.application.StoreLikeService;
 import com.baedal.storeService.dto.StoreDto;
+import com.baedal.storeService.util.AccountId;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -18,24 +19,28 @@ public class StoreLikeController {
     private final StoreLikeService likeService;
 
     @GetMapping("/{storeId}/likes")
-    public ResponseEntity<StoreLikeRes> checkLike(@PathVariable Long storeId) {
-        Long accountId = 1L;
+    public ResponseEntity<StoreLikeRes> checkLike(@AccountId Long accountId, @PathVariable Long storeId) {
         return ResponseEntity.ok().body(new StoreLikeRes(likeService.checkLike(accountId,storeId)));
     }
     @PostMapping("/{storeId}/likes")
-    public ResponseEntity<StoreLikeRes> toggleLike(@PathVariable Long storeId) {
-        Long accountId = 1L;
+    public ResponseEntity<StoreLikeRes> toggleLike(@AccountId Long accountId, @PathVariable Long storeId) {
         return ResponseEntity.ok().body(new StoreLikeRes(likeService.toggleLike(accountId,storeId)));
     }
 
 
     @GetMapping("/likes")
-    public ResponseEntity<StoreLikeFindAllRes> findAllLikeStore() {
-        Long accountId = 1L;
+    public ResponseEntity<StoreLikeFindAllRes> findAllLikeStore(@AccountId Long accountId) {
         return ResponseEntity.ok().body(new StoreLikeFindAllRes(
                 likeService.countLikes(accountId),
                 likeService.findAllLikeStores(accountId)
         ));
+    }
+
+    @GetMapping("/test")
+    public ResponseEntity<Boolean> findAllLikeStore() {
+        return ResponseEntity.ok().body(
+                likeService.checkLike2()
+        );
     }
 
     @AllArgsConstructor

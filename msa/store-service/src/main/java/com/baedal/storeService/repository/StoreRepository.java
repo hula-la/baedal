@@ -2,9 +2,12 @@ package com.baedal.storeService.repository;
 
 import com.baedal.storeService.entity.Store;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 
+import javax.persistence.LockModeType;
 import java.util.List;
+import java.util.Optional;
 
 public interface StoreRepository extends JpaRepository<Store,Long> {
 
@@ -20,5 +23,7 @@ public interface StoreRepository extends JpaRepository<Store,Long> {
     List<Store> findAllByAddressIdAndCategoryId(Long addressId, Long categoryId, Long lastIdx, Long pageNum);
 
 
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    Optional<Store> findStoreToUpdateById(Long storeId);
 
 }

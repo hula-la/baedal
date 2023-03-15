@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -40,7 +41,7 @@ public class Store implements Serializable {
     private int recentOrder;
     private int recentReview;
     private int heartNum;
-    private float rating = 0;
+    private float rating;
     private String notice;
     @NotNull
     private String time;
@@ -59,7 +60,12 @@ public class Store implements Serializable {
 
     @NotNull
     @Enumerated(EnumType.STRING)
+    @Builder.Default()
     private StoreStatus storeStatus = StoreStatus.CLOSE;
     private String img;
+
+    public void updateHeartNum(int plus) {
+        this.heartNum += plus;
+    }
 
 }
