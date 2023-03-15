@@ -39,4 +39,9 @@ public class AccountService {
         account.updateInfo(accountPutReq);
     }
 
+    public String findAccountName(Long accountId) {
+        Account account = getUserEntity(accountId);
+        return account.getName();
+    }
+
 }

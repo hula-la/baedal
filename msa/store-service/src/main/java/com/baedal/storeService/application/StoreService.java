@@ -1,11 +1,6 @@
 package com.baedal.storeService.application;
 
-import com.baedal.monolithic.domain.account.exception.AccountException;
-import com.baedal.monolithic.domain.account.exception.AccountExceptionCode;
-import com.baedal.monolithic.domain.account.repository.AccountRepository;
-import com.baedal.monolithic.domain.store.entity.DeliveryAddress;
-import com.baedal.monolithic.domain.store.entity.StoreTipByPrice;
-import com.baedal.monolithic.domain.store.exception.StoreStatusCode;
+import com.baedal.storeService.application.feign.UserServiceClient;
 import com.baedal.storeService.dto.StoreDto;
 import com.baedal.storeService.entity.DeliveryAddress;
 import com.baedal.storeService.entity.Store;
@@ -29,10 +24,12 @@ import java.util.stream.Collectors;
 public class StoreService {
 
     private final StoreRepository storeRepository;
-    private final AccountRepository accountRepository;
+//    private final AccountRepository accountRepository;
     private final DeliveryAddressRepository deliveryAddressRepository;
     private final StoreTipByPriceRepository storeTipByPriceRepository;
     private final ModelMapper modelMapper;
+
+    private final UserServiceClient userServiceClient;
 
     @Transactional(readOnly = true)
     @Cacheable(key = "#storeReq", cacheNames = "stores")
@@ -56,9 +53,7 @@ public class StoreService {
 
         StoreDto.DetailedInfo storeFindDto = modelMapper.map(store, StoreDto.DetailedInfo.class);
 
-        String ownerName = accountRepository.findById(store.getOwnerId())
-                .orElseThrow(()-> new AccountException(AccountExceptionCode.NO_USER))
-                .getName();
+        String ownerName = userServiceClient.getUserName(store.getOwnerId());
 
         storeFindDto.setOwnerName(ownerName);
         // 지역별배달팁 추가
