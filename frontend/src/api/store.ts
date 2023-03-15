@@ -2,7 +2,7 @@ import { StoreParam } from "../models/store";
 import { client } from "./client";
 
 export const storeCategory = async () => {
-  const { data } = await client.get("/store/categories");
+  const { data } = await client.get("/stores/categories");
   return data;
 };
 

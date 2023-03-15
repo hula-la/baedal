@@ -3,6 +3,7 @@ import { useStoreCategory } from "../../../hooks/store";
 import styled from "styled-components";
 import MenuCard from "./MenuCard";
 import MenuLabel from "./MenuLabel";
+import axios from "axios";
 
 interface Categories {
   results: number;
@@ -12,7 +13,7 @@ interface Categories {
 interface Category {
   id: number;
   name: string;
-  en_name: string;
+  en_name?: string;
 }
 
 const Wrapper = styled.div`
@@ -31,20 +32,20 @@ const Wrapper = styled.div`
 `
 
 const Menu = () => {
-  // const data = useStoreCategory();
-  const data = [
-    { id: 1, name: "치킨", en_name: "chicken" },
-    { id: 2, name: "피자", en_name: "pizza"},
-    { id: 3, name: "중식", en_name: "chiness" },
-    { id: 4, name: "한식", en_name: "korean" },
-  ];
 
+  const data = useStoreCategory();
+  // const data = [
+  //   { id: 1, name: "치킨", en_name: "chicken" },
+  //   { id: 2, name: "피자", en_name: "pizza"},
+  //   { id: 3, name: "중식", en_name: "chiness" },
+  //   { id: 4, name: "한식", en_name: "korean" },
+  // ];
   return (
     <Wrapper>
-      {data.map((category: Category) => {
+      {data.data.categories.map((category: Category) => {
         return (
           <div className="Card" key={category.id}>
-            <MenuCard name={category.en_name} />
+            <MenuCard name={category.name} />
             <MenuLabel name={category.name} />
           </div>
         );
