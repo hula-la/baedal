@@ -2,11 +2,14 @@ import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import { addressAtom } from "../../atoms/atoms";
-import { useGetAddress } from "../../hooks/address";
+import { getAddress } from "../../api/addressApi";
+import { useNavigate } from "react-router-dom";
 
 const RedirectPage = () => {
 
   const location = useLocation()
+  const navigate = useNavigate()
+  const [address, setAddress] = useRecoilState(addressAtom)
 
   const getToken = () => {
     if (location.search) {
@@ -17,16 +20,16 @@ const RedirectPage = () => {
   
   useEffect(() => {
     getToken();
+    if (!address.length) {
+      getAddress().then((data) => {
+        if (!data.addresses.length) {
+          navigate('/address')
+        } else {
+          setAddress(data.addresses)
+        }
+      })
+    }
   }, [])
-
-  // const [address, setAddress] = useRecoilState(addressAtom)
-  // const data = useGetAddress();
-
-  // useEffect(() => {
-  //   if (!address) {
-  //     console.log(data)
-  //   }
-  // })
 
   return (
     <div></div>
