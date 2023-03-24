@@ -64,7 +64,9 @@ public class ReviewService {
         review.setContent(reviewPostReq.getContent());
     }
 
+    @Transactional
     public void deleteReview(Long reviewId) {
-        reviewRepository.deleteById(reviewId);
+        reviewRepository.delete(reviewRepository.findById(reviewId)
+                .orElseThrow(()->new ReviewException(ReviewStatusCode.NO_ORDER)));
     }
 }
