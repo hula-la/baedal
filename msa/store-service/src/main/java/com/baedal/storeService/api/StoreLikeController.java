@@ -36,12 +36,6 @@ public class StoreLikeController {
         ));
     }
 
-    @GetMapping("/test")
-    public ResponseEntity<Boolean> findAllLikeStore() {
-        return ResponseEntity.ok().body(
-                likeService.checkLike2()
-        );
-    }
 
     @AllArgsConstructor
     @Getter
