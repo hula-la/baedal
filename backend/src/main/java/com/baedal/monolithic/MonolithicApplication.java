@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
-//@EnableCaching
+@EnableCaching
 @SpringBootApplication
 @EnableJpaRepositories(basePackages = {"com.baedal.monolithic.domain"})
 public class MonolithicApplication {
