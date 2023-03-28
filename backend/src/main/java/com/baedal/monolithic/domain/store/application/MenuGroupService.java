@@ -8,6 +8,7 @@ import com.baedal.monolithic.domain.store.repository.StoreMenuGroupRepository;
 import com.baedal.monolithic.domain.store.repository.StoreMenuRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,6 +25,7 @@ public class MenuGroupService {
     private final ModelMapper modelMapper;
 
     @Transactional(readOnly = true)
+    @Cacheable(value = "menus", key = "#storeId")
     public List<MenuDto.Group> findAllMenuGroups(Long storeId) {
         return storeMenuGroupRepository.findByStoreIdOrderByPriority(storeId)
                 .stream()
@@ -35,7 +37,6 @@ public class MenuGroupService {
                 .collect(Collectors.toList());
     }
 
-    @Transactional(readOnly = true)
     public List<MenuDto.SummarizedInfo> findAllMenuByGroupId(Long groupId) {
         return storeMenuRepository.findByGroupIdOrderByPriority(groupId)
                 .stream()
@@ -52,7 +53,6 @@ public class MenuGroupService {
         return menuDetailDto;
     }
 
-    @Transactional(readOnly = true)
     public StoreMenu findMenuEntity(Long menuId) {
         return storeMenuRepository.findById(menuId)
                 .orElseThrow(() -> new StoreException(StoreStatusCode.NO_MENU));
