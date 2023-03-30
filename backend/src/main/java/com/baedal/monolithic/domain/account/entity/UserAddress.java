@@ -11,7 +11,9 @@ import java.sql.Timestamp;
 
 @Entity
 @Getter
-@Setter
+@Builder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 @Table(indexes = {
                 @Index(name = "IX_user_address_01",columnList = "accountId,addressId")
         })

@@ -1,44 +1,44 @@
 package com.baedal.monolithic.domain.account.dto;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
 public class AddressDto {
 
-
     @Getter
-    @Setter
-    @AllArgsConstructor
+    @Builder
     public static class AddressInfo {
 
         private Long id;
         private String addressName;
-
     }
 
     @Getter
-    @Setter
-    @AllArgsConstructor
+    @Builder
     public static class UserAddressInfo {
 
         private Long id;
         private String addressName;
         private String addressDetail;
-
+//        private Boolean isSelect;
     }
 
-    @AllArgsConstructor
     @Getter
+    @AllArgsConstructor
     public static class GetRes {
         private List<UserAddressInfo> addresses;
-
     }
 
-    @Setter
+    @Getter
+    @AllArgsConstructor
+    public static class SearchRes {
+        private List<AddressInfo> addresses;
+    }
+
     @Getter
     public static class PostReq {
         @NotNull(message = "{notnull}")
@@ -47,20 +47,11 @@ public class AddressDto {
         private String addressDetail;
     }
 
-    @Setter
     @Getter
     public static class PutReq {
         @NotNull(message = "{notnull}")
         private Long userAddressId;
         @NotNull(message = "{notnull}")
         private String addressDetail;
-    }
-
-
-    @Setter
-    @Getter
-    @AllArgsConstructor
-    public static class SearchRes {
-        private List<AddressInfo> addresses;
     }
 }

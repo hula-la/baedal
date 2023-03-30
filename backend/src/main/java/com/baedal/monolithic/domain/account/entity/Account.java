@@ -2,17 +2,14 @@ package com.baedal.monolithic.domain.account.entity;
 
 import com.baedal.monolithic.domain.account.dto.AccountDto;
 import com.baedal.monolithic.global.entity.BaseTime;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Entity
-@Builder
 @Getter
-@NoArgsConstructor
+@Builder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 public class Account extends BaseTime {
 

@@ -36,7 +36,7 @@ public class ReviewService {
                 ).stream()
                 .map(review -> {
                     ReviewDto.Info reviewDto = modelMapper.map(review, ReviewDto.Info.class);
-                    reviewDto.setNickName(accountService.getUserEntity(review.getAccountId()).getNickname());
+                    reviewDto.setNickName(accountService.getUserNickname(review.getAccountId()));
                     reviewDto.setMenus(orderService
                             .findMenusByOrderId(review.getOrderId()).stream()
                             .map(OrderDto.Menu::getMenuName)

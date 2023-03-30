@@ -1,19 +1,17 @@
 package com.baedal.monolithic.domain.account.application;
 
-import com.baedal.monolithic.domain.account.dto.AccountDto;
 import com.baedal.monolithic.domain.account.dto.AddressDto;
+import com.baedal.monolithic.domain.account.entity.Account;
 import com.baedal.monolithic.domain.account.entity.Address;
 import com.baedal.monolithic.domain.account.entity.UserAddress;
 import com.baedal.monolithic.domain.account.exception.AccountException;
 import com.baedal.monolithic.domain.account.exception.AccountExceptionCode;
-import com.baedal.monolithic.domain.account.repository.AccountRepository;
 import com.baedal.monolithic.domain.account.repository.AddressRepository;
 import com.baedal.monolithic.domain.account.repository.UserAddressRepository;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,60 +21,31 @@ public class AddressService {
 
     private final UserAddressRepository userAddressRepository;
     private final AddressRepository addressRepository;
-    private final ModelMapper modelMapper;
-    private final AccountRepository accountRepository;
+    private final AccountMapper accountMapper;
+    private final AccountService accountService;
 
-    //    public String[] getUserAddressName(Long userAddressId){
-//        UserAddress userAddress = userAddressRepository.findById(userAddressId)
-//                .orElseThrow(() -> new AccountException(AccountExceptionCode.NO_ADDRESS));
-//
-//        return new String[] {
-//                getAddressName(userAddress.getAddressId()),
-//                userAddress.getAddressDetail()
-//        };
-//    }
-    public Long getAddressId(Long userAddressId){
-        UserAddress userAddress = userAddressRepository.findById(userAddressId)
-                .orElseThrow(() -> new AccountException(AccountExceptionCode.NO_ADDRESS));
-
-        return userAddress.getAddressId();
-    }
-    public String getAddressName(Long addressId){
-        Address address = addressRepository.findById(addressId)
-                .orElseThrow(() -> new AccountException(AccountExceptionCode.NO_ADDRESS));
-        return concatAddressName(address);
-    }
-
-    public String concatAddressName(Address address) {
-        return address.getSido() + " " + address.getSigungu() + " " + address.getDong();
-    }
-
-    public List<AddressDto.UserAddressInfo> findAllAddress(Long accountId) {
+    @Transactional(readOnly = true)
+    public List<AddressDto.UserAddressInfo> findAllAddress(final Long accountId) {
         return userAddressRepository.findAllByAccountId(accountId)
                 .stream()
                 .map(userAddress ->
-                    new AddressDto.UserAddressInfo(userAddress.getId(),
-                            getAddressName(userAddress.getAddressId()),
-                            userAddress.getAddressDetail())
+                    accountMapper.mapUserAddressEntityToGetInfoDto(userAddress,
+                            getAddressName(userAddress.getAddressId()))
                 ).collect(Collectors.toList());
     }
 
-    @Transactional
-    public void updateAddress(Long accountId, AddressDto.PutReq accountPutReq) {
-        UserAddress userAddress = userAddressRepository.findById(accountPutReq.getUserAddressId())
-                .orElseThrow(() -> new AccountException(AccountExceptionCode.NO_ADDRESS));
-
-        if (!userAddress.getAccountId().equals(accountId))
-            throw new AccountException(AccountExceptionCode.NOT_MATCH_USER_ID);
-
-        userAddress.updateDetail(accountPutReq);
+    @Transactional(readOnly = true)
+    public List<AddressDto.AddressInfo> searchAllAddress(final String addressKeyword) {
+        return addressRepository.searchAddress(addressKeyword)
+                .stream()
+                .map(accountMapper::mapAddressEntityToGetInfoDto)
+                .collect(Collectors.toList());
     }
 
-    public Long createAddress(Long accountId, AddressDto.PostReq addressPutReq) {
-        UserAddress userAddress = modelMapper.map(addressPutReq, UserAddress.class);
-        userAddress.setAccountId(accountId);
+    public Long createUserAddress(final Long accountId, final AddressDto.PostReq addressPostReq) {
+        UserAddress userAddress = accountMapper.mapPostDtoToUserAddressEntity(addressPostReq, accountId);
 
-        if (!accountRepository.existsById(addressPutReq.getAddressId()))
+        if (!addressRepository.existsById(addressPostReq.getAddressId()))
             throw new AccountException(AccountExceptionCode.NO_ADDRESS);
 
         UserAddress savedUserAddress = userAddressRepository.save(userAddress);
@@ -84,17 +53,49 @@ public class AddressService {
         return savedUserAddress.getId();
     }
 
-    public void deleteAddress(Long userAddressId) {
+    @Transactional
+    public void updateAddress(final Long accountId, final AddressDto.PutReq accountPutReq) {
+        UserAddress userAddress = getUserAddressEntity(accountPutReq.getUserAddressId());
+
+        if (!userAddress.getAccountId().equals(accountId))
+            throw new AccountException(AccountExceptionCode.NOT_MATCH_USER_ID);
+
+        userAddress.updateDetail(accountPutReq);
+    }
+
+    @Transactional
+    public void deleteUserAddress(final Long accountId, final Long userAddressId) {
+        if (!userAddressId.equals(accountService.getAddressIdOfUser(accountId)))
+            throw new AccountException(AccountExceptionCode.NOT_MATCH_USER_SELECTED_ADDRESS);
+
+        userAddressRepository.delete(getUserAddressEntity(userAddressId));
+    }
+
+
+    @Transactional(readOnly = true)
+    public Long getAddressIdByAccountId(final Long accountId){
+        return getAddressIdByUserAddressId(accountService.getUserEntity(accountId).getUserAddressId());
+    }
+
+    private Long getAddressIdByUserAddressId(final Long userAddressId){
         UserAddress userAddress = userAddressRepository.findById(userAddressId)
                 .orElseThrow(() -> new AccountException(AccountExceptionCode.NO_ADDRESS));
 
-        userAddressRepository.delete(userAddress);
+        return userAddress.getAddressId();
     }
 
-    public List<AddressDto.AddressInfo> searchAllAddress(String addressKeyword) {
-        return addressRepository.searchAddress(addressKeyword)
-                .stream()
-                .map(address -> new AddressDto.AddressInfo(address.getId(), concatAddressName(address)))
-                .collect(Collectors.toList());
+    private String getAddressName(final Long addressId){
+        return getAddressEntity(addressId).getAddressName();
     }
+
+    private UserAddress getUserAddressEntity(final Long userAddressId) {
+        return userAddressRepository.findById(userAddressId)
+                .orElseThrow(() -> new AccountException(AccountExceptionCode.NO_ADDRESS));
+    }
+
+    private Address getAddressEntity(final Long addressId) {
+        return addressRepository.findById(addressId)
+                .orElseThrow(() -> new AccountException(AccountExceptionCode.NO_ADDRESS));
+    }
+
 }

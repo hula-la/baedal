@@ -12,13 +12,14 @@ public class Address {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     @NotNull
     private String sido;
     @NotNull
     private String sigungu;
     private String dong;
-//    private String roadName;
-//    private String name;
+
+    public String getAddressName() {
+        return sido + " " + sigungu + " " + dong;
+    }
 
 }

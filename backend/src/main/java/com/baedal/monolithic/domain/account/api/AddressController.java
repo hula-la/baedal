@@ -1,8 +1,6 @@
 package com.baedal.monolithic.domain.account.api;
 
-import com.baedal.monolithic.domain.account.application.AccountService;
 import com.baedal.monolithic.domain.account.application.AddressService;
-import com.baedal.monolithic.domain.account.dto.AccountDto;
 import com.baedal.monolithic.domain.account.dto.AddressDto;
 import com.baedal.monolithic.global.util.AccountId;
 import lombok.RequiredArgsConstructor;
@@ -41,18 +39,18 @@ public class AddressController {
     @PostMapping
     public ResponseEntity<Void> create(@AccountId Long accountId,
                                                     @RequestBody AddressDto.PostReq addressPutReq) {
-        Long reviewId = addressService.createAddress(accountId, addressPutReq);
+        Long userAddressId = addressService.createUserAddress(accountId, addressPutReq);
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest().path("/{id}")
-                .buildAndExpand(reviewId).toUri();
+                .buildAndExpand(userAddressId).toUri();
 
         return ResponseEntity.created(location).build();
     }
 
     @DeleteMapping
-    public ResponseEntity<Void> delete(@AccountId Long accountId) {
-        addressService.deleteAddress(accountId);
+    public ResponseEntity<Void> delete(@AccountId Long accountId, @AccountId Long userAddressId) {
+        addressService.deleteUserAddress(accountId, userAddressId);
         return ResponseEntity.noContent().build();
     }
 
