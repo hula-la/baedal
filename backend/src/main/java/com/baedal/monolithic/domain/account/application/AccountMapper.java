@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 @Component
 class AccountMapper {
 
-    AccountDto.GetRes mapAccountEntityToGetDto(Account account){
+    AccountDto.GetRes mapAccountEntityToGetDto(final Account account){
         return AccountDto.GetRes.builder()
                 .id(account.getId())
                 .nickname(account.getNickname())
@@ -20,21 +20,21 @@ class AccountMapper {
                 .build();
     }
 
-    AddressDto.AddressInfo mapAddressEntityToGetInfoDto(Address address){
+    AddressDto.AddressInfo mapAddressEntityToGetInfoDto(final Address address){
         return AddressDto.AddressInfo.builder()
                 .id(address.getId())
                 .addressName(address.getAddressName())
                 .build();
     }
 
-    AddressDto.UserAddressInfo mapUserAddressEntityToGetInfoDto(UserAddress userAddress, String addressName){
+    AddressDto.UserAddressInfo mapUserAddressEntityToGetInfoDto(final UserAddress userAddress, final String addressName){
         return AddressDto.UserAddressInfo.builder()
                 .id(userAddress.getId())
                 .addressName(addressName)
                 .addressDetail(userAddress.getAddressDetail())
                 .build();
     }
-    UserAddress mapPostDtoToUserAddressEntity(AddressDto.PostReq address, Long accountId){
+    UserAddress mapPostDtoToUserAddressEntity(final AddressDto.PostReq address, final Long accountId){
         return UserAddress.builder()
                 .accountId(accountId)
                 .addressId(address.getAddressId())

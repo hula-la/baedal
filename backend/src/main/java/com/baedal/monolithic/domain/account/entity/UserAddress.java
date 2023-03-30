@@ -31,7 +31,7 @@ public class UserAddress {
     private String addressDetail;
 
 
-    public void updateDetail(AddressDto.PutReq accountPutReq) {
+    public void updateDetail(final AddressDto.PutReq accountPutReq) {
         this.addressDetail = accountPutReq.getAddressDetail();
     }
 }

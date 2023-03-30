@@ -35,11 +35,11 @@ public class Account extends BaseTime {
         return role.getKey();
     }
 
-    public void updateRefreshToken(String refreshToken){
+    public void updateRefreshToken(final String refreshToken){
         this.refreshToken = refreshToken;
     }
 
-    public void updateInfo(AccountDto.PutReq accountPutReq){
+    public void updateInfo(final AccountDto.PutReq accountPutReq){
         this.nickname = accountPutReq.getNickname();
         this.tel = accountPutReq.getTel();
         this.profile = accountPutReq.getProfile();
