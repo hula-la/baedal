@@ -30,7 +30,7 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
         String registrationId = userRequest.getClientRegistration().getRegistrationId();
         String userNameAttributeName = userRequest.getClientRegistration().getProviderDetails().getUserInfoEndpoint().getUserNameAttributeName();
 
-        String socialId = getSocialId(registrationId,userNameAttributeName,oAuth2User);
+        String socialId = getSocialId(registrationId, userNameAttributeName, oAuth2User);
 
         Account user = saveIfNewUser(socialId);
 
