@@ -3,11 +3,13 @@ package com.baedal.monolithic.domain.store.dto;
 import com.baedal.monolithic.domain.store.entity.StoreMenuStatus;
 import lombok.*;
 
+import java.io.Serializable;
 import java.util.List;
 
 public class MenuDto {
     @Getter
-    public static class SummarizedInfo {
+    @Builder
+    public static class SummarizedMenu implements Serializable{
 
         private Long id;
         private String name;
@@ -18,9 +20,9 @@ public class MenuDto {
 
     }
 
-    @Setter
     @Getter
-    public static class DetailedInfo {
+    @Builder
+    public static class DetailedMenu {
 
         private Long id;
         private String name;
@@ -32,19 +34,20 @@ public class MenuDto {
     }
 
     @Getter
-    @Setter
+    @Builder
     @ToString
     @EqualsAndHashCode(of = {"id"})
-    public static class Group {
+    public static class Group implements Serializable {
 
         private Long id;
         private String name;
         private String detail;
-        private List<SummarizedInfo> menus;
+        private List<SummarizedMenu> menus;
 
     }
 
     @Getter
+    @Builder
     public static class Option {
 
         private Long id;
@@ -53,8 +56,8 @@ public class MenuDto {
 
     }
 
-    @Setter
     @Getter
+    @Builder
     public static class OptionGroup {
 
         private Long id;
