@@ -1,6 +1,17 @@
 spring:
+  messages:
+    basename: messages.validation
   profiles:
-    include: hide
+    group:
+      prod:
+        - prod
+        - hide
+      dev:
+        - dev
+        - hide
+      test:
+        - test
+        - testhide
   jpa:
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
     open-in-view: false
@@ -8,13 +19,12 @@ spring:
     hibernate:
       format_sql: true
       ddl-auto: update
-  cache:
-    redis:
-      time-to-live: 86400000 # 1초
   redis:
     port: 6379 #설정한 포트번호
     host: 127.0.0.1
-
+  cache:
+    redis:
+      time-to-live: 86400000 # 1초
 
 management:
   endpoints:

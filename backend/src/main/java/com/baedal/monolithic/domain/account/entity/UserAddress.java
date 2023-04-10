@@ -1,9 +1,7 @@
 package com.baedal.monolithic.domain.account.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import com.baedal.monolithic.domain.account.dto.AddressDto;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -13,6 +11,7 @@ import java.sql.Timestamp;
 
 @Entity
 @Getter
+@Setter
 @Table(indexes = {
                 @Index(name = "IX_user_address_01",columnList = "accountId,addressId")
         })
@@ -30,5 +29,7 @@ public class UserAddress {
     private String addressDetail;
 
 
-
+    public void updateDetail(AddressDto.PutReq accountPutReq) {
+        this.addressDetail = accountPutReq.getAddressDetail();
+    }
 }
