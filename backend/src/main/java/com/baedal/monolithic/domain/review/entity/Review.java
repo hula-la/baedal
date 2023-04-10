@@ -1,7 +1,6 @@
 package com.baedal.monolithic.domain.review.entity;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -9,6 +8,9 @@ import javax.validation.constraints.NotNull;
 @Entity
 @Getter
 @Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(indexes = {
         @Index(name = "IX_store_01",columnList = "accountId,storeId")
 })
@@ -22,11 +24,10 @@ public class Review {
     private Long accountId;
     @NotNull
     private Long storeId;
-
     @NotNull
     private Long orderId;
     @NotNull
-    private Integer rating;
+    private int rating;
     @NotNull
     private String content;
 

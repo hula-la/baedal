@@ -1,0 +1,43 @@
+server:
+  port: 0
+
+spring:
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    open-in-view: false
+    show-sql: true
+    hibernate:
+      format_sql: true
+      ddl-auto: update
+  application:
+    name: store-service
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://database-1.cx4pyomay0lq.ap-northeast-2.rds.amazonaws.com:3306/baedal
+    username: soojin
+    password: qoekftnwls123
+
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://127.0.0.1:8761/eureka
+  instance:
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: refresh, health, beans, busrefresh
+
+
+jwt:
+  user-id:
+    header: X-Authorization-Id
+
+logging:
+  level:
+    com.baedal.storeService.application.feign: DEBUG

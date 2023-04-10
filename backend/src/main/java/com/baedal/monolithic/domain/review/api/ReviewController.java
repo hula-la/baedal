@@ -21,9 +21,9 @@ public class ReviewController {
 
     @GetMapping("/stores/{storeId}")
     public ResponseEntity<ReviewDto.GetRes> findAll(@PathVariable Long storeId,
-                                                    @Valid @RequestBody ReviewDto.GetReq reviewGetReq) {
+                                                    @Valid @ModelAttribute ReviewDto.GetReq reviewGetReq) {
         return ResponseEntity.ok()
-                .body(new ReviewDto.GetRes(reviewService.findReviews(storeId)));
+                .body(new ReviewDto.GetRes(reviewService.findReviews(storeId, reviewGetReq)));
     }
 
     @PostMapping("/stores/{storeId}")

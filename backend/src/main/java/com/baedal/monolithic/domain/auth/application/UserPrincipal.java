@@ -4,11 +4,12 @@ import com.baedal.monolithic.domain.account.entity.Account;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
-import reactor.util.annotation.Nullable;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Map;
+import java.util.Set;
 
 @Getter
 public class UserPrincipal implements OAuth2User, UserDetails {
@@ -60,7 +61,6 @@ public class UserPrincipal implements OAuth2User, UserDetails {
     }
 
     @Override
-    @Nullable
     @SuppressWarnings("unchecked")
     public <A> A getAttribute(String name) {
         return (A) attributes.get(name);
