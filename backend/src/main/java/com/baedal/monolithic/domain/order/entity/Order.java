@@ -1,6 +1,5 @@
 package com.baedal.monolithic.domain.order.entity;
 
-import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
@@ -12,7 +11,6 @@ import java.sql.Timestamp;
 @Entity
 @Getter
 @Setter
-@Builder
 @Table(name = "ORDERS",
         indexes = {
         @Index(name = "IX_orders_01",columnList = "accountId,storeId")

@@ -2,9 +2,6 @@ package com.baedal.monolithic.domain.auth.util;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
-import com.auth0.jwt.exceptions.AlgorithmMismatchException;
-import com.auth0.jwt.exceptions.InvalidClaimException;
-import com.auth0.jwt.exceptions.SignatureVerificationException;
 import com.baedal.monolithic.domain.account.entity.Account;
 import com.baedal.monolithic.domain.account.exception.AccountException;
 import com.baedal.monolithic.domain.account.exception.AccountExceptionCode;
@@ -69,18 +66,15 @@ public class JwtProvider {
                 .sign(Algorithm.HMAC512(secretKey));
     }
 
-    public void refreshRefreshToken(HttpServletResponse response, String userId) {
+    public void refreshAccessAndRefreshToken(HttpServletResponse response, String userId) {
+        String accessToken = createAccessToken(userId);
         String refreshToken = createRefreshToken(userId);
 
         updateRefreshTokenInAccount(Long.valueOf(userId), refreshToken);
 
+        CookieUtil.addCookie(response, accessHeader, accessToken, accessTokenExpirationPeriod);
         CookieUtil.addCookie(response, refreshHeader, refreshToken, refreshTokenExpirationPeriod);
     }
-//    public String refreshAccessToken(HttpServletResponse response, String userId) {
-//        String accessToken = createAccessToken(userId);
-//        CookieUtil.addCookie(response, accessHeader, accessToken, accessTokenExpirationPeriod);
-//        return accessToken;
-//    }
 
     public void updateRefreshTokenInAccount(Long userId, String refreshToken) {
         Account account = accountRepository.findById(userId)
@@ -117,12 +111,15 @@ public class JwtProvider {
     }
 
     public boolean isTokenValid(String token) {
-        
+        try {
             JWT.require(Algorithm.HMAC512(secretKey))
                     .build()
                     .verify(token);
             return true;
-
+        } catch (Exception e) {
+            log.error("유효하지 않은 토큰입니다. {}", e.getMessage());
+            return false;
+        }
     }
 
 

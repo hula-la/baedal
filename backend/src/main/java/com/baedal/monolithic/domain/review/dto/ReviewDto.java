@@ -11,23 +11,18 @@ public class ReviewDto {
 
     @Getter
     @Setter
-    @Builder
-    @NoArgsConstructor
-    @AllArgsConstructor
     public static class Info {
 
         private Long id;
         private String nickName;
-        private int rating;
+        private Long rating;
         private String content;
         private List<String> menus;
 
     }
 
-
-    @Getter
     @AllArgsConstructor
-    @NoArgsConstructor
+    @Getter
     public static class GetRes {
 //        private Long results; // 총 갯수
         private List<Info> reviews;
@@ -44,8 +39,6 @@ public class ReviewDto {
 
     @Setter
     @Getter
-    @AllArgsConstructor
-    @NoArgsConstructor
     public static class PostReq {
         @NotNull(message = "{notnull}")
         private Long orderId;
