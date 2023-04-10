@@ -12,7 +12,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(indexes = {
-        @Index(name = "IX_store_01",columnList = "categoryId")
+        @Index(name = "IX_store_01",columnList = "ownerId")
 })
 public class Store implements Serializable {
 
@@ -42,10 +42,11 @@ public class Store implements Serializable {
     @NotNull
     private String tel;
     @NotNull
+    private String deliveryRegion;
+    @NotNull
     private Long addressId;
 
     private String addressDetail;
-    private String deliveryRegion;
 
     private String info;
 

@@ -27,30 +27,32 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                         Authentication authentication) throws IOException, ServletException {
 
-        UserPrincipal userDetails = (UserPrincipal) authentication.getPrincipal();
-        String userId = userDetails.getUsername();
-
-        jwtProvider.refreshRefreshToken(response, userId);
-        String accessToken = jwtProvider.createAccessToken(userId);
+        saveAccessAndRefreshToken(response, authentication);
 
         clearAuthenticationAttributes(request, response);
 
-        String targetUrl = determineTargetUrl(request, accessToken);
+        String targetUrl = determineTargetUrl(request, response);
         getRedirectStrategy().sendRedirect(request, response, targetUrl);
 
     }
 
-    protected String determineTargetUrl(HttpServletRequest request, String accessToken) {
+    @Override
+    protected String determineTargetUrl(HttpServletRequest request, HttpServletResponse response) {
         String targetUrl = CookieUtil
                 .getCookie(request, CookieAuthorizationRequestRepository.REDIRECT_URI_PARAM_COOKIE_NAME)
                 .map(Cookie::getValue)
                 .orElse(getDefaultTargetUrl());
 
         return UriComponentsBuilder.fromUriString(targetUrl)
-                .queryParam("accessToken", accessToken)
                 .build().toUriString();
     }
 
+    protected void saveAccessAndRefreshToken(HttpServletResponse response, Authentication authentication) {
+        UserPrincipal userDetails = (UserPrincipal) authentication.getPrincipal();
+        String userId = userDetails.getUsername();
+
+        jwtProvider.refreshAccessAndRefreshToken(response, userId);
+    }
 
     protected void clearAuthenticationAttributes(HttpServletRequest request, HttpServletResponse response) {
         super.clearAuthenticationAttributes(request);

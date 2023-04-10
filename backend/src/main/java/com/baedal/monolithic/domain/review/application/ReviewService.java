@@ -10,7 +10,6 @@ import com.baedal.monolithic.domain.review.exception.ReviewStatusCode;
 import com.baedal.monolithic.domain.review.repository.ReviewRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -26,14 +25,8 @@ public class ReviewService {
     private final ReviewRepository reviewRepository;
     private final ModelMapper modelMapper;
 
-    public List<ReviewDto.Info> findReviews(Long storeId, ReviewDto.GetReq reviewGetReq) {
-        Long lastIdx = reviewGetReq.getPageVO().getLastIdx()==-1L?
-                Integer.MAX_VALUE:reviewGetReq.getPageVO().getLastIdx();
-
-        return reviewRepository.findAllByStoreIdAndIdLessThanOrderByIdDesc(storeId,
-                        lastIdx,
-                        PageRequest.of(0, Math.toIntExact(reviewGetReq.getPageVO().getPageNum()))
-                ).stream()
+    public List<ReviewDto.Info> findReviews(Long storeId) {
+        return reviewRepository.findByStoreIdOrderByIdDesc(storeId).stream()
                 .map(review -> {
                     ReviewDto.Info reviewDto = modelMapper.map(review, ReviewDto.Info.class);
                     reviewDto.setNickName(accountService.getUserEntity(review.getAccountId()).getNickname());
@@ -64,9 +57,7 @@ public class ReviewService {
         review.setContent(reviewPostReq.getContent());
     }
 
-    @Transactional
     public void deleteReview(Long reviewId) {
-        reviewRepository.delete(reviewRepository.findById(reviewId)
-                .orElseThrow(()->new ReviewException(ReviewStatusCode.NO_ORDER)));
+        reviewRepository.deleteById(reviewId);
     }
 }
