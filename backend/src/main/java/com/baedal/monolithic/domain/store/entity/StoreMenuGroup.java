@@ -1,19 +1,17 @@
 package com.baedal.monolithic.domain.store.entity;
 
+import com.baedal.monolithic.global.entity.BaseTime;
 import lombok.Getter;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.sql.Timestamp;
 
 @Entity
 @Getter
 @Table(indexes = {
         @Index(name = "IX_store_menu_group_01",columnList = "storeId")
 })
-public class StoreMenuGroup {
+public class StoreMenuGroup extends BaseTime {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -25,9 +23,5 @@ public class StoreMenuGroup {
     private Integer priority;
     private String detail;
 
-    @CreationTimestamp
-    private Timestamp createdAt;
-    @UpdateTimestamp
-    private Timestamp updatedAt;
 
 }

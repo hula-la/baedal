@@ -2,10 +2,13 @@ package com.baedal.monolithic.domain.store.repository;
 
 import com.baedal.monolithic.domain.store.entity.Store;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import javax.persistence.LockModeType;
 import java.util.List;
+import java.util.Optional;
 
 public interface StoreRepository extends JpaRepository<Store,Long> {
 
@@ -23,5 +26,8 @@ public interface StoreRepository extends JpaRepository<Store,Long> {
                                                 @Param("categoryId") Long categoryId,
                                                 @Param("lastIdx") Long lastIdx,
                                                 @Param("pageNum") Long pageNum);
+
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    Optional<Store> findStoreToUpdateById(Long storeId);
 
 }

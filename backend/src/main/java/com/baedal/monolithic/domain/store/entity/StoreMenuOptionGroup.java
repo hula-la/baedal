@@ -1,5 +1,6 @@
 package com.baedal.monolithic.domain.store.entity;
 
+import lombok.Builder;
 import lombok.Getter;
 
 import javax.persistence.*;
@@ -21,6 +22,7 @@ public class StoreMenuOptionGroup {
     @NotNull
     private Integer priority;
     @NotNull
+    @Builder.Default
     private boolean isRadio = false;
 
     private Integer min;

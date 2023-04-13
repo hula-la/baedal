@@ -102,8 +102,7 @@ public class OrderService {
 
         Order order = modelMapper.map(orderPostReq, Order.class);
         Long orderPrice = calculatePrice(orderPostReq.getMenus());
-        Long userAddressId = accountService.getUserEntity(accountId).getUserAddressId();
-        Long addressId = addressService.getAddressId(userAddressId);
+        Long addressId = addressService.getAddressIdByAccountId(accountId);
         Long deliveryTip = calculateTip(order.getStoreId(),orderPrice, addressId);
         String menuSummary = summaryMenu(orderPostReq.getMenus());
 
