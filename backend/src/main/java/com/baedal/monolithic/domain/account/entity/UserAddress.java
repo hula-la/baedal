@@ -11,7 +11,9 @@ import java.sql.Timestamp;
 
 @Entity
 @Getter
-@Setter
+@Builder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 @Table(indexes = {
                 @Index(name = "IX_user_address_01",columnList = "accountId,addressId")
         })
@@ -29,7 +31,7 @@ public class UserAddress {
     private String addressDetail;
 
 
-    public void updateDetail(AddressDto.PutReq accountPutReq) {
+    public void updateDetail(final AddressDto.PutReq accountPutReq) {
         this.addressDetail = accountPutReq.getAddressDetail();
     }
 }

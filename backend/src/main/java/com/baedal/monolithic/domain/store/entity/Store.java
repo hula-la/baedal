@@ -54,4 +54,8 @@ public class Store implements Serializable {
     private StoreStatus storeStatus = StoreStatus.CLOSE;
     private String img;
 
+    public void updateHeartNum(int plus) {
+        this.heartNum += plus;
+    }
+
 }

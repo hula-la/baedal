@@ -21,7 +21,7 @@ public class MenuGroupController {
     }
 
     @GetMapping("/menu/{menuId}")
-    public ResponseEntity<MenuDto.DetailedInfo> findAllOptionGroups (@PathVariable Long menuId) {
+    public ResponseEntity<MenuDto.DetailedMenu> findAllOptionGroups (@PathVariable Long menuId) {
         return ResponseEntity.ok(menuGroupService.findMenuDetail(menuId));
     }
 

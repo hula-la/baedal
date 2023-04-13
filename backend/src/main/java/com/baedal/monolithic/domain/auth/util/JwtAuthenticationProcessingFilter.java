@@ -11,6 +11,7 @@ import com.baedal.monolithic.global.exception.ExceptionResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -54,18 +55,22 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
 
     }
 
-//    @Transactional
     public void checkRefreshTokenAndReIssueAccessToken(HttpServletResponse response, String refreshToken) {
         String userId = jwtProvider.extractUserId(refreshToken)
                 .orElseThrow(() -> new OAuthProcessingException("토큰이 유효하지 않습니다."));
 
-        Account account = accountRepository.findById(Long.valueOf(userId))
-                .orElseThrow(() -> new AccountException(AccountExceptionCode.NO_USER));
+        Account account = getAccount(userId);
 
         if (!account.getRefreshToken().equals(refreshToken))
             throw new OAuthProcessingException("RefreshToken not match");
 
         jwtProvider.refreshRefreshToken(response, userId);
+    }
+
+    @Cacheable(value = "account", key = "#accountId")
+    public Account getAccount(String accountId) {
+        return accountRepository.findById(Long.valueOf(accountId))
+                .orElseThrow(() -> new AccountException(AccountExceptionCode.NO_USER));
     }
 
     public void checkAccessTokenAndAuthentication(HttpServletRequest request) {

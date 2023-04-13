@@ -1,20 +1,15 @@
 package com.baedal.monolithic.domain.account.dto;
 
-import com.baedal.monolithic.domain.store.dto.PageVO;
-import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
-import java.util.List;
+import javax.validation.constraints.Pattern;
 
 public class AccountDto {
 
     @Getter
+    @Builder
     public static class GetRes {
         private Long id;
         private String nickname;
@@ -23,14 +18,16 @@ public class AccountDto {
         private String profile;
     }
 
-    @Setter
     @Getter
     public static class PutReq {
         @NotNull(message = "{notnull}")
         private String nickname;
+
         @NotNull(message = "{notnull}")
+        @Pattern(regexp = "^01([0|1|6|7|8|9]?)-([0-9]{3,4})-([0-9]{4})$",
+                message = "{pattern.tel}")
         private String tel;
-        @NotNull(message = "{notnull}")
+
         private String profile;
     }
 

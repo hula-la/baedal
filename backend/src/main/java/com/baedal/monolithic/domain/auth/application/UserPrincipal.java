@@ -1,7 +1,6 @@
 package com.baedal.monolithic.domain.auth.application;
 
 import com.baedal.monolithic.domain.account.entity.Account;
-import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -11,12 +10,11 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 
-@Getter
 public class UserPrincipal implements OAuth2User, UserDetails {
 
-    private Account account;
-    private Set<GrantedAuthority> authorities;
-    private Map<String, Object> attributes;
+    private final Account account;
+    private final Set<GrantedAuthority> authorities;
+    private final Map<String, Object> attributes;
 
     public UserPrincipal(Account account, Set<GrantedAuthority> authorities,
                           Map<String, Object> attributes) {

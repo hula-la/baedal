@@ -7,7 +7,7 @@ import com.baedal.monolithic.domain.store.exception.StoreStatusCode;
 import com.baedal.monolithic.domain.store.repository.StoreMenuGroupRepository;
 import com.baedal.monolithic.domain.store.repository.StoreMenuRepository;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,41 +21,74 @@ public class MenuGroupService {
     private final StoreMenuGroupRepository storeMenuGroupRepository;
     private final StoreMenuRepository storeMenuRepository;
     private final MenuOptionService menuOptionService;
-    private final ModelMapper modelMapper;
+    private final StoreMapper storeMapper;
 
     @Transactional(readOnly = true)
+    @Cacheable(value = "menus", key = "#storeId")
     public List<MenuDto.Group> findAllMenuGroups(Long storeId) {
         return storeMenuGroupRepository.findByStoreIdOrderByPriority(storeId)
                 .stream()
-                .map(group -> {
-                    MenuDto.Group menuGroupDto = modelMapper.map(group, MenuDto.Group.class);
-                    menuGroupDto.setMenus(findAllMenuByGroupId(menuGroupDto.getId()));
-                    return menuGroupDto;
-                })
+                .map(group ->
+                        storeMapper.mapToGroupDto(group, findAllMenuByGroupId(group.getId()))
+                )
                 .collect(Collectors.toList());
     }
 
-    @Transactional(readOnly = true)
-    public List<MenuDto.SummarizedInfo> findAllMenuByGroupId(Long groupId) {
+    public List<MenuDto.SummarizedMenu> findAllMenuByGroupId(Long groupId) {
         return storeMenuRepository.findByGroupIdOrderByPriority(groupId)
                 .stream()
-                .map(group -> modelMapper.map(group, MenuDto.SummarizedInfo.class))
+                .map(storeMapper::mapToSummarizedMenuDto)
                 .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
-    public MenuDto.DetailedInfo findMenuDetail(Long menuId) {
-        StoreMenu storeMenu = storeMenuRepository.findById(menuId)
-                .orElseThrow(() -> new StoreException(StoreStatusCode.NO_MENU));
-        MenuDto.DetailedInfo menuDetailDto = modelMapper.map(storeMenu, MenuDto.DetailedInfo.class);
-        menuDetailDto.setOptionGroup(menuOptionService.findAllMenuOptionGroupsByMenuId(menuId));
-        return menuDetailDto;
+    public MenuDto.DetailedMenu findMenuDetail(Long menuId) {
+        return storeMapper.mapToDetailedMenuDto(
+                storeMenuRepository.findById(menuId)
+                        .orElseThrow(() -> new StoreException(StoreStatusCode.NO_MENU)),
+                menuOptionService.findAllMenuOptionGroupsByMenuId(menuId));
     }
 
-    @Transactional(readOnly = true)
     public StoreMenu findMenuEntity(Long menuId) {
         return storeMenuRepository.findById(menuId)
                 .orElseThrow(() -> new StoreException(StoreStatusCode.NO_MENU));
     }
 
+//    public Map<Long, MenuJoinDto.MenuMap> findMenusByMenuIds(List<Long> menuIds) {
+//        return storeMenuRepository.findMenusByIdIn(menuIds)
+//
+//
+//    }
+
+//    public List<MenuDto.SummarizedMenu> findAllMenuByGroupId(Long groupId) {
+//        return storeMenuRepository.findByGroupIdOrderByPriority(groupId)
+//                .stream()
+//                .map(storeMapper::mapToSummarizedMenuDto)
+//                .collect(Collectors.toList());
+//    }
+//    public Map<Long, MenuJoinDto.MenuMap> findMenusByMenuIds(List<Long> menuIds) {
+//        return storeMenuRepository.findMenusByIdIn(menuIds)
+//
+//
+//    }
+//    public Map<Long, MenuJoinDto.MenuMap> findMenusByMenuIds(List<Long> menuIds) {
+//        return storeMenuRepository.findMenusByIdIn(menuIds)
+//                .stream()
+//                .collect(groupingBy(MenuJoinDto::getMenuId))
+//                        .entrySet().stream()
+//                        .collect(Collectors.toMap(
+//                                Map.Entry::getKey,
+//                                e -> e.getValue().
+//                        ))
+//
+//
+//
+//                            mapping(MenuJoinDto::toMap, groupingBy(MenuJoinDto::getOptionGroupId))));
+//                            groupingBy(MenuJoinDto::getOptionGroupId,
+//                                groupingBy())));
+//        return storeMenuRepository.findMenusByIdIn(menuIds)
+//                .stream()
+//                .collect(Collectors.toMap(StoreMenu::getId,
+//                        storeMapper::mapToSummarizedMenuDto));
+//    }
 }

@@ -21,36 +21,32 @@ public class MenuOptionService {
 
     private final StoreMenuOptionRepository storeMenuOptionRepository;
     private final StoreMenuOptionGroupRepository storeMenuOptionGroupRepository;
-    private final ModelMapper modelMapper;
+    private final StoreMapper storeMapper;
 
     @Transactional(readOnly = true)
     public List<MenuDto.OptionGroup> findAllMenuOptionGroupsByMenuId(Long menuId) {
         return storeMenuOptionGroupRepository.findAllByMenuIdOrderByPriority(menuId)
                 .stream()
-                .map(group -> {
-                    MenuDto.OptionGroup menuOptionGroupDto = modelMapper.map(group, MenuDto.OptionGroup.class);
-                    menuOptionGroupDto.setOptions(findAllMenuOptionsByGroupId(menuOptionGroupDto.getId()));
-                    return menuOptionGroupDto;
-                })
+                .map(group ->
+                        storeMapper.mapToOptionGroupDto(group,
+                            findAllMenuOptionsByGroupId(group.getId()))
+                )
                 .collect(Collectors.toList());
     }
 
-    @Transactional(readOnly = true)
-    public List<MenuDto.Option> findAllMenuOptionsByGroupId(Long groupId) {
+    private List<MenuDto.Option> findAllMenuOptionsByGroupId(Long groupId) {
         return storeMenuOptionRepository.findAllByGroupIdOrderByGroupId(groupId)
                 .stream()
-                .map(group -> modelMapper.map(group, MenuDto.Option.class))
+                .map(storeMapper::mapToOptionDto)
                 .collect(Collectors.toList());
     }
 
-    @Transactional(readOnly = true)
     public StoreMenuOption findMenuOptionEntity(Long optionId) {
         return storeMenuOptionRepository.findById(optionId)
                 .orElseThrow(()->
                         new StoreException(StoreStatusCode.NO_OPTION));
     }
 
-    @Transactional(readOnly = true)
     public StoreMenuOptionGroup findMenuOptionGroupEntity(Long groupId) {
         return storeMenuOptionGroupRepository.findById(groupId)
                 .orElseThrow(()->
