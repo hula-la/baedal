@@ -32,7 +32,7 @@ public class StoreService {
     private final ModelMapper modelMapper;
 
     @Transactional(readOnly = true)
-    @Cacheable(key = "#storeReq", cacheNames = "stores")
+    @Cacheable(key = "#storeReq", value = "stores")
     public List<StoreDto.SummarizedInfo> findAllStores(StoreDto.GetReq storeReq) {
 
         return storeRepository.findAllByAddressIdAndCategoryId(
@@ -71,7 +71,7 @@ public class StoreService {
     }
 
     @Transactional(readOnly = true)
-    @Cacheable(key = "#storeReq", cacheNames = "storeCnt")
+    @Cacheable(key = "#storeReq", value = "storeCnt")
     public Long countStores(StoreDto.GetReq storeReq) {
         return storeRepository.countAllByAddressIdAndCategoryId(
                 storeReq.getAddressId(),

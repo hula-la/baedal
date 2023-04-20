@@ -5,6 +5,8 @@ import com.baedal.monolithic.domain.account.entity.Account;
 import com.baedal.monolithic.domain.account.exception.AccountException;
 import com.baedal.monolithic.domain.account.exception.AccountExceptionCode;
 import com.baedal.monolithic.domain.account.repository.AccountRepository;
+import com.baedal.monolithic.domain.auth.application.AuthService;
+import com.baedal.monolithic.domain.auth.dto.AuthDto;
 import com.baedal.monolithic.domain.auth.exception.AuthStatusCode;
 import com.baedal.monolithic.domain.auth.exception.OAuthProcessingException;
 import com.baedal.monolithic.global.exception.ExceptionResponse;
@@ -33,58 +35,49 @@ import java.io.IOException;
 public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
 
     private final JwtProvider jwtProvider;
-    private final AccountRepository accountRepository;
-    private final ObjectMapper objectMapper;
+    private final AuthService authService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
 
-            String refreshToken = jwtProvider.extractRefreshTokenFromHeader(request)
-                    .filter(jwtProvider::isTokenValid)
-                    .orElse(null);
-
-            if (refreshToken != null) {
-                checkRefreshTokenAndReIssueAccessToken(response, refreshToken);
-                return;
-            }
+//            String refreshToken = jwtProvider.extractRefreshTokenFromHeader(request)
+//                    .filter(jwtProvider::isTokenValid)
+//                    .orElse(null);
+//
+//            if (refreshToken != null) {
+//                checkRefreshTokenAndReIssueAccessToken(response, refreshToken);
+//                return;
+//            }
 
             checkAccessTokenAndAuthentication(request);
             filterChain.doFilter(request, response);
-
     }
 
-    public void checkRefreshTokenAndReIssueAccessToken(HttpServletResponse response, String refreshToken) {
-        String userId = jwtProvider.extractUserId(refreshToken)
-                .orElseThrow(() -> new OAuthProcessingException("토큰이 유효하지 않습니다."));
-
-        Account account = getAccount(userId);
-
-        if (!account.getRefreshToken().equals(refreshToken))
-            throw new OAuthProcessingException("RefreshToken not match");
-
-        jwtProvider.refreshRefreshToken(response, userId);
-    }
-
-    @Cacheable(value = "account", key = "#accountId")
-    public Account getAccount(String accountId) {
-        return accountRepository.findById(Long.valueOf(accountId))
-                .orElseThrow(() -> new AccountException(AccountExceptionCode.NO_USER));
-    }
+//    public void checkRefreshTokenAndReIssueAccessToken(HttpServletResponse response, String refreshToken) {
+//        String accountId = jwtProvider.extractUserId(refreshToken)
+//                .orElseThrow(() -> new OAuthProcessingException("토큰이 유효하지 않습니다."));
+//
+//        AuthDto.GetRes authDto = authService.findAuth(Long.valueOf(accountId));
+//
+//        if (!authDto.getRefreshToken().equals(refreshToken))
+//            throw new OAuthProcessingException("RefreshToken not match");
+//
+//        jwtProvider.refreshRefreshToken(response, accountId);
+//    }
 
     public void checkAccessTokenAndAuthentication(HttpServletRequest request) {
         log.info(request.getRequestURI()+" checkAccessTokenAndAuthentication() 호출");
         jwtProvider.extractAccessTokenFromHeader(request)
-                .filter(jwtProvider::isTokenValid)
+//                .filter(jwtProvider::isTokenValid)
                 .flatMap(jwtProvider::extractUserId)
                 .map(Long::valueOf)
-                .map(accountId -> accountRepository.findById(accountId)
-                        .orElseThrow(() ->  new AccountException(AccountExceptionCode.NO_USER)))
+                .map(authService::findAuth)
                 .ifPresent(this::saveAuthentication);
     }
 
-    public void saveAuthentication(Account myUser) {
+    public void saveAuthentication(AuthDto.GetRes myUser) {
 //        UserPrincipal userPrincipal = new UserPrincipal(myUser,
 //                Collections.singleton(new SimpleGrantedAuthority(myUser.getRoleKey())),
 //                        null);
