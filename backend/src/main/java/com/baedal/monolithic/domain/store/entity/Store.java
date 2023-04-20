@@ -35,6 +35,8 @@ public class Store {
     private int recentOrder;
     private int recentReview;
     private int heartNum;
+
+    @Builder.Default
     private float rating = 0;
     private String notice;
     @NotNull

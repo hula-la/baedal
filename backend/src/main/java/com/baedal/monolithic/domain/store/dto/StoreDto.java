@@ -25,6 +25,8 @@ public class StoreDto {
         private int recentOrder;
         private int recentReview;
         private int heartNum;
+
+        @Builder.Default
         private float rating = 0;
         private String notice;
         private String time;
@@ -49,6 +51,7 @@ public class StoreDto {
 
         private Long id;
         private String name;
+        @Builder.Default
         private float rating = 0;
         private String img;
 
