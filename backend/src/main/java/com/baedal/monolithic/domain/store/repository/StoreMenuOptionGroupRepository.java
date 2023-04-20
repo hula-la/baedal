@@ -9,6 +9,4 @@ import java.util.List;
 
 public interface StoreMenuOptionGroupRepository extends JpaRepository<StoreMenuOptionGroup,Long> {
 
-    List<StoreMenuOptionGroup> findAllByMenuIdOrderByPriority(Long menuId);
-
 }

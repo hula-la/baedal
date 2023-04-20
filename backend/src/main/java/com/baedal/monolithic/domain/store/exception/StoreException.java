@@ -6,11 +6,11 @@ import lombok.Getter;
 @Getter
 public class StoreException extends RuntimeException{
 
-    private final ExceptionCode exceptionCode;
+    private final StoreStatusCode storeStatusCode;
 
-    public StoreException(ExceptionCode exceptionCode) {
-        super(exceptionCode.getMessage());
-        this.exceptionCode = exceptionCode;
+    public StoreException(StoreStatusCode storeStatusCode) {
+        super(storeStatusCode.getMessage());
+        this.storeStatusCode = storeStatusCode;
     }
 
 }

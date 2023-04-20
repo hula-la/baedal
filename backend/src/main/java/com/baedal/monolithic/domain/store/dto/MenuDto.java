@@ -9,29 +9,21 @@ import java.util.List;
 public class MenuDto {
     @Getter
     @Builder
-    public static class SummarizedMenu implements Serializable{
+    public static class Menu implements Serializable{
+
+        private static final long serialVersionUID = -342341228534127459L;
 
         private Long id;
         private String name;
         private Long price;
         private String img;
         private String expIntro;
-        private StoreMenuStatus status;
-
-    }
-
-    @Getter
-    @Builder
-    public static class DetailedMenu {
-
-        private Long id;
-        private String name;
-        private Long price;
-        private String img;
         private String expDetail;
+        private StoreMenuStatus status;
         private List<OptionGroup> optionGroup;
 
     }
+
 
     @Getter
     @Builder
@@ -39,26 +31,22 @@ public class MenuDto {
     @EqualsAndHashCode(of = {"id"})
     public static class Group implements Serializable {
 
+        private static final long serialVersionUID = -34234234234559L;
+
+
         private Long id;
         private String name;
         private String detail;
-        private List<SummarizedMenu> menus;
+        private List<Menu> menus;
 
     }
 
     @Getter
     @Builder
-    public static class Option {
+    public static class OptionGroup implements Serializable {
 
-        private Long id;
-        private String name;
-        private Long price;
+        private static final long serialVersionUID = -234341234127459L;
 
-    }
-
-    @Getter
-    @Builder
-    public static class OptionGroup {
 
         private Long id;
         private String name;
@@ -68,6 +56,21 @@ public class MenuDto {
         private List<Option> options;
 
     }
+
+    @Getter
+    @Builder
+    public static class Option implements Serializable {
+
+        private static final long serialVersionUID = -5647123457459L;
+
+
+        private Long id;
+        private String name;
+        private Long price;
+
+    }
+
+
 
     @AllArgsConstructor
     @Getter

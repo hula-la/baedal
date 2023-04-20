@@ -1,5 +1,6 @@
 package com.baedal.monolithic.domain.store.dto;
 
+import com.baedal.monolithic.domain.store.entity.StoreMenuGroup;
 import com.baedal.monolithic.domain.store.entity.StoreStatus;
 import lombok.*;
 
@@ -12,7 +13,7 @@ import java.util.List;
 public class StoreDto {
 
     @Getter
-    @Setter
+    @Builder
     @ToString
     @EqualsAndHashCode(of = {"id"})
     public static class DetailedInfo {
@@ -33,13 +34,15 @@ public class StoreDto {
         private String address;
         private String info;
         @Enumerated(EnumType.STRING)
+        @Builder.Default
         private StoreStatus storeStatus = StoreStatus.CLOSE;
         private String img;
+        private List<MenuDto.Group> storeMenuGroups;
 
     }
 
     @Getter
-    @Setter
+    @Builder
     @ToString
     @EqualsAndHashCode(of = {"id"})
     public static class SummarizedInfo implements Serializable {
