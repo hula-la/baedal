@@ -4,9 +4,11 @@ import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.security.oauth2.jwt.JwtException;
+import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -16,7 +18,10 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @Slf4j
+@RequiredArgsConstructor
+@Component
 public class ExceptionHandlerFilter extends OncePerRequestFilter {
+    private final ObjectMapper objectMapper;
     @Override
     protected void doFilterInternal(
             HttpServletRequest request,
@@ -40,7 +45,6 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
             HttpServletResponse response,
             AuthStatusCode errorCode
     ){
-        ObjectMapper objectMapper = new ObjectMapper();
         response.setStatus(errorCode.getStatus().value());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         ErrorResponse errorResponse = new ErrorResponse(errorCode.getCode(), errorCode.getMessage());

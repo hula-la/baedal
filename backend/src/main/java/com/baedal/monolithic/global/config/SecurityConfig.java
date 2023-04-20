@@ -1,12 +1,13 @@
 package com.baedal.monolithic.global.config;
 
-import com.baedal.monolithic.domain.account.repository.AccountRepository;
-import com.baedal.monolithic.domain.account.repository.AddressRepository;
 import com.baedal.monolithic.domain.auth.application.CustomOAuth2UserService;
 import com.baedal.monolithic.domain.auth.exception.ExceptionHandlerFilter;
 import com.baedal.monolithic.domain.auth.exception.JwtAccessDeniedHandler;
 import com.baedal.monolithic.domain.auth.exception.JwtAuthenticationEntryPoint;
-import com.baedal.monolithic.domain.auth.util.*;
+import com.baedal.monolithic.domain.auth.util.CookieAuthorizationRequestRepository;
+import com.baedal.monolithic.domain.auth.util.JwtAuthenticationProcessingFilter;
+import com.baedal.monolithic.domain.auth.util.OAuth2FailureHandler;
+import com.baedal.monolithic.domain.auth.util.OAuth2LoginSuccessHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -31,6 +32,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final CookieAuthorizationRequestRepository cookieAuthorizationRequestRepository;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
+    private final ExceptionHandlerFilter exceptionHandlerFilter;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -67,7 +69,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .accessDeniedHandler(jwtAccessDeniedHandler);
 
         http.addFilterBefore(jwtAuthenticationProcessingFilter, UsernamePasswordAuthenticationFilter.class);
-        http.addFilterBefore(new ExceptionHandlerFilter(), JwtAuthenticationProcessingFilter.class);
+        http.addFilterBefore(exceptionHandlerFilter, JwtAuthenticationProcessingFilter.class);
 
     }
 
