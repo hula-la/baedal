@@ -1,8 +1,7 @@
 package com.baedal.monolithic.domain.store.entity;
 
 import com.baedal.monolithic.domain.order.dto.OrderDto;
-import lombok.Builder;
-import lombok.Getter;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -14,6 +13,9 @@ import java.util.stream.Collectors;
 
 @Entity
 @Getter
+@Builder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 @Table(indexes = {
         @Index(name = "IX_store_menu_option_group_01",columnList = "menu_id")
 })
