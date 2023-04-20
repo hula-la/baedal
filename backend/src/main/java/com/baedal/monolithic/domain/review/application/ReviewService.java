@@ -38,9 +38,7 @@ public class ReviewService {
                     ReviewDto.Info reviewDto = modelMapper.map(review, ReviewDto.Info.class);
                     reviewDto.setNickName(accountService.getUserNickname(review.getAccountId()));
                     reviewDto.setMenus(orderService
-                            .findMenusByOrderId(review.getOrderId()).stream()
-                            .map(OrderDto.Menu::getMenuName)
-                            .collect(Collectors.toList()));
+                            .getMenuNames(review.getOrderId()));
                     return reviewDto;
                 })
                 .collect(Collectors.toList());

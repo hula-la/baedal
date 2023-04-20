@@ -6,13 +6,17 @@ import com.baedal.monolithic.domain.account.entity.Account;
 import com.baedal.monolithic.domain.account.entity.Role;
 import com.baedal.monolithic.domain.account.repository.AccountRepository;
 import com.baedal.monolithic.domain.auth.util.JwtProvider;
+import com.baedal.monolithic.domain.order.entity.Order;
 import com.baedal.monolithic.domain.order.repository.OrderMenuRepository;
 import com.baedal.monolithic.domain.order.repository.OrderRepository;
 import com.baedal.monolithic.domain.review.dto.ReviewDto;
 import com.baedal.monolithic.domain.review.entity.Review;
+import com.baedal.monolithic.domain.store.entity.Store;
+import com.baedal.monolithic.domain.store.repository.StoreRepository;
 import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import org.apache.tomcat.jni.Time;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -24,6 +28,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 
+import java.sql.Timestamp;
 import java.util.Arrays;
 import java.util.List;
 
@@ -41,7 +46,9 @@ class ReviewControllerTest {
     protected static final String SOCIAL_ID = "sdfadsf";
 
     private static final String AUTHORIZATION_PREFIX = "Bearer ";
-    private static final Long storeId = 1L;
+    private static Long storeId;
+    private static Long accountId;
+    private static Long orderId;
     private static ReviewDto.Info review;
     private static ReviewDto.Info review2;
 
@@ -57,6 +64,9 @@ class ReviewControllerTest {
     OrderRepository orderRepository;
 
     @Autowired
+    StoreRepository storeRepository;
+
+    @Autowired
     private DatabaseCleaner databaseCleaner;
 
 
@@ -65,7 +75,40 @@ class ReviewControllerTest {
         RestAssured.port = port;
         Account account = saveAccount();
 
+        saveStore();
+        saveOrder();
         savePreReviews(account);
+
+    }
+
+    private void saveStore() {
+        Store testStore = Store.builder()
+                .ownerId(1L)
+                .categoryId(1L)
+                .name("테스트가게")
+                .minPrice(100)
+                .time("연중무휴")
+                .closedDay("올타임")
+                .tel("010-2030-2939")
+                .addressId(1L)
+                .deliveryRegion("부산")
+                .build();
+
+        Store savedStore = storeRepository.save(testStore);
+        storeId = savedStore.getId();
+    }
+
+    private void saveOrder() {
+        Order testOrder = Order.builder()
+                .accountId(accountId)
+                .storeId(storeId)
+                .addressId(1L)
+                .menuSummary("연중무휴")
+//                .orderAt()
+                .build();
+
+        Order savedOrder = orderRepository.save(testOrder);
+        orderId = savedOrder.getId();
     }
 
 
@@ -187,6 +230,7 @@ class ReviewControllerTest {
                 .build());
 
         accessToken = jwtProvider.createAccessToken(String.valueOf(save.getId()));
+        accountId = save.getId();
         return save;
     }
 
@@ -201,12 +245,12 @@ class ReviewControllerTest {
 
     private void savePreReviews(Account account) {
         ReviewDto.PostReq reviewReq1 = new ReviewDto.PostReq(
-                Constants.REVIEW_ORDER_ID_1,
+                orderId,
                 Constants.REVIEW_RATING,
                 Constants.REVIEW_CONTENT
         );
         ReviewDto.PostReq reviewReq2 = new ReviewDto.PostReq(
-                Constants.REVIEW_ORDER_ID_2,
+                orderId,
                 Constants.REVIEW_RATING,
                 Constants.REVIEW_CONTENT
         );

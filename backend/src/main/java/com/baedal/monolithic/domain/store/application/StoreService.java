@@ -13,7 +13,6 @@ import com.baedal.monolithic.domain.store.repository.DeliveryAddressRepository;
 import com.baedal.monolithic.domain.store.repository.StoreRepository;
 import com.baedal.monolithic.domain.store.repository.StoreTipByPriceRepository;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,7 +28,7 @@ public class StoreService {
     private final AccountRepository accountRepository;
     private final DeliveryAddressRepository deliveryAddressRepository;
     private final StoreTipByPriceRepository storeTipByPriceRepository;
-    private final ModelMapper modelMapper;
+    private final StoreMapper storeMapper;
 
     @Transactional(readOnly = true)
     @Cacheable(key = "#storeReq", value = "stores")
@@ -41,33 +40,30 @@ public class StoreService {
                                 storeReq.getPageVO().getLastIdx(),
                                 storeReq.getPageVO().getPageNum())
                 .stream()
-                .map(store -> modelMapper.map(store, StoreDto.SummarizedInfo.class))
+                .map(storeMapper::mapToSummarizedStoreDto)
                 .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
     public StoreDto.DetailedInfo findStoreDetail(Long storeId) {
-        Store store = storeRepository.findById(storeId)
+        Store store = storeRepository.findDetailedStoreById(storeId)
                 .orElseThrow(()->new StoreException(StoreStatusCode.NO_STORE));
-
-
-        StoreDto.DetailedInfo storeFindDto = modelMapper.map(store, StoreDto.DetailedInfo.class);
 
         String ownerName = accountRepository.findById(store.getOwnerId())
                 .orElseThrow(()-> new AccountException(AccountExceptionCode.NO_USER))
                 .getName();
 
-        storeFindDto.setOwnerName(ownerName);
         // 지역별배달팁 추가
-        return storeFindDto;
+        return storeMapper.mapToDetailedStoreDto(store, ownerName);
     }
 
     @Transactional(readOnly = true)
     public StoreDto.SummarizedInfo findStoreIntro(Long storeId) {
-        Store store = storeRepository.findById(storeId)
-                .orElseThrow(()->new StoreException(StoreStatusCode.NO_STORE));
 
-        return modelMapper.map(store, StoreDto.SummarizedInfo.class);
+        return storeMapper.mapToSummarizedStoreDto(
+                storeRepository.findById(storeId)
+                .orElseThrow(()->new StoreException(StoreStatusCode.NO_STORE))
+        );
     }
 
     @Transactional(readOnly = true)
@@ -77,6 +73,7 @@ public class StoreService {
                 storeReq.getAddressId(),
                 storeReq.getCategoryId());
     }
+
 
     @Transactional(readOnly = true)
     public Long getTipByAddressId(Long storeId, Long addressId) {

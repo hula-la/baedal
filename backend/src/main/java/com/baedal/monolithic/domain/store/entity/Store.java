@@ -5,6 +5,8 @@ import lombok.*;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.util.List;
+import java.util.Set;
 
 @Entity
 @Builder
@@ -14,7 +16,7 @@ import java.io.Serializable;
 @Table(indexes = {
         @Index(name = "IX_store_01",columnList = "categoryId")
 })
-public class Store implements Serializable {
+public class Store {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -45,12 +47,20 @@ public class Store implements Serializable {
     private Long addressId;
 
     private String addressDetail;
+
+    @NotNull
     private String deliveryRegion;
 
     private String info;
 
+    @OneToMany(mappedBy = "store")
+    @OrderBy("priority ASC")
+    private Set<StoreMenuGroup> menuGroups;
+
+
     @NotNull
     @Enumerated(EnumType.STRING)
+    @Builder.Default
     private StoreStatus storeStatus = StoreStatus.CLOSE;
     private String img;
 
