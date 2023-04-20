@@ -2,9 +2,6 @@ package com.baedal.monolithic.domain.auth.util;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
-import com.auth0.jwt.exceptions.AlgorithmMismatchException;
-import com.auth0.jwt.exceptions.InvalidClaimException;
-import com.auth0.jwt.exceptions.SignatureVerificationException;
 import com.baedal.monolithic.domain.account.entity.Account;
 import com.baedal.monolithic.domain.account.exception.AccountException;
 import com.baedal.monolithic.domain.account.exception.AccountExceptionCode;
@@ -12,6 +9,7 @@ import com.baedal.monolithic.domain.account.repository.AccountRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
@@ -60,7 +58,7 @@ public class JwtProvider {
                 .sign(Algorithm.HMAC512(secretKey));
     }
 
-    public String createRefreshToken(String userId) {
+    protected String createRefreshToken(String userId) {
         Date now = new Date();
         return JWT.create()
                 .withSubject(REFRESH_TOKEN_SUBJECT)
@@ -69,6 +67,7 @@ public class JwtProvider {
                 .sign(Algorithm.HMAC512(secretKey));
     }
 
+    @CacheEvict(value = "auth", key = "#userId")
     public void refreshRefreshToken(HttpServletResponse response, String userId) {
         String refreshToken = createRefreshToken(userId);
 
@@ -82,7 +81,7 @@ public class JwtProvider {
 //        return accessToken;
 //    }
 
-    public void updateRefreshTokenInAccount(Long userId, String refreshToken) {
+    protected void updateRefreshTokenInAccount(Long userId, String refreshToken) {
         Account account = accountRepository.findById(userId)
                 .orElseThrow(() -> new AccountException(AccountExceptionCode.NO_USER));
 
@@ -115,14 +114,14 @@ public class JwtProvider {
             return Optional.empty();
         }
     }
-
-    public boolean isTokenValid(String token) {
-        
-            JWT.require(Algorithm.HMAC512(secretKey))
-                    .build()
-                    .verify(token);
-            return true;
-
-    }
+//
+//    public boolean isTokenValid(String token) {
+//
+//            JWT.require(Algorithm.HMAC512(secretKey))
+//                    .build()
+//                    .verify(token);
+//            return true;
+//
+//    }
 
 }

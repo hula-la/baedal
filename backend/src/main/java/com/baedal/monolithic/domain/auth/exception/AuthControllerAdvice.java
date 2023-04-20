@@ -1,6 +1,7 @@
 package com.baedal.monolithic.domain.auth.exception;
 
 import com.baedal.monolithic.global.exception.ExceptionResponse;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;

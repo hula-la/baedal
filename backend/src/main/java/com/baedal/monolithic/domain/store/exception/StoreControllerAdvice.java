@@ -14,7 +14,7 @@ public class StoreControllerAdvice {
 
     @ExceptionHandler(StoreException.class)
     public ResponseEntity<ExceptionResponse> reviewException(StoreException exception) {
-        ExceptionCode code = exception.getExceptionCode();
+        StoreStatusCode code = exception.getStoreStatusCode();
         return ResponseEntity.status(code.getStatus()).body(new ExceptionResponse(code));
     }
 

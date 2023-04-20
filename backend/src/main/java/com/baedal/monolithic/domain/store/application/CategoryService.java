@@ -16,14 +16,14 @@ import java.util.stream.Collectors;
 public class CategoryService {
 
     private final StoreCategoryRepository storeCategoryRepository;
-    private final ModelMapper modelMapper;
+    private final StoreMapper storeMapper;
 
     @Transactional(readOnly = true)
     @Cacheable(value = "categories")
     public List<StoreCategoryDto.Info> findAllCategory() {
         return storeCategoryRepository.findAll()
                 .stream()
-                .map(category -> modelMapper.map(category, StoreCategoryDto.Info.class))
+                .map(storeMapper::mapToCategoryDto)
                 .collect(Collectors.toList());
     }
 

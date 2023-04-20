@@ -1,10 +1,7 @@
 package com.baedal.monolithic.domain.order.dto;
 
 import com.baedal.monolithic.domain.order.entity.OrderStatus;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -16,7 +13,7 @@ import java.util.Map;
 public class OrderDto {
 
     @Getter
-    @Setter
+    @Builder
     @EqualsAndHashCode(of = {"id"})
     public static class DetailedInfo {
 
@@ -44,7 +41,7 @@ public class OrderDto {
     }
 
     @Getter
-    @Setter
+    @Builder
     @EqualsAndHashCode(of = {"id"})
     public static class SummarizedInfo {
 
@@ -60,7 +57,7 @@ public class OrderDto {
     }
 
     @Getter
-    @Setter
+    @Builder
     @EqualsAndHashCode(of = {"id"})
     public static class Menu {
 
@@ -74,7 +71,6 @@ public class OrderDto {
 
     }
 
-    @AllArgsConstructor
     @Getter
     public static class PostReq {
 
@@ -94,7 +90,6 @@ public class OrderDto {
 
     }
 
-    @AllArgsConstructor
     @Getter
     public static class MenuPostReq {
 

@@ -2,15 +2,15 @@ package com.baedal.monolithic.domain.store.dto;
 
 import lombok.*;
 
+import java.io.Serializable;
 import java.util.List;
 
 public class StoreCategoryDto {
 
     @Getter
-    @Setter
-    @ToString
+    @Builder
     @EqualsAndHashCode(of = {"id"})
-    public static class Info {
+    public static class Info implements Serializable {
 
         private Long id;
         private String name;
