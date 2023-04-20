@@ -237,10 +237,10 @@ class ReviewControllerTest {
 
     public static Long getReviewIdAfterSave(
             final ReviewDto.PostReq reviewReq) {
-        return Long.valueOf(
-                saveReview(reviewReq)
-                        .header("location")
-                        .split("/")[6]);
+        String[] urlArr = saveReview(reviewReq)
+                .header("location")
+                .split("/");
+        return Long.valueOf(urlArr[urlArr.length-1]);
     }
 
     private void savePreReviews(Account account) {
