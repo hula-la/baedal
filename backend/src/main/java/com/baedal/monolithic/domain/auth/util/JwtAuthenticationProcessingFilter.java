@@ -1,26 +1,14 @@
 package com.baedal.monolithic.domain.auth.util;
 
-import com.auth0.jwt.exceptions.TokenExpiredException;
-import com.baedal.monolithic.domain.account.entity.Account;
-import com.baedal.monolithic.domain.account.exception.AccountException;
-import com.baedal.monolithic.domain.account.exception.AccountExceptionCode;
-import com.baedal.monolithic.domain.account.repository.AccountRepository;
 import com.baedal.monolithic.domain.auth.application.AuthService;
 import com.baedal.monolithic.domain.auth.dto.AuthDto;
-import com.baedal.monolithic.domain.auth.exception.AuthStatusCode;
-import com.baedal.monolithic.domain.auth.exception.OAuthProcessingException;
-import com.baedal.monolithic.global.exception.ExceptionResponse;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -30,7 +18,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @RequiredArgsConstructor
-@Component
 @Slf4j
 public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
 
@@ -40,7 +27,6 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
-
 
 //            String refreshToken = jwtProvider.extractRefreshTokenFromHeader(request)
 //                    .filter(jwtProvider::isTokenValid)
