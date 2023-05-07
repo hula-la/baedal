@@ -1,6 +1,5 @@
 package com.baedal.monolithic.domain.account.entity;
 
-import com.baedal.monolithic.domain.account.dto.AccountDto;
 import com.baedal.monolithic.global.entity.BaseTime;
 import lombok.*;
 
@@ -39,10 +38,10 @@ public class Account extends BaseTime {
         this.refreshToken = refreshToken;
     }
 
-    public void updateInfo(final AccountDto.PutReq accountPutReq){
-        this.nickname = accountPutReq.getNickname();
-        this.tel = accountPutReq.getTel();
-        this.profile = accountPutReq.getProfile();
+    public void updateInfo(final String nickname, final String tel, final String profileUrl){
+        this.nickname = nickname;
+        this.tel = tel;
+        this.profile = profileUrl;
     }
 
 }

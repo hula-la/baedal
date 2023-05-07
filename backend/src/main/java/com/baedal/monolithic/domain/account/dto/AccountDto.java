@@ -1,7 +1,9 @@
 package com.baedal.monolithic.domain.account.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -16,9 +18,16 @@ public class AccountDto {
         private String email;
         private String tel;
         private String profile;
+
+        public void setDefaultProfileIfEmpty(String defaultProfileUrl){
+            if (this.profile.isEmpty() || this.profile.equals("")) {
+                this.profile = defaultProfileUrl;
+            }
+        }
     }
 
     @Getter
+    @AllArgsConstructor
     public static class PutReq {
         @NotNull(message = "{notnull}")
         private String nickname;
@@ -28,7 +37,9 @@ public class AccountDto {
                 message = "{pattern.tel}")
         private String tel;
 
-        private String profile;
+        private MultipartFile profile;
+
+        private boolean isProfileUpdated;
     }
 
 }

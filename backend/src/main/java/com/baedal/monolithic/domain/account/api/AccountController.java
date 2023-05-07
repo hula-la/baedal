@@ -21,7 +21,7 @@ public class AccountController {
     }
     @PutMapping("/my")
     public ResponseEntity<Void> update(@AccountId Long accountId,
-                                                    @RequestBody AccountDto.PutReq accountPutReq) {
+                                       @ModelAttribute AccountDto.PutReq accountPutReq) {
         accountService.updateAccount(accountId, accountPutReq);
         return ResponseEntity.noContent().build();
     }

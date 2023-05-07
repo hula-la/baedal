@@ -14,6 +14,7 @@ public enum AccountExceptionCode implements ExceptionCode {
             "사용자가 선택한 주소와 일치하지 않습니다."),
     ID_PWD_MISMATCH(HttpStatus.BAD_REQUEST, "user.id-pwd-mismatch","해당 유저가 존재하지 않습니다."),
     NOT_MATCH_USER_ID(HttpStatus.UNAUTHORIZED, "user.not-match-user-id","접근 권한이 없습니다."),
+    NOT_IMAGE_UPLOAD(HttpStatus.BAD_REQUEST, "user.io-problem","이미지 업로드 중 문제가 발생했습니다."),
     DUPLICATE_NICKNAME(HttpStatus.BAD_REQUEST, "user.duplicate-nickname","이미 사용 중인 닉네임 입니다.");
 
 
