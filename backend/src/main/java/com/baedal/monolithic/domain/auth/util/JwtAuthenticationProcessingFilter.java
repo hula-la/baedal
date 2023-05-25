@@ -56,7 +56,7 @@ public class JwtAuthenticationProcessingFilter extends OncePerRequestFilter {
     public void checkAccessTokenAndAuthentication(HttpServletRequest request) {
         log.info(request.getRequestURI()+" checkAccessTokenAndAuthentication() 호출");
         jwtProvider.extractAccessTokenFromHeader(request)
-//                .filter(jwtProvider::isTokenValid)
+                .filter(jwtProvider::isTokenValid)
                 .flatMap(jwtProvider::extractUserId)
                 .map(Long::valueOf)
                 .map(authService::findAuth)
