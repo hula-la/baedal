@@ -10,7 +10,6 @@ public class ReviewDto {
 
 
     @Getter
-    @Setter
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor

@@ -7,9 +7,8 @@ import javax.validation.constraints.NotNull;
 
 @Entity
 @Getter
-@Setter
 @Builder
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Table(indexes = {
         @Index(name = "IX_store_01",columnList = "accountId,storeId")
@@ -30,5 +29,10 @@ public class Review {
     private int rating;
     @NotNull
     private String content;
+
+    public void update(int rating, String content) {
+        this.rating = rating;
+        this.content = content;
+    }
 
 }
