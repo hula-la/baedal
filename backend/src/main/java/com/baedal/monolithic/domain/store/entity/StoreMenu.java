@@ -18,28 +18,33 @@ import java.util.Set;
         @Index(name = "IX_store_menu_01",columnList = "group_id")
 })
 public class StoreMenu extends BaseTime {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "group_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
-    private StoreMenuGroup menuGroup;
-
     @NotNull
     private String name;
+
     @NotNull
     private Integer priority;
+
+    @Enumerated(EnumType.STRING)
+    private StoreMenuStatus status;
+
     private String img;
     private Long price;
     private String expDetail;
     private String expIntro;
-    @Enumerated(EnumType.STRING)
-    private StoreMenuStatus status;
+
 
     @OneToMany(mappedBy = "menuGroup")
     @OrderBy("priority ASC")
     private Set<StoreMenuOptionGroup> optionGroups;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "group_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+    private StoreMenuGroup menuGroup;
 
     public long calculatePriceAndCheckValidation(Map<Long,List<Long>> options) {
         long totalPrice = 0;
@@ -55,7 +60,4 @@ public class StoreMenu extends BaseTime {
 
         return totalPrice;
     }
-
-
-
 }

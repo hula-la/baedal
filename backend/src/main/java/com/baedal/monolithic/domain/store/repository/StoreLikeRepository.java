@@ -9,9 +9,11 @@ import java.util.Optional;
 public interface StoreLikeRepository extends JpaRepository<StoreLike,Long> {
 
     Boolean existsByAccountIdAndStoreId(Long accountId, Long storeId);
+
     Optional<StoreLike> findByAccountIdAndStoreId(Long accountId, Long storeId);
 
     List<StoreLike> findByAccountId(Long accountId);
+
     Long countByAccountId(Long accountId);
 
 }

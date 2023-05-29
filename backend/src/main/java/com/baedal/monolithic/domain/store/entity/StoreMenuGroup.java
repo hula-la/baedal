@@ -5,7 +5,6 @@ import lombok.Getter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -14,22 +13,25 @@ import java.util.Set;
         @Index(name = "IX_store_menu_group_01",columnList = "store_id")
 })
 public class StoreMenuGroup extends BaseTime {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "store_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
-    private Store store;
-
     @NotNull
     private String name;
+
     @NotNull
     private Integer priority;
+
     private String detail;
 
     @OneToMany(mappedBy = "menuGroup")
     @OrderBy("priority ASC")
     private Set<StoreMenu> menus;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "store_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+    private Store store;
 
 }

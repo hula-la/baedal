@@ -17,16 +17,23 @@ import java.util.Collections;
 @RequiredArgsConstructor
 @Service
 public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
+
     private final AccountRepository accountRepository;
     private final OAuth2UserService<OAuth2UserRequest, OAuth2User> delegate;
 
     @Override
     public OAuth2User loadUser(final OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
+
 //        OAuth2UserService<OAuth2UserRequest, OAuth2User> delegate = new DefaultOAuth2UserService();
         OAuth2User oAuth2User = delegate.loadUser(userRequest);
 
         String registrationId = userRequest.getClientRegistration().getRegistrationId();
-        String userNameAttributeName = userRequest.getClientRegistration().getProviderDetails().getUserInfoEndpoint().getUserNameAttributeName();
+
+        String userNameAttributeName = userRequest
+                .getClientRegistration()
+                .getProviderDetails()
+                .getUserInfoEndpoint()
+                .getUserNameAttributeName();
 
         String socialId = getSocialId(registrationId, userNameAttributeName, oAuth2User);
 
@@ -38,6 +45,7 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
     }
 
     private Account saveIfNewUser(final String socialId) {
+
         Account user = accountRepository.findBySocialId(socialId)
                 .orElse(Account.builder()
                         .socialId(socialId)
@@ -47,8 +55,12 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
         return accountRepository.save(user);
     }
 
-    private String getSocialId(final String registrationId, final String userNameAttributeName, final OAuth2User oAuth2User) {
+    private String getSocialId(final String registrationId,
+                               final String userNameAttributeName,
+                               final OAuth2User oAuth2User) {
+
         Long userIdFromProvider = (Long) oAuth2User.getAttributes().get(userNameAttributeName);
+
         return registrationId + "_" + userIdFromProvider;
     }
 

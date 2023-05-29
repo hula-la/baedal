@@ -21,7 +21,6 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
     private final JwtProvider jwtProvider;
     private final CookieAuthorizationRequestRepository cookieAuthorizationRequestRepository;
 
-
     @Override
     @Transactional
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
@@ -31,6 +30,7 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
         String userId = userDetails.getUsername();
 
         jwtProvider.refreshRefreshToken(response, userId);
+
         String accessToken = jwtProvider.createAccessToken(userId);
 
         clearAuthenticationAttributes(request, response);
@@ -41,6 +41,7 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
     }
 
     private String determineTargetUrl(HttpServletRequest request, String accessToken) {
+      
         String targetUrl = CookieUtil
                 .getCookie(request, CookieAuthorizationRequestRepository.REDIRECT_URI_PARAM_COOKIE_NAME)
                 .map(Cookie::getValue)

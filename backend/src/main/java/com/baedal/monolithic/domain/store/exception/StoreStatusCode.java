@@ -18,6 +18,7 @@ public enum StoreStatusCode implements ExceptionCode {
     NOT_EXCEED_MIN_PRICE(HttpStatus.BAD_REQUEST, "store.not-exceed-min-price", "최소 가격을 넘지 않습니다."),
     NOT_MATCH_OPTION_CONDITION(HttpStatus.BAD_REQUEST,"store.not-match-option-condition" ,
             "조건을 충족하지 않습니다.");
+
     private final HttpStatus status;
     private final String code;
     private final String message;

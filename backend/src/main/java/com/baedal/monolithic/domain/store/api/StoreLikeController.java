@@ -1,14 +1,11 @@
 package com.baedal.monolithic.domain.store.api;
 
 import com.baedal.monolithic.domain.store.application.StoreLikeService;
-import com.baedal.monolithic.domain.store.dto.StoreDto;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import com.baedal.monolithic.domain.store.dto.StoreLikeDto;
+import com.baedal.monolithic.global.util.AccountId;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/stores")
@@ -18,38 +15,28 @@ public class StoreLikeController {
     private final StoreLikeService likeService;
 
     @GetMapping("/{storeId}/likes")
-    public ResponseEntity<StoreLikeRes> checkLike(@PathVariable Long storeId) {
-        Long accountId = 1L;
-        return ResponseEntity.ok().body(new StoreLikeRes(likeService.checkLike(accountId,storeId)));
+    public ResponseEntity<StoreLikeDto.StoreLikeRes> checkLike(@AccountId Long accountId,
+                                                               @PathVariable Long storeId) {
+
+        return ResponseEntity.ok().body(new StoreLikeDto.StoreLikeRes(likeService.checkLike(accountId,storeId)));
     }
     @PostMapping("/{storeId}/likes")
-    public ResponseEntity<StoreLikeRes> toggleLike(@PathVariable Long storeId) {
-        Long accountId = 1L;
-        return ResponseEntity.ok().body(new StoreLikeRes(likeService.toggleLike(accountId,storeId)));
+    public ResponseEntity<StoreLikeDto.StoreLikeRes> toggleLike(@AccountId Long accountId,
+                                                                @PathVariable Long storeId) {
+
+        return ResponseEntity.ok().body(new StoreLikeDto.StoreLikeRes(likeService.toggleLike(accountId,storeId)));
     }
 
 
     @GetMapping("/likes")
-    public ResponseEntity<StoreLikeFindAllRes> findAllLikeStore() {
-        Long accountId = 1L;
-        return ResponseEntity.ok().body(new StoreLikeFindAllRes(
+    public ResponseEntity<StoreLikeDto.StoreLikeFindAllRes> findAllLikeStore(@AccountId Long accountId) {
+
+        return ResponseEntity.ok().body(new StoreLikeDto.StoreLikeFindAllRes(
                 likeService.countLikes(accountId),
                 likeService.findAllLikeStores(accountId)
         ));
     }
 
-    @AllArgsConstructor
-    @Getter
-    private static class StoreLikeRes {
-        private Boolean isLike;
-    }
-
-    @AllArgsConstructor
-    @Getter
-    private static class StoreLikeFindAllRes {
-        private Long results;
-        private List<StoreDto.SummarizedInfo> stores;
-    }
 
 
 }

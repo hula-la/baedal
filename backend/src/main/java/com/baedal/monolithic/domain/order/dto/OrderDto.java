@@ -1,10 +1,10 @@
 package com.baedal.monolithic.domain.order.dto;
 
 import com.baedal.monolithic.domain.order.entity.OrderStatus;
-import lombok.*;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
 import java.util.List;
@@ -18,26 +18,21 @@ public class OrderDto {
     public static class DetailedInfo {
 
         private Long id;
+        private Boolean disposableReq;
+        private Boolean kimchiReq;
+        private String riderMsg;
+        private String ownerMsg;
+        private OrderStatus status;
+        private Long deliveryTip;
+        private Long orderPrice;
+        private Long totalPrice;
+        private Timestamp orderAt;
+        private Timestamp exArrivalTime;
 
         // 직접 추가해야 하는 필드
         private String storeName;
         private String address;
         private List<Menu> menus;
-
-        private Boolean disposableReq;
-        private Boolean kimchiReq;
-        private String riderMsg;
-        private String ownerMsg;
-        @Enumerated(EnumType.STRING)
-        private OrderStatus status;
-        private Long deliveryTip;
-        private Long orderPrice;
-        private Long totalPrice;
-
-        @NotNull
-        private Timestamp orderAt;
-        private Timestamp exArrivalTime;
-
     }
 
     @Getter
@@ -46,13 +41,13 @@ public class OrderDto {
     public static class SummarizedInfo {
 
         private Long id;
-        private String name; // 추가해줘야함
-        private String menuSummary;
-        private Long totalPrice;
-
-        @NotNull(message = "{notnull}")
         private Timestamp orderAt;
         private Timestamp exArrivalTime;
+
+        // 추가해줘야함
+        private String name;
+        private String menuSummary;
+        private Long totalPrice;
 
     }
 
@@ -62,12 +57,11 @@ public class OrderDto {
     public static class Menu {
 
         private Long id;
+        private Integer cnt;
+        private String options;
 
         // 직접 추가
         private String menuName;
-
-        private Integer cnt;
-        private String options;
 
     }
 
