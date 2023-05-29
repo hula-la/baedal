@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 class StoreMapper {
 
     protected StoreCategoryDto.Info mapToCategoryDto(StoreCategory storeCategory){
+
         return  StoreCategoryDto.Info.builder()
                 .id(storeCategory.getId())
                 .name(storeCategory.getName())
@@ -21,6 +22,7 @@ class StoreMapper {
     }
 
     protected StoreDto.SummarizedInfo mapToSummarizedStoreDto(Store store){
+
         return  StoreDto.SummarizedInfo.builder()
                 .id(store.getId())
                 .name(store.getName())
@@ -31,6 +33,7 @@ class StoreMapper {
 
     protected StoreDto.DetailedInfo mapToDetailedStoreDto(Store store,
                                                           String ownerName){
+
         return  StoreDto.DetailedInfo.builder()
                 .id(store.getId())
                 .ownerName(ownerName)
@@ -56,6 +59,7 @@ class StoreMapper {
     }
 
     private MenuDto.Group mapToGroupDto(StoreMenuGroup storeMenuGroup){
+
         return  MenuDto.Group.builder()
                 .id(storeMenuGroup.getId())
                 .name(storeMenuGroup.getName())
@@ -67,6 +71,7 @@ class StoreMapper {
     }
 
     private MenuDto.Menu mapToMenuDto(StoreMenu storeMenu){
+
         return  MenuDto.Menu.builder()
                 .id(storeMenu.getId())
                 .name(storeMenu.getName())
@@ -82,6 +87,7 @@ class StoreMapper {
     }
 
     private MenuDto.Option mapToOptionDto(StoreMenuOption option){
+
         return  MenuDto.Option.builder()
                 .id(option.getId())
                 .name(option.getName())
@@ -90,6 +96,7 @@ class StoreMapper {
     }
 
     private MenuDto.OptionGroup mapToOptionGroupDto(StoreMenuOptionGroup optionGroup){
+
         return  MenuDto.OptionGroup.builder()
                 .id(optionGroup.getId())
                 .name(optionGroup.getName())

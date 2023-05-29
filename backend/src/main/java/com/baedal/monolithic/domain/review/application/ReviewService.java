@@ -25,26 +25,27 @@ public class ReviewService {
     private final ReviewMapper reviewMapper;
 
     public List<ReviewDto.Info> findReviews(Long storeId, ReviewDto.GetReq reviewGetReq) {
+
         Long lastIdx = reviewGetReq.getPageVO().getLastIdx()==-1L?
                 Integer.MAX_VALUE:reviewGetReq.getPageVO().getLastIdx();
 
-        return reviewRepository.findAllByStoreIdAndIdLessThanOrderByIdDesc(storeId,
-                        lastIdx,
-                        PageRequest.of(0, Math.toIntExact(reviewGetReq.getPageVO().getPageNum()))
-                ).stream()
-                .map(review -> {
-                    ReviewDto.Info reviewDto = reviewMapper.mapEntityToGetDto(
-                            accountService.getUserNickname(review.getAccountId()),
-                            orderService.getMenuNames(review.getOrderId()),
-                            review);
+        List<Review> reviewEntitys = reviewRepository.findAllByStoreIdAndIdLessThanOrderByIdDesc(storeId,
+                lastIdx,
+                PageRequest.of(0, Math.toIntExact(reviewGetReq.getPageVO().getPageNum()))
+        );
 
-                    return reviewDto;
-                })
-                .collect(Collectors.toList());
+        return reviewEntitys.stream()
+                .map(review ->
+                        reviewMapper.mapEntityToGetDto(
+                        accountService.getUserNickname(review.getAccountId()),
+                        orderService.getMenuNames(review.getOrderId()),
+                        review)
+                ).collect(Collectors.toList());
     }
 
     @Transactional
     public Long createReview(Long accountId, Long storeId, ReviewDto.PostReq reviewPostReq) {
+
         Review review = reviewMapper.mapPostDtoToEntity(accountId, storeId, reviewPostReq);
 
         return reviewRepository.save(review).getId();
@@ -52,6 +53,7 @@ public class ReviewService {
 
     @Transactional
     public void updateReview(Long accountId, Long reviewId, ReviewDto.PostReq reviewPostReq) {
+
         Review review = reviewRepository.findById(reviewId)
                 .orElseThrow(() -> new ReviewException(ReviewStatusCode.NO_ORDER));
 
@@ -62,6 +64,7 @@ public class ReviewService {
 
     @Transactional
     public void deleteReview(Long reviewId) {
+
         reviewRepository.delete(reviewRepository.findById(reviewId)
                 .orElseThrow(()->new ReviewException(ReviewStatusCode.NO_ORDER)));
     }

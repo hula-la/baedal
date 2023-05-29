@@ -17,9 +17,9 @@ public class MenuService {
 
     private final StoreMenuRepository storeMenuRepository;
 
-
     @Transactional(readOnly = true)
     public Long calculateOrderPrice(List<OrderDto.MenuPostReq> menuPostReqs) {
+
         return menuPostReqs.stream()
                 .map(this::calculatePriceOfMenu)
                 .reduce(0L, Long::sum);
@@ -32,6 +32,7 @@ public class MenuService {
 
     @Transactional(readOnly = true)
     public String summaryMenu(List<OrderDto.MenuPostReq> menus) {
+
         String menuName = findMenuEntity(menus.get(0).getMenuId()).getName();
         String extra = menus.size()==1?" 1개": " 외 " + (menus.size()-1) +"개";
 
@@ -40,13 +41,16 @@ public class MenuService {
 
 
     private long calculatePriceOfMenu(OrderDto.MenuPostReq menuPostReq) {
+
         int cnt = menuPostReq.getCount();
         long priceOfMenu = findMenuEntity(menuPostReq.getMenuId())
                 .calculatePriceAndCheckValidation(menuPostReq.getOptions());
+
         return cnt * priceOfMenu;
     }
 
     private StoreMenu findMenuEntity(Long menuId) {
+
         return storeMenuRepository.findById(menuId)
                 .orElseThrow(() -> new StoreException(StoreStatusCode.NO_MENU));
     }

@@ -3,7 +3,8 @@ package com.baedal.monolithic.domain.auth.exception;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.Data;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
@@ -21,7 +22,9 @@ import java.io.IOException;
 @RequiredArgsConstructor
 @Component
 public class ExceptionHandlerFilter extends OncePerRequestFilter {
+
     private final ObjectMapper objectMapper;
+
     @Override
     protected void doFilterInternal(
             HttpServletRequest request,
@@ -45,9 +48,11 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
             HttpServletResponse response,
             AuthStatusCode errorCode
     ){
+
         response.setStatus(errorCode.getStatus().value());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         ErrorResponse errorResponse = new ErrorResponse(errorCode.getCode(), errorCode.getMessage());
+
         try{
             response.getWriter().write(objectMapper.writeValueAsString(errorResponse));
         }catch (IOException e){
@@ -55,7 +60,8 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
         }
     }
 
-    @Data
+    @Getter
+    @AllArgsConstructor
     public static class ErrorResponse{
         private final String code;
         private final String message;

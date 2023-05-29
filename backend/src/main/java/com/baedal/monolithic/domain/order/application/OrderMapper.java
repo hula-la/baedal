@@ -18,6 +18,7 @@ class OrderMapper {
                                      Long addressId,
                                      Long deliveryTip,
                                      String menuSummary){
+
         return  Order.builder()
                 .accountId(accountId)
                 .storeId(orderPostReq.getStoreId())
@@ -35,6 +36,7 @@ class OrderMapper {
     }
 
     protected OrderMenu mapToOrderMenuEntity(OrderDto.MenuPostReq menu, Order order){
+
         return  OrderMenu.builder()
                 .order(order)
                 .menuId(menu.getMenuId())
@@ -48,6 +50,7 @@ class OrderMapper {
                                                           String address,
                                                           String storeName,
                                                           List<OrderDto.Menu> menus){
+
         return  OrderDto.DetailedInfo.builder()
                 .id(order.getId())
                 .storeName(storeName)
@@ -64,6 +67,7 @@ class OrderMapper {
     }
 
     protected OrderDto.SummarizedInfo mapToSummarizedOrderDto(Order order, String name){
+
         return  OrderDto.SummarizedInfo.builder()
                 .id(order.getId())
                 .name(name)
@@ -75,6 +79,7 @@ class OrderMapper {
     }
 
     public OrderDto.Menu mapToMenuDto(OrderMenu orderMenu, String menuName){
+
         return  OrderDto.Menu.builder()
                 .id(orderMenu.getId())
                 .menuName(menuName)

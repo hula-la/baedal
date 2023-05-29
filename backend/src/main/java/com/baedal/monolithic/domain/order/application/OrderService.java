@@ -33,6 +33,7 @@ public class OrderService {
 
     @Transactional(readOnly = true)
     public Map<OrderStatus, List<OrderDto.SummarizedInfo>> findAllOrders(Long accountId) {
+
         Map<OrderStatus, List<OrderDto.SummarizedInfo>> map = new EnumMap<>(OrderStatus.class);
 
         List<Order> orders = orderRepository.findAllByAccountIdOrderByOrderAtDesc(accountId);
@@ -52,6 +53,7 @@ public class OrderService {
 
     @Transactional(readOnly = true)
     public OrderDto.DetailedInfo findOrder(Long accountId, Long orderId) {
+
         Order order = findOrderEntity(orderId);
 
         if (!accountId.equals(order.getAccountId())) throw new OrderException(OrderStatusCode.NO_ACCESS);
@@ -64,6 +66,7 @@ public class OrderService {
 
     @Transactional(readOnly = true)
     public List<String> getMenuNames(Long orderId) {
+
         Order order = findOrderEntity(orderId);
 
         return getOrderMenuDto(order)
@@ -75,6 +78,7 @@ public class OrderService {
 
     @Transactional
     public void deleteOrder(Long accountId, Long orderId) {
+
         Order order = orderRepository.findById(orderId).orElseThrow(()->new OrderException(OrderStatusCode.NO_ORDER));
 
         // 사용자가 일치하지 않을 경우 접근 권한 X

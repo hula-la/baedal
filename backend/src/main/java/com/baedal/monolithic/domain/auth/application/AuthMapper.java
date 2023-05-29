@@ -1,6 +1,5 @@
 package com.baedal.monolithic.domain.auth.application;
 
-import com.baedal.monolithic.domain.account.dto.AccountDto;
 import com.baedal.monolithic.domain.account.entity.Account;
 import com.baedal.monolithic.domain.auth.dto.AuthDto;
 import org.springframework.stereotype.Component;

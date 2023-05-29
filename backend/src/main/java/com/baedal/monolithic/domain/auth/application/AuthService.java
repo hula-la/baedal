@@ -1,6 +1,5 @@
 package com.baedal.monolithic.domain.auth.application;
 
-import com.baedal.monolithic.domain.account.dto.AccountDto;
 import com.baedal.monolithic.domain.account.entity.Account;
 import com.baedal.monolithic.domain.account.exception.AccountException;
 import com.baedal.monolithic.domain.account.exception.AccountExceptionCode;
@@ -13,7 +12,6 @@ import com.baedal.monolithic.domain.auth.util.JwtProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,6 +33,7 @@ public class AuthService {
     private final AuthMapper authMapper;
 
     public String refreshToken(HttpServletRequest request, HttpServletResponse response, String oldAccessToken) {
+
         // 1. Validation Refresh Token
         String oldRefreshToken = CookieUtil.getCookie(request, refreshKey)
                 .map(Cookie::getValue).orElseThrow(() -> new AuthException(AuthStatusCode.NO_REFRESH_TOKEN));

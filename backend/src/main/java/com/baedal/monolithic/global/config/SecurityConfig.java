@@ -86,9 +86,4 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return source;
     }
 
-
-//    public JwtAuthenticationProcessingFilter jwtAuthenticationProcessingFilter() {
-//        return new JwtAuthenticationProcessingFilter(jwtProvider, accountRepository);
-//    }
-
 }

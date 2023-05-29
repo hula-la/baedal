@@ -11,7 +11,9 @@ public class AccountControllerAdvice {
 
     @ExceptionHandler(AccountException.class)
     public ResponseEntity<ExceptionResponse> processValidationError(AccountException exception) {
+
         ExceptionCode exceptionCode = exception.getExceptionCode();
+
         return ResponseEntity.status(exceptionCode.getStatus()).body(new ExceptionResponse(exceptionCode));
     }
 

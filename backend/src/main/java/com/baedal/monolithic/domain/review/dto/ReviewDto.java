@@ -29,6 +29,7 @@ public class ReviewDto {
     @NoArgsConstructor
     public static class GetRes {
 //        private Long results; // 총 갯수
+
         private List<Info> reviews;
     }
 
@@ -46,10 +47,13 @@ public class ReviewDto {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class PostReq {
+
         @NotNull(message = "{notnull}")
         private Long orderId;
+
         @NotNull(message = "{notnull}")
         private Integer rating;
+
         @NotNull(message = "{notnull}")
         private String content;
     }

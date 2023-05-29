@@ -30,27 +30,33 @@ public class AddressDto {
     @Getter
     @AllArgsConstructor
     public static class GetRes {
+
         private List<UserAddressInfo> addresses;
     }
 
     @Getter
     @AllArgsConstructor
     public static class SearchRes {
+
         private List<AddressInfo> addresses;
     }
 
     @Getter
     public static class PostReq {
+
         @NotNull(message = "{notnull}")
         private Long addressId;
+
         @NotNull(message = "{notnull}")
         private String addressDetail;
     }
 
     @Getter
     public static class PutReq {
+
         @NotNull(message = "{notnull}")
         private Long userAddressId;
+
         @NotNull(message = "{notnull}")
         private String addressDetail;
     }

@@ -21,14 +21,20 @@ public class Review {
 
     @NotNull
     private Long accountId;
+
     @NotNull
     private Long storeId;
+
     @NotNull
     private Long orderId;
+
     @NotNull
     private int rating;
+
     @NotNull
     private String content;
+
+    private String menus;
 
     public void update(int rating, String content) {
         this.rating = rating;

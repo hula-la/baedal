@@ -9,9 +9,10 @@ import java.util.List;
 @Component
 class ReviewMapper {
 
-    ReviewDto.Info mapEntityToGetDto(final String nickname,
+    protected ReviewDto.Info mapEntityToGetDto(final String nickname,
                              final List<String> menus,
                              final Review review){
+
         return ReviewDto.Info.builder()
                 .id(review.getId())
                 .nickName(nickname)
@@ -21,9 +22,10 @@ class ReviewMapper {
                 .build();
     }
 
-    Review mapPostDtoToEntity(final Long accountId,
+    protected Review mapPostDtoToEntity(final Long accountId,
                               final Long storeId,
                               final ReviewDto.PostReq reviewPostReq){
+
         return Review.builder()
                 .accountId(accountId)
                 .storeId(storeId)

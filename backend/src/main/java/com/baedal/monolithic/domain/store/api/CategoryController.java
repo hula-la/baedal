@@ -15,6 +15,7 @@ public class CategoryController {
 
     @GetMapping()
     public ResponseEntity<StoreCategoryDto.GetRes> findAll () {
+
         return ResponseEntity.ok(
                 new StoreCategoryDto.GetRes(
                         categoryService.countCategory(),

@@ -15,9 +15,6 @@ public class StoreMenuOption {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "group_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
-    private StoreMenuOptionGroup optionGroup;
 
     @NotNull
     private String name;
@@ -28,5 +25,8 @@ public class StoreMenuOption {
     @NotNull
     private Integer priority;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "group_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+    private StoreMenuOptionGroup optionGroup;
 
 }

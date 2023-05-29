@@ -13,6 +13,7 @@ public class AccountDto {
     @Getter
     @Builder
     public static class GetRes {
+
         private Long id;
         private String nickname;
         private String email;
@@ -29,6 +30,7 @@ public class AccountDto {
     @Getter
     @AllArgsConstructor
     public static class PutReq {
+
         @NotNull(message = "{notnull}")
         private String nickname;
 
@@ -38,7 +40,6 @@ public class AccountDto {
         private String tel;
 
         private MultipartFile profile;
-
         private boolean isProfileUpdated;
     }
 

@@ -4,14 +4,12 @@ import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.io.Serializable;
-import java.util.List;
 import java.util.Set;
 
 @Entity
 @Builder
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Table(indexes = {
         @Index(name = "IX_store_01",columnList = "categoryId")
@@ -30,41 +28,44 @@ public class Store {
 
     @NotNull
     private String name;
+
     @NotNull
     private int minPrice;
-    private int recentOrder;
-    private int recentReview;
-    private int heartNum;
 
-    @Builder.Default
-    private float rating = 0;
-    private String notice;
     @NotNull
     private String time;
+
     @NotNull
     private String closedDay;
+
     @NotNull
     private String tel;
+
     @NotNull
     private Long addressId;
 
-    private String addressDetail;
-
     @NotNull
     private String deliveryRegion;
-
-    private String info;
-
-    @OneToMany(mappedBy = "store")
-    @OrderBy("priority ASC")
-    private Set<StoreMenuGroup> menuGroups;
-
 
     @NotNull
     @Enumerated(EnumType.STRING)
     @Builder.Default
     private StoreStatus storeStatus = StoreStatus.CLOSE;
+
+    @Builder.Default
+    private float rating = 0;
+
+    private int recentOrder;
+    private int recentReview;
+    private int heartNum;
+    private String notice;
+    private String addressDetail;
+    private String info;
     private String img;
+
+    @OneToMany(mappedBy = "store")
+    @OrderBy("priority ASC")
+    private Set<StoreMenuGroup> menuGroups;
 
     public void updateHeartNum(int plus) {
         this.heartNum += plus;

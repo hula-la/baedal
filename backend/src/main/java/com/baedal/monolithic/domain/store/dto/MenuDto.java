@@ -7,6 +7,7 @@ import java.io.Serializable;
 import java.util.List;
 
 public class MenuDto {
+
     @Getter
     @Builder
     public static class Menu implements Serializable{
@@ -33,7 +34,6 @@ public class MenuDto {
 
         private static final long serialVersionUID = -34234234234559L;
 
-
         private Long id;
         private String name;
         private String detail;
@@ -46,7 +46,6 @@ public class MenuDto {
     public static class OptionGroup implements Serializable {
 
         private static final long serialVersionUID = -234341234127459L;
-
 
         private Long id;
         private String name;
@@ -62,7 +61,6 @@ public class MenuDto {
     public static class Option implements Serializable {
 
         private static final long serialVersionUID = -5647123457459L;
-
 
         private Long id;
         private String name;
