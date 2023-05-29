@@ -109,4 +109,23 @@ class StoreMapper {
                 .build();
     }
 
+    protected Store mapToEntity(Long ownerId, StoreDto.PostPutReq storePostReq){
+
+        return  Store.builder()
+                .ownerId(ownerId)
+                .categoryId(storePostReq.getCategoryId())
+                .name(storePostReq.getName())
+                .minPrice(storePostReq.getMinPrice())
+                .time(storePostReq.getTime())
+                .closedDay(storePostReq.getClosedDay())
+                .tel(storePostReq.getTel())
+                .addressId(storePostReq.getAddressId())
+                .deliveryRegion(storePostReq.getDeliveryRegion())
+                .addressDetail(storePostReq.getAddressDetail())
+                .img(storePostReq.getImg())
+                .notice(storePostReq.getNotice())
+                .info(storePostReq.getInfo())
+                .build();
+    }
+
 }

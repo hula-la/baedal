@@ -73,4 +73,41 @@ public class StoreDto {
         private PageVO pageVO = new PageVO();
 
     }
+
+    @Getter
+    @Builder
+    public static class PostPutReq {
+
+        @NotNull
+        private String name;
+
+        @NotNull
+        private Long categoryId;
+
+        @NotNull
+        private int minPrice;
+
+        @NotNull
+        private String time;
+
+        @NotNull
+        private String closedDay;
+
+        @NotNull
+        private Long addressId;
+
+        @NotNull
+        private String tel;
+
+        @NotNull
+        private String deliveryRegion;
+
+        @NotNull
+        private String addressDetail;
+
+        private String img;
+        private String notice;
+        private String info;
+
+    }
 }

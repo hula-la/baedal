@@ -38,7 +38,7 @@ public class StoreMenu extends BaseTime {
     private String expIntro;
 
 
-    @OneToMany(mappedBy = "menuGroup")
+    @OneToMany(mappedBy = "menuGroup", orphanRemoval = true)
     @OrderBy("priority ASC")
     private Set<StoreMenuOptionGroup> optionGroups;
 

@@ -35,7 +35,7 @@ public class StoreMenuOptionGroup {
     private Integer min;
     private Integer max;
 
-    @OneToMany(mappedBy = "optionGroup")
+    @OneToMany(mappedBy = "optionGroup", orphanRemoval = true)
     @OrderBy("priority ASC")
     private Set<StoreMenuOption> options;
 

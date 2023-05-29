@@ -26,7 +26,7 @@ public class StoreMenuGroup extends BaseTime {
 
     private String detail;
 
-    @OneToMany(mappedBy = "menuGroup")
+    @OneToMany(mappedBy = "menuGroup", orphanRemoval = true)
     @OrderBy("priority ASC")
     private Set<StoreMenu> menus;
 

@@ -17,13 +17,6 @@ public class MenuService {
 
     private final StoreMenuRepository storeMenuRepository;
 
-    @Transactional(readOnly = true)
-    public Long calculateOrderPrice(List<OrderDto.MenuPostReq> menuPostReqs) {
-
-        return menuPostReqs.stream()
-                .map(this::calculatePriceOfMenu)
-                .reduce(0L, Long::sum);
-    }
 
     @Transactional(readOnly = true)
     public String getMenuName(Long menuId) {
@@ -39,8 +32,8 @@ public class MenuService {
         return menuName + extra;
     }
 
-
-    private long calculatePriceOfMenu(OrderDto.MenuPostReq menuPostReq) {
+    @Transactional(readOnly = true)
+    public long calculatePriceOfMenu(OrderDto.MenuPostReq menuPostReq) {
 
         int cnt = menuPostReq.getCount();
         long priceOfMenu = findMenuEntity(menuPostReq.getMenuId())
