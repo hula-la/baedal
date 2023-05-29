@@ -1,16 +1,16 @@
 package com.baedal.monolithic.global.config;
 
+import com.baedal.monolithic.domain.auth.application.AuthService;
 import com.baedal.monolithic.domain.auth.application.CustomOAuth2UserService;
 import com.baedal.monolithic.domain.auth.exception.ExceptionHandlerFilter;
 import com.baedal.monolithic.domain.auth.exception.JwtAccessDeniedHandler;
 import com.baedal.monolithic.domain.auth.exception.JwtAuthenticationEntryPoint;
-import com.baedal.monolithic.domain.auth.util.CookieAuthorizationRequestRepository;
-import com.baedal.monolithic.domain.auth.util.JwtAuthenticationProcessingFilter;
-import com.baedal.monolithic.domain.auth.util.OAuth2FailureHandler;
-import com.baedal.monolithic.domain.auth.util.OAuth2LoginSuccessHandler;
+import com.baedal.monolithic.domain.auth.util.*;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -28,14 +28,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final CustomOAuth2UserService customOAuth2UserService;
     private final OAuth2LoginSuccessHandler customAuthenticationSuccessHandler;
     private final OAuth2FailureHandler customAuthenticationFailureHandler;
-    private final JwtAuthenticationProcessingFilter jwtAuthenticationProcessingFilter;
+    private final JwtProvider jwtProvider;
+    private final AuthService authService;
     private final CookieAuthorizationRequestRepository cookieAuthorizationRequestRepository;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
-    private final ExceptionHandlerFilter exceptionHandlerFilter;
+
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        web.ignoring().antMatchers("/actuator/**", "/auth/**");
+    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+      
         http
                 .formLogin().disable()
                 .httpBasic().disable()
@@ -43,11 +49,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .cors()
                 .and()
                     .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
-                    .authorizeRequests()
-                .antMatchers("/actuator/**").permitAll()
-                .antMatchers("/auth/**").permitAll()
-                    .anyRequest().authenticated()
                 .and()
                     .logout()
                         .logoutSuccessUrl("/")
@@ -68,13 +69,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authenticationEntryPoint(jwtAuthenticationEntryPoint)	// 401
                 .accessDeniedHandler(jwtAccessDeniedHandler);
 
-        http.addFilterBefore(jwtAuthenticationProcessingFilter, UsernamePasswordAuthenticationFilter.class);
-        http.addFilterBefore(exceptionHandlerFilter, JwtAuthenticationProcessingFilter.class);
+        http.addFilterBefore(new JwtAuthenticationProcessingFilter(jwtProvider, authService), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(new ExceptionHandlerFilter(new ObjectMapper()), JwtAuthenticationProcessingFilter.class);
 
     }
 
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
+      
         CorsConfiguration configuration = new CorsConfiguration();
 //        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
         configuration.addAllowedOriginPattern("*");
@@ -83,6 +85,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         configuration.setAllowCredentials(true);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
+      
         return source;
     }
 

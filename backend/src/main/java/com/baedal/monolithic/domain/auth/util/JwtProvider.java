@@ -110,13 +110,13 @@ public class JwtProvider {
         }
     }
 //
-//    public boolean isTokenValid(String token) {
-//
-//            JWT.require(Algorithm.HMAC512(secretKey))
-//                    .build()
-//                    .verify(token);
-//            return true;
-//
-//    }
+    public boolean isTokenValid(String token) {
+
+            JWT.require(Algorithm.HMAC512(secretKey))
+                    .build()
+                    .verify(token);
+            return true;
+
+    }
 
 }

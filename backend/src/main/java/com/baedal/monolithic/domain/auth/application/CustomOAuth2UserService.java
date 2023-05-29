@@ -4,6 +4,7 @@ import com.baedal.monolithic.domain.account.entity.Account;
 import com.baedal.monolithic.domain.account.entity.Role;
 import com.baedal.monolithic.domain.account.repository.AccountRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;

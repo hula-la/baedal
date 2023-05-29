@@ -41,6 +41,11 @@ server:
   tomcat:
     mbeanregistry:
       enabled: true
+  servlet:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
 
 
 store:
