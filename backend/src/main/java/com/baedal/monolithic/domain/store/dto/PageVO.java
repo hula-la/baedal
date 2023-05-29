@@ -12,10 +12,7 @@ import lombok.ToString;
 public class PageVO {
 
     private Long lastIdx = -1L;
-
     private Long pageNum = 10L;
-
     private String sort;
-
 
 }

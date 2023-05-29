@@ -1,6 +1,5 @@
 package com.baedal.monolithic.domain.store.exception;
 
-import com.baedal.monolithic.global.exception.ExceptionCode;
 import lombok.Getter;
 
 @Getter

@@ -25,27 +25,35 @@ public class Order {
 
     @NotNull
     private Long accountId;
+
     @NotNull
     private Long storeId;
+
     @NotNull
     private Long addressId;
+
     private String addressDetail;
+
     @NotNull
     private String menuSummary;
+
     private Boolean disposableReq;
     private Boolean kimchiReq;
     private String riderMsg;
     private String ownerMsg;
+
     @NotNull
     @Builder.Default
     @Enumerated(EnumType.STRING)
     private OrderStatus status = OrderStatus.WAIT;
+
     private Long deliveryTip;
     private Long orderPrice;
     private Long totalPrice;
 
     @CreationTimestamp
     private Timestamp orderAt;
+
     private Timestamp exArrivalTime;
 
     @OneToMany(mappedBy = "order")

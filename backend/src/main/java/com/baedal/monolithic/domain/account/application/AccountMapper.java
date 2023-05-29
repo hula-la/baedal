@@ -34,6 +34,7 @@ class AccountMapper {
                 .addressDetail(userAddress.getAddressDetail())
                 .build();
     }
+
     UserAddress mapPostDtoToUserAddressEntity(final AddressDto.PostReq address, final Long accountId){
         return UserAddress.builder()
                 .accountId(accountId)

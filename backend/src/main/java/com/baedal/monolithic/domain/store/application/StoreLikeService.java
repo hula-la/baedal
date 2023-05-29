@@ -43,12 +43,15 @@ public class StoreLikeService {
     }
 
     private void updateLikeCntOfStore(Long storeId, int plus){
+
         Store store = storeRepository.findStoreToUpdateById(storeId)
                 .orElseThrow(() -> new StoreException(StoreStatusCode.NO_STORE));
+
         store.updateHeartNum(plus);
     }
 
     private void likeStore(Long accountId, Long storeId) {
+
         storeLikeRepository.save(
                 StoreLike.builder()
                         .accountId(accountId)
@@ -59,12 +62,15 @@ public class StoreLikeService {
     }
 
     private void unLikeStore(Long storeLikeId, Long storeId) {
+
         storeLikeRepository.deleteById(storeLikeId);
+
         updateLikeCntOfStore(storeId, -1);
     }
 
     @Transactional(readOnly = true)
     public List<StoreDto.SummarizedInfo> findAllLikeStores(Long accountId) {
+
         return storeLikeRepository.findByAccountId(accountId)
                 .stream()
                 .map(storeLike -> storeService.findStoreIntro(storeLike.getStoreId()))

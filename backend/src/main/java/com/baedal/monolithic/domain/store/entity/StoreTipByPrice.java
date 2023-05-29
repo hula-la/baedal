@@ -18,8 +18,10 @@ public class StoreTipByPrice {
 
     @NotNull
     private Long storeId;
+
     @NotNull
     private Long price;
+
     @NotNull
     private Long tip;
 

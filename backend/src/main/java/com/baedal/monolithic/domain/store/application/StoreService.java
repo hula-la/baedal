@@ -46,6 +46,7 @@ public class StoreService {
 
     @Transactional(readOnly = true)
     public StoreDto.DetailedInfo findStoreDetail(Long storeId) {
+
         Store store = storeRepository.findDetailedStoreById(storeId)
                 .orElseThrow(()->new StoreException(StoreStatusCode.NO_STORE));
 
@@ -69,6 +70,7 @@ public class StoreService {
     @Transactional(readOnly = true)
     @Cacheable(key = "#storeReq", value = "storeCnt")
     public Long countStores(StoreDto.GetReq storeReq) {
+
         return storeRepository.countAllByAddressIdAndCategoryId(
                 storeReq.getAddressId(),
                 storeReq.getCategoryId());
@@ -77,19 +79,24 @@ public class StoreService {
 
     @Transactional(readOnly = true)
     public Long getTipByAddressId(Long storeId, Long addressId) {
+
         DeliveryAddress deliveryAddress = deliveryAddressRepository.findByStoreIdAndAddressId(storeId, addressId)
                 .orElseThrow(() -> new StoreException(StoreStatusCode.NO_DELIVERY_REGION));
+
         return deliveryAddress.getTip();
     }
 
     @Transactional(readOnly = true)
     public Long getTipByPrice(Long storeId, Long price) {
+
         List<StoreTipByPrice> deliveryAddress = storeTipByPriceRepository.findByStoreIdOrderByPriceDesc(storeId);
+
         for (StoreTipByPrice tipByPrice:deliveryAddress) {
             if (price>=tipByPrice.getPrice()) {
                 return tipByPrice.getTip();
             }
         }
+
         throw new StoreException(StoreStatusCode.NOT_EXCEED_MIN_PRICE);
     }
 

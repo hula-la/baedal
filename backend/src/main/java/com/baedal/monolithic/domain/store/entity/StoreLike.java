@@ -1,9 +1,6 @@
 package com.baedal.monolithic.domain.store.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -11,7 +8,7 @@ import javax.validation.constraints.NotNull;
 @Entity
 @Builder
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Table(indexes = {
         @Index(name = "IX_store_like_01",columnList = "accountId,storeId")

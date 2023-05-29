@@ -37,12 +37,6 @@ public class JwtProvider {
     @Value("${jwt.refresh.header}")
     private String refreshHeader;
 
-//    private final CookieUtil cookieUtil;
-
-    /**
-     * JWT의 Subject와 Claim으로 userId 사용 -> 클레임의 name을 "userId"으로 설정
-     * JWT의 헤더에 들어오는 값 : 'Authorization(Key) = Bearer {토큰} (Value)' 형식
-     */
     private static final String ACCESS_TOKEN_SUBJECT = "AccessToken";
     private static final String REFRESH_TOKEN_SUBJECT = "RefreshToken";
     private static final String USERID_CLAIM = "userId";
@@ -75,6 +69,7 @@ public class JwtProvider {
 
         CookieUtil.addCookie(response, refreshHeader, refreshToken, refreshTokenExpirationPeriod);
     }
+
 //    public String refreshAccessToken(HttpServletResponse response, String userId) {
 //        String accessToken = createAccessToken(userId);
 //        CookieUtil.addCookie(response, accessHeader, accessToken, accessTokenExpirationPeriod);
@@ -115,13 +110,13 @@ public class JwtProvider {
         }
     }
 //
-//    public boolean isTokenValid(String token) {
-//
-//            JWT.require(Algorithm.HMAC512(secretKey))
-//                    .build()
-//                    .verify(token);
-//            return true;
-//
-//    }
+    public boolean isTokenValid(String token) {
+
+            JWT.require(Algorithm.HMAC512(secretKey))
+                    .build()
+                    .verify(token);
+            return true;
+
+    }
 
 }

@@ -20,13 +20,13 @@ import java.io.IOException;
 @Slf4j
 public class AccountService {
 
+    private static final String PROFILE_UPLOAD_DIR = "image/profile";
+    private static final String DEFAULT_PROFILE_NAME = "defaultProfile.png";
+
     private final AccountRepository accountRepository;
     private final AccountMapper accountMapper;
     private final S3Util s3Util;
 
-    private static final String PROFILE_UPLOAD_DIR = "image/profile";
-
-    private static final String DEFAULT_PROFILE_NAME = "defaultProfile.png";
     private String DEFAULT_PROFILE_URL;
 
     @PostConstruct
@@ -46,6 +46,7 @@ public class AccountService {
 
     @Transactional
     public void deleteAccount(final Long accountId) {
+
         Account account = getUserEntity(accountId);
         accountRepository.delete(account);
     }
@@ -61,8 +62,7 @@ public class AccountService {
 
             if (accountPutReq.getProfile().isEmpty()){
                 profileUrl = "";
-            }
-            if (!accountPutReq.getProfile().isEmpty()){
+            } else if (!accountPutReq.getProfile().isEmpty()){
                 profileUrl = uploadNewProfileFile(account, accountPutReq);
             }
         }
@@ -75,6 +75,7 @@ public class AccountService {
     }
 
     private String uploadNewProfileFile(final Account account, final AccountDto.PutReq accountPutReq) {
+
         try {
             s3Util.remove(account.getProfile(), PROFILE_UPLOAD_DIR);
             return s3Util.upload(accountPutReq.getProfile(), PROFILE_UPLOAD_DIR);

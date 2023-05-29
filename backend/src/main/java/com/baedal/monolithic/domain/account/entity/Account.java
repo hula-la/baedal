@@ -15,6 +15,11 @@ public class Account extends BaseTime {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Role role;
+
     private Long userAddressId;
     private String socialId;
     private String provider;
@@ -25,10 +30,6 @@ public class Account extends BaseTime {
     private String profile;
     private String refreshToken;
     private String password;
-
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private Role role;
 
     public String getRoleKey(){
         return role.getKey();

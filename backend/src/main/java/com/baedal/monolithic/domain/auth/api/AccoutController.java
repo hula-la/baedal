@@ -22,6 +22,7 @@ public class AccoutController {
     @PostMapping("/refresh")
     public ResponseEntity<String> refreshToken(HttpServletRequest request, HttpServletResponse response,
                                        @RequestBody Map<String, String> accessTokenMap) {
+
         return ResponseEntity.ok().body(authService.refreshToken(request, response, accessTokenMap.get("accessToken")));
     }
 

@@ -1,6 +1,5 @@
 package com.baedal.monolithic.global.exception;
 
-import com.baedal.monolithic.domain.account.exception.AccountExceptionCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -10,6 +9,7 @@ import org.springframework.http.HttpStatus;
 @Setter
 @NoArgsConstructor
 public class ExceptionResponse {
+
     private String message;
     private String code;
     private HttpStatus status;
@@ -23,6 +23,7 @@ public class ExceptionResponse {
     public ExceptionResponse(String message) {
         this.message = message;
     }
+
     public ExceptionResponse(String message, String code, HttpStatus status) {
         this.message = message;
         this.code = code;
