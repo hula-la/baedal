@@ -14,6 +14,7 @@ public class BaseTime {
 
     @CreatedDate
     private Timestamp createdAt;
+
     @LastModifiedDate
     private Timestamp updatedAt;
 }

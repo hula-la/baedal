@@ -35,7 +35,6 @@ public class ReviewDto {
 
     @Getter
     @Setter
-    @ToString
     public static class GetReq {
 
         private PageVO pageVO = new PageVO();
