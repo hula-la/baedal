@@ -1,11 +1,8 @@
 package com.baedal.monolithic.domain.store.dto;
 
-import com.baedal.monolithic.domain.store.entity.StoreMenuGroup;
 import com.baedal.monolithic.domain.store.entity.StoreStatus;
 import lombok.*;
 
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.List;
@@ -25,9 +22,7 @@ public class StoreDto {
         private int recentOrder;
         private int recentReview;
         private int heartNum;
-
-        @Builder.Default
-        private float rating = 0;
+        private float rating;
         private String notice;
         private String time;
         private String closedDay;
@@ -35,11 +30,9 @@ public class StoreDto {
         private String deliveryRegion;
         private String address;
         private String info;
-        @Enumerated(EnumType.STRING)
-        @Builder.Default
-        private StoreStatus storeStatus = StoreStatus.CLOSE;
+        private StoreStatus storeStatus;
         private String img;
-        private List<MenuDto.Group> storeMenuGroups;
+        private List<MenuGetDto.MenuGroup> storeMenuGroups;
 
     }
 
@@ -51,8 +44,7 @@ public class StoreDto {
 
         private Long id;
         private String name;
-        @Builder.Default
-        private float rating = 0;
+        private float rating;
         private String img;
 
     }
@@ -61,8 +53,8 @@ public class StoreDto {
     @Getter
     public static class GetRes {
 
-        private Long results; // 총 갯수
-        private List<SummarizedInfo> stores; // 가게 목록
+        private Long results;
+        private List<SummarizedInfo> stores;
 
     }
 
@@ -80,6 +72,42 @@ public class StoreDto {
 
         private PageVO pageVO = new PageVO();
 
+    }
+
+    @Getter
+    @Builder
+    public static class PostPutReq {
+
+        @NotNull
+        private String name;
+
+        @NotNull
+        private Long categoryId;
+
+        @NotNull
+        private int minPrice;
+
+        @NotNull
+        private String time;
+
+        @NotNull
+        private String closedDay;
+
+        @NotNull
+        private Long addressId;
+
+        @NotNull
+        private String tel;
+
+        @NotNull
+        private String deliveryRegion;
+
+        @NotNull
+        private String addressDetail;
+
+        private String img;
+        private String notice;
+        private String info;
 
     }
 }

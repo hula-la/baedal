@@ -1,11 +1,10 @@
 package com.baedal.monolithic.domain.store.entity;
 
-import com.baedal.monolithic.domain.order.dto.OrderDto;
+import com.baedal.monolithic.domain.store.dto.MenuPutPostDto;
 import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -23,13 +22,13 @@ public class StoreMenuOptionGroup {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "menu_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
-    private StoreMenu menuGroup;
+
     @NotNull
     private String name;
+
     @NotNull
     private Integer priority;
+
     @NotNull
     @Builder.Default
     private boolean isRadio = false;
@@ -37,9 +36,13 @@ public class StoreMenuOptionGroup {
     private Integer min;
     private Integer max;
 
-    @OneToMany(mappedBy = "optionGroup")
+    @OneToMany(mappedBy = "optionGroup", orphanRemoval = true)
     @OrderBy("priority ASC")
     private Set<StoreMenuOption> options;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "menu_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+    private StoreMenu menu;
 
     public long calculateTotalPrice(List<Long> checkedOptions) {
         Map<Long, Long> optionMap = options.stream()
@@ -53,6 +56,14 @@ public class StoreMenuOptionGroup {
     public boolean isValidCntOfOptions(int cnt) {
         if (isRadio && cnt==1) return true;
         return !isRadio && min <= cnt && max >= cnt;
+    }
+
+    public void update(MenuPutPostDto.OptionGroupReq optionGroupReq) {
+        this.name = optionGroupReq.getName();
+        this.priority = optionGroupReq.getPriority();
+        this.isRadio = optionGroupReq.getIsRadio();
+        this.min = optionGroupReq.getMin();
+        this.max = optionGroupReq.getMax();
     }
 }
 

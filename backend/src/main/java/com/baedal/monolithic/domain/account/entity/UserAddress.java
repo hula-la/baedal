@@ -2,12 +2,9 @@ package com.baedal.monolithic.domain.account.entity;
 
 import com.baedal.monolithic.domain.account.dto.AddressDto;
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.sql.Timestamp;
 
 @Entity
 @Getter
@@ -25,8 +22,10 @@ public class UserAddress {
 
     @NotNull
     private Long accountId;
+
     @NotNull
     private Long addressId;
+
     @NotNull
     private String addressDetail;
 

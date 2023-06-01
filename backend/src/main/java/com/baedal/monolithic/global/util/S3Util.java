@@ -25,7 +25,6 @@ public class S3Util {
     private final char TIME_SEPARATOR = '_';
     private static final String FILE_EXTENSION_SEPARATOR = ".";
 
-
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
@@ -35,6 +34,7 @@ public class S3Util {
         String fileName = getNewFileName(dirName, multipartFile.getOriginalFilename());
 
         ObjectMetadata metadata = new ObjectMetadata();
+
         metadata.setContentType(MediaType.IMAGE_PNG_VALUE);
         metadata.setContentLength(multipartFile.getSize());
 
@@ -60,6 +60,7 @@ public class S3Util {
     }
 
     private String getNewFileName(String dirName, String originalFileName) {
+        
         int fileExtensionIndex = originalFileName.lastIndexOf(FILE_EXTENSION_SEPARATOR);
         String fileExtension = originalFileName.substring(fileExtensionIndex);
         String fileName = originalFileName.substring(0, fileExtensionIndex);

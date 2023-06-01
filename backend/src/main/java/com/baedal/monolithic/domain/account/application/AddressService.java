@@ -1,7 +1,6 @@
 package com.baedal.monolithic.domain.account.application;
 
 import com.baedal.monolithic.domain.account.dto.AddressDto;
-import com.baedal.monolithic.domain.account.entity.Account;
 import com.baedal.monolithic.domain.account.entity.Address;
 import com.baedal.monolithic.domain.account.entity.UserAddress;
 import com.baedal.monolithic.domain.account.exception.AccountException;
@@ -43,6 +42,7 @@ public class AddressService {
     }
 
     public Long createUserAddress(final Long accountId, final AddressDto.PostReq addressPostReq) {
+
         UserAddress userAddress = accountMapper.mapPostDtoToUserAddressEntity(addressPostReq, accountId);
 
         if (!addressRepository.existsById(addressPostReq.getAddressId()))
@@ -55,6 +55,7 @@ public class AddressService {
 
     @Transactional
     public void updateAddress(final Long accountId, final AddressDto.PutReq accountPutReq) {
+
         UserAddress userAddress = getUserAddressEntity(accountPutReq.getUserAddressId());
 
         if (!userAddress.getAccountId().equals(accountId))
@@ -65,6 +66,7 @@ public class AddressService {
 
     @Transactional
     public void deleteUserAddress(final Long accountId, final Long userAddressId) {
+
         if (!userAddressId.equals(accountService.getAddressIdOfUser(accountId)))
             throw new AccountException(AccountExceptionCode.NOT_MATCH_USER_SELECTED_ADDRESS);
 
@@ -78,6 +80,7 @@ public class AddressService {
     }
 
     private Long getAddressIdByUserAddressId(final Long userAddressId){
+
         UserAddress userAddress = userAddressRepository.findById(userAddressId)
                 .orElseThrow(() -> new AccountException(AccountExceptionCode.NO_ADDRESS));
 

@@ -9,13 +9,16 @@ import com.baedal.monolithic.domain.order.exception.OrderException;
 import com.baedal.monolithic.domain.order.exception.OrderStatusCode;
 import com.baedal.monolithic.domain.order.repository.OrderMenuRepository;
 import com.baedal.monolithic.domain.order.repository.OrderRepository;
+import com.baedal.monolithic.domain.owner.dto.OwnerOrderDto;
 import com.baedal.monolithic.domain.store.application.MenuService;
+import com.baedal.monolithic.domain.store.application.PriceCalculatorService;
 import com.baedal.monolithic.domain.store.application.StoreService;
 import com.baedal.monolithic.domain.store.dto.StoreDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Timestamp;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -28,11 +31,13 @@ public class OrderService {
     private final StoreService storeService;
     private final AddressService addressService;
     private final MenuService menuService;
+    private final PriceCalculatorService priceCalculatorService;
     private final OrderMapper orderMapper;
 
 
     @Transactional(readOnly = true)
     public Map<OrderStatus, List<OrderDto.SummarizedInfo>> findAllOrders(Long accountId) {
+
         Map<OrderStatus, List<OrderDto.SummarizedInfo>> map = new EnumMap<>(OrderStatus.class);
 
         List<Order> orders = orderRepository.findAllByAccountIdOrderByOrderAtDesc(accountId);
@@ -52,6 +57,7 @@ public class OrderService {
 
     @Transactional(readOnly = true)
     public OrderDto.DetailedInfo findOrder(Long accountId, Long orderId) {
+
         Order order = findOrderEntity(orderId);
 
         if (!accountId.equals(order.getAccountId())) throw new OrderException(OrderStatusCode.NO_ACCESS);
@@ -64,6 +70,7 @@ public class OrderService {
 
     @Transactional(readOnly = true)
     public List<String> getMenuNames(Long orderId) {
+
         Order order = findOrderEntity(orderId);
 
         return getOrderMenuDto(order)
@@ -75,6 +82,7 @@ public class OrderService {
 
     @Transactional
     public void deleteOrder(Long accountId, Long orderId) {
+
         Order order = orderRepository.findById(orderId).orElseThrow(()->new OrderException(OrderStatusCode.NO_ORDER));
 
         // 사용자가 일치하지 않을 경우 접근 권한 X
@@ -89,9 +97,9 @@ public class OrderService {
     @Transactional
     public Long createOrder(Long accountId, OrderDto.PostReq orderPostReq) {
 
-        Long orderPrice = menuService.calculateOrderPrice(orderPostReq.getMenus());
         Long addressId = addressService.getAddressIdByAccountId(accountId);
-        Long deliveryTip = calculateTip(orderPostReq.getStoreId(),orderPrice, addressId);
+        Long orderPrice = priceCalculatorService.calculateOrderPrice(orderPostReq.getMenus());
+        Long deliveryTip = priceCalculatorService.calculateTip(orderPostReq.getStoreId(),orderPrice, addressId);
         String menuSummary = menuService.summaryMenu(orderPostReq.getMenus());
 
         Order order = orderMapper
@@ -104,28 +112,39 @@ public class OrderService {
         return savedOrder.getId();
     }
 
-//    private Timestamp calculateExArrivalTime(Order order, int minute) {
-//        Calendar cal = Calendar.getInstance();
-//        cal.setTimeInMillis(order.getOrderAt().getTime());
-//        cal.add(Calendar.MINUTE, minute);
-//        return new Timestamp(cal.getTime().getTime());
-//    }
-
     @Transactional
-    public void createOrderMenus(Order order, List<OrderDto.MenuPostReq> menus) {
+    public void updateOrder(Long orderId, OwnerOrderDto.PutReq orderPutReq) {
+
+        Order order = findOrderEntity(orderId);
+
+        if (orderPutReq.getOrderStatus().equals(OrderStatus.RECEIVED)){
+            if (orderPutReq.getDurationMinutes() == null)
+                throw new OrderException(OrderStatusCode.NO_EXPECTED_ARRIVAL_TIME);
+
+            Timestamp exArrivalTime = calculateExArrivalTime(order, orderPutReq.getDurationMinutes());
+
+            order.updateArrivalTime(exArrivalTime);
+        }
+
+        order.updateStatus(orderPutReq.getOrderStatus());
+    }
+
+    private Timestamp calculateExArrivalTime(Order order, int minute) {
+
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(order.getOrderAt().getTime());
+        cal.add(Calendar.MINUTE, minute);
+
+        return new Timestamp(cal.getTime().getTime());
+    }
+
+    private void createOrderMenus(Order order, List<OrderDto.MenuPostReq> menus) {
 
         for (OrderDto.MenuPostReq menu:menus) {
             OrderMenu orderMenu = orderMapper.mapToOrderMenuEntity(menu, order);
 
             orderMenuRepository.save(orderMenu);
         }
-    }
-
-    private Long calculateTip(Long storeId, Long orderPrice, Long addressId) {
-
-        return storeService.getTipByAddressId(storeId,addressId)
-                + storeService.getTipByPrice(storeId,orderPrice);
-
     }
 
     private Order findOrderEntity(Long orderId) {

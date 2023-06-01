@@ -4,14 +4,10 @@ import com.baedal.monolithic.domain.account.exception.AccountException;
 import com.baedal.monolithic.domain.account.exception.AccountExceptionCode;
 import com.baedal.monolithic.domain.account.repository.AccountRepository;
 import com.baedal.monolithic.domain.store.dto.StoreDto;
-import com.baedal.monolithic.domain.store.entity.DeliveryAddress;
 import com.baedal.monolithic.domain.store.entity.Store;
-import com.baedal.monolithic.domain.store.entity.StoreTipByPrice;
 import com.baedal.monolithic.domain.store.exception.StoreException;
 import com.baedal.monolithic.domain.store.exception.StoreStatusCode;
-import com.baedal.monolithic.domain.store.repository.DeliveryAddressRepository;
 import com.baedal.monolithic.domain.store.repository.StoreRepository;
-import com.baedal.monolithic.domain.store.repository.StoreTipByPriceRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -26,8 +22,6 @@ public class StoreService {
 
     private final StoreRepository storeRepository;
     private final AccountRepository accountRepository;
-    private final DeliveryAddressRepository deliveryAddressRepository;
-    private final StoreTipByPriceRepository storeTipByPriceRepository;
     private final StoreMapper storeMapper;
 
     @Transactional(readOnly = true)
@@ -46,6 +40,7 @@ public class StoreService {
 
     @Transactional(readOnly = true)
     public StoreDto.DetailedInfo findStoreDetail(Long storeId) {
+
         Store store = storeRepository.findDetailedStoreById(storeId)
                 .orElseThrow(()->new StoreException(StoreStatusCode.NO_STORE));
 
@@ -69,28 +64,37 @@ public class StoreService {
     @Transactional(readOnly = true)
     @Cacheable(key = "#storeReq", value = "storeCnt")
     public Long countStores(StoreDto.GetReq storeReq) {
+
         return storeRepository.countAllByAddressIdAndCategoryId(
                 storeReq.getAddressId(),
                 storeReq.getCategoryId());
     }
 
+    @Transactional
+    public Long createStore(Long ownerId, StoreDto.PostPutReq storePostReq) {
 
-    @Transactional(readOnly = true)
-    public Long getTipByAddressId(Long storeId, Long addressId) {
-        DeliveryAddress deliveryAddress = deliveryAddressRepository.findByStoreIdAndAddressId(storeId, addressId)
-                .orElseThrow(() -> new StoreException(StoreStatusCode.NO_DELIVERY_REGION));
-        return deliveryAddress.getTip();
+        Store store = storeMapper.mapToEntity(ownerId, storePostReq);
+
+        return storeRepository.save(store).getId();
     }
 
-    @Transactional(readOnly = true)
-    public Long getTipByPrice(Long storeId, Long price) {
-        List<StoreTipByPrice> deliveryAddress = storeTipByPriceRepository.findByStoreIdOrderByPriceDesc(storeId);
-        for (StoreTipByPrice tipByPrice:deliveryAddress) {
-            if (price>=tipByPrice.getPrice()) {
-                return tipByPrice.getTip();
-            }
-        }
-        throw new StoreException(StoreStatusCode.NOT_EXCEED_MIN_PRICE);
+    @Transactional
+    public void updateStore(Long storeId, StoreDto.PostPutReq storePostReq) {
+
+        Store store = storeRepository.findById(storeId)
+                .orElseThrow(()->new StoreException(StoreStatusCode.NO_STORE));
+
+        store.update(storePostReq);
+    }
+
+    @Transactional
+    public void deleteStore(Long storeId) {
+
+        Store store = storeRepository.findById(storeId)
+                .orElseThrow(()->new StoreException(StoreStatusCode.NO_STORE));
+
+        // 접수된 주문이면 삭제 불가
+        storeRepository.delete(store);
     }
 
 }

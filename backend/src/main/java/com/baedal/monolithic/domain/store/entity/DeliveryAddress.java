@@ -19,8 +19,10 @@ public class DeliveryAddress {
 
     @NotNull
     private Long storeId;
+
     @NotNull
     private Long addressId;
+
     @NotNull
     private Long tip;
 
