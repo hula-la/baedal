@@ -43,6 +43,7 @@ public class OrderDto {
         private Long id;
         private Timestamp orderAt;
         private Timestamp exArrivalTime;
+        private OrderStatus status;
 
         // 추가해줘야함
         private String name;

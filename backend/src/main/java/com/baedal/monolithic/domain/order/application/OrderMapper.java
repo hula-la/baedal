@@ -55,6 +55,9 @@ class OrderMapper {
                 .id(order.getId())
                 .storeName(storeName)
                 .address(address)
+                .status(order.getStatus())
+                .exArrivalTime(order.getExArrivalTime())
+                .orderAt(order.getOrderAt())
                 .disposableReq(order.getDisposableReq())
                 .kimchiReq(order.getKimchiReq())
                 .riderMsg(order.getRiderMsg())
@@ -74,7 +77,9 @@ class OrderMapper {
                 .menuSummary(order.getMenuSummary())
                 .totalPrice(order.getTotalPrice())
                 .orderAt(order.getOrderAt())
+                .status(order.getStatus())
                 .exArrivalTime(order.getExArrivalTime())
+                .orderAt(order.getOrderAt())
                 .build();
     }
 

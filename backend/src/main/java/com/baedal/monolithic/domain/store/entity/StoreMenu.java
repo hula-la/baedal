@@ -1,9 +1,10 @@
 package com.baedal.monolithic.domain.store.entity;
 
+import com.baedal.monolithic.domain.store.dto.MenuPutPostDto;
 import com.baedal.monolithic.domain.store.exception.StoreException;
 import com.baedal.monolithic.domain.store.exception.StoreStatusCode;
 import com.baedal.monolithic.global.entity.BaseTime;
-import lombok.Getter;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -14,6 +15,9 @@ import java.util.Set;
 
 @Entity
 @Getter
+@Builder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 @Table(indexes = {
         @Index(name = "IX_store_menu_01",columnList = "group_id")
 })
@@ -38,7 +42,7 @@ public class StoreMenu extends BaseTime {
     private String expIntro;
 
 
-    @OneToMany(mappedBy = "menuGroup")
+    @OneToMany(mappedBy = "menu", orphanRemoval = true)
     @OrderBy("priority ASC")
     private Set<StoreMenuOptionGroup> optionGroups;
 
@@ -59,5 +63,15 @@ public class StoreMenu extends BaseTime {
         }
 
         return totalPrice;
+    }
+
+    public void update(MenuPutPostDto.MenuReq menuReq) {
+        this.name = menuReq.getName();
+        this.img = menuReq.getImg();
+        this.expIntro = menuReq.getExpIntro();
+        this.expDetail = menuReq.getExpDetail();
+        this.price = menuReq.getPrice();
+        this.priority = menuReq.getPriority();
+        this.status = menuReq.getStatus();
     }
 }

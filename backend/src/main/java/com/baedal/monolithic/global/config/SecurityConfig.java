@@ -43,10 +43,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
       
         http
-                .formLogin().disable()
-                .httpBasic().disable()
-                .csrf().disable()
-                .cors()
+                .authorizeRequests()
+                    .antMatchers("/owner/**").hasRole("OWNER")
+                    .anyRequest().authenticated()
+                .and()
+                    .formLogin().disable()
+                    .httpBasic().disable()
+                    .csrf().disable()
+                    .cors()
                 .and()
                     .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
@@ -57,13 +61,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .authorizationEndpoint()
                     .authorizationRequestRepository(cookieAuthorizationRequestRepository)
                 .and()
-                .redirectionEndpoint()
+                    .redirectionEndpoint()
                 .and()
-                .userInfoEndpoint()
-                .userService(customOAuth2UserService)
+                    .userInfoEndpoint()
+                    .userService(customOAuth2UserService)
                 .and()
-                .successHandler(customAuthenticationSuccessHandler)
-                .failureHandler(customAuthenticationFailureHandler);
+                    .successHandler(customAuthenticationSuccessHandler)
+                    .failureHandler(customAuthenticationFailureHandler);
 
         http.exceptionHandling()
                 .authenticationEntryPoint(jwtAuthenticationEntryPoint)	// 401

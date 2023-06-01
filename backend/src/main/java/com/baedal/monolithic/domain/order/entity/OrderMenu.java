@@ -19,10 +19,6 @@ public class OrderMenu {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "order_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
-    private Order order;
-
     @NotNull
     @Column(name = "menu_id")
     private Long menuId;
@@ -31,5 +27,9 @@ public class OrderMenu {
     private Integer count;
 
     private String options;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "order_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+    private Order order;
 
 }

@@ -1,6 +1,7 @@
 package com.baedal.monolithic.domain.store.application;
 
-import com.baedal.monolithic.domain.store.dto.MenuDto;
+import com.baedal.monolithic.domain.store.dto.MenuGetDto;
+import com.baedal.monolithic.domain.store.dto.MenuPutPostDto;
 import com.baedal.monolithic.domain.store.dto.StoreCategoryDto;
 import com.baedal.monolithic.domain.store.dto.StoreDto;
 import com.baedal.monolithic.domain.store.entity.*;
@@ -58,9 +59,9 @@ class StoreMapper {
                 .build();
     }
 
-    private MenuDto.Group mapToGroupDto(StoreMenuGroup storeMenuGroup){
+    private MenuGetDto.MenuGroup mapToGroupDto(StoreMenuGroup storeMenuGroup){
 
-        return  MenuDto.Group.builder()
+        return  MenuGetDto.MenuGroup.builder()
                 .id(storeMenuGroup.getId())
                 .name(storeMenuGroup.getName())
                 .detail(storeMenuGroup.getDetail())
@@ -70,9 +71,9 @@ class StoreMapper {
                 .build();
     }
 
-    private MenuDto.Menu mapToMenuDto(StoreMenu storeMenu){
+    private MenuGetDto.Menu mapToMenuDto(StoreMenu storeMenu){
 
-        return  MenuDto.Menu.builder()
+        return  MenuGetDto.Menu.builder()
                 .id(storeMenu.getId())
                 .name(storeMenu.getName())
                 .price(storeMenu.getPrice())
@@ -86,18 +87,18 @@ class StoreMapper {
                 .build();
     }
 
-    private MenuDto.Option mapToOptionDto(StoreMenuOption option){
+    private MenuGetDto.Option mapToOptionDto(StoreMenuOption option){
 
-        return  MenuDto.Option.builder()
+        return  MenuGetDto.Option.builder()
                 .id(option.getId())
                 .name(option.getName())
                 .price(option.getPrice())
                 .build();
     }
 
-    private MenuDto.OptionGroup mapToOptionGroupDto(StoreMenuOptionGroup optionGroup){
+    private MenuGetDto.OptionGroup mapToOptionGroupDto(StoreMenuOptionGroup optionGroup){
 
-        return  MenuDto.OptionGroup.builder()
+        return  MenuGetDto.OptionGroup.builder()
                 .id(optionGroup.getId())
                 .name(optionGroup.getName())
                 .isRadio(optionGroup.isRadio())
@@ -108,5 +109,74 @@ class StoreMapper {
                         .collect(Collectors.toList()))
                 .build();
     }
+
+    protected Store mapToEntity(Long ownerId, StoreDto.PostPutReq storePostReq){
+
+        return  Store.builder()
+                .ownerId(ownerId)
+                .categoryId(storePostReq.getCategoryId())
+                .name(storePostReq.getName())
+                .minPrice(storePostReq.getMinPrice())
+                .time(storePostReq.getTime())
+                .closedDay(storePostReq.getClosedDay())
+                .tel(storePostReq.getTel())
+                .addressId(storePostReq.getAddressId())
+                .deliveryRegion(storePostReq.getDeliveryRegion())
+                .addressDetail(storePostReq.getAddressDetail())
+                .img(storePostReq.getImg())
+                .notice(storePostReq.getNotice())
+                .info(storePostReq.getInfo())
+                .build();
+    }
+
+    // 메뉴 엔티티 변환
+    protected StoreMenuGroup mapPostDtoToMenuGroupEntity(MenuPutPostDto.MenuGroupReq menuGroupDto, Store store){
+
+        return  StoreMenuGroup.builder()
+                .name(menuGroupDto.getName())
+                .detail(menuGroupDto.getDetail())
+                .priority(menuGroupDto.getPriority())
+                .store(store)
+                .build();
+    }
+
+    protected StoreMenu mapPostDtoToMenuEntity(MenuPutPostDto.MenuReq menuReq, StoreMenuGroup storeMenuGroup){
+        return  StoreMenu.builder()
+                .name(menuReq.getName())
+                .priority(menuReq.getPriority())
+                .status(StoreMenuStatus.READY)
+                .img(menuReq.getImg())
+                .price(menuReq.getPrice())
+                .expDetail(menuReq.getExpDetail())
+                .expIntro(menuReq.getExpIntro())
+                .menuGroup(storeMenuGroup)
+                .build();
+    }
+
+    protected StoreMenuOptionGroup mapToMenuOptionGroupEntity(MenuPutPostDto.OptionGroupReq optionGroupReq,
+                                                              StoreMenu storeMenu){
+
+        return  StoreMenuOptionGroup.builder()
+                .name(optionGroupReq.getName())
+                .priority(optionGroupReq.getPriority())
+                .isRadio(optionGroupReq.getIsRadio())
+                .min(optionGroupReq.getMin())
+                .max(optionGroupReq.getMax())
+                .menu(storeMenu)
+                .build();
+    }
+
+    protected StoreMenuOption mapPostDtoToMenuOptionEntity(MenuPutPostDto.OptionReq optionReq,
+                                                           StoreMenuOptionGroup storeMenuOptionGroup){
+
+        return  StoreMenuOption.builder()
+                .name(optionReq.getName())
+                .price(optionReq.getPrice())
+                .priority(optionReq.getPriority())
+                .optionGroup(storeMenuOptionGroup)
+                .build();
+    }
+
+
 
 }

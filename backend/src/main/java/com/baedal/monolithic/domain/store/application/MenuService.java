@@ -1,10 +1,11 @@
 package com.baedal.monolithic.domain.store.application;
 
 import com.baedal.monolithic.domain.order.dto.OrderDto;
-import com.baedal.monolithic.domain.store.entity.StoreMenu;
+import com.baedal.monolithic.domain.store.dto.MenuPutPostDto;
+import com.baedal.monolithic.domain.store.entity.*;
 import com.baedal.monolithic.domain.store.exception.StoreException;
 import com.baedal.monolithic.domain.store.exception.StoreStatusCode;
-import com.baedal.monolithic.domain.store.repository.StoreMenuRepository;
+import com.baedal.monolithic.domain.store.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,15 +16,13 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MenuService {
 
+    private final StoreRepository storeRepository;
     private final StoreMenuRepository storeMenuRepository;
+    private final StoreMenuGroupRepository storeMenuGroupRepository;
+    private final StoreOptionRepository storeOptionRepository;
+    private final StoreOptionGroupRepository storeOptionGroupRepository;
+    private final StoreMapper storeMapper;
 
-    @Transactional(readOnly = true)
-    public Long calculateOrderPrice(List<OrderDto.MenuPostReq> menuPostReqs) {
-
-        return menuPostReqs.stream()
-                .map(this::calculatePriceOfMenu)
-                .reduce(0L, Long::sum);
-    }
 
     @Transactional(readOnly = true)
     public String getMenuName(Long menuId) {
@@ -39,8 +38,8 @@ public class MenuService {
         return menuName + extra;
     }
 
-
-    private long calculatePriceOfMenu(OrderDto.MenuPostReq menuPostReq) {
+    @Transactional(readOnly = true)
+    public long calculatePriceOfMenu(OrderDto.MenuPostReq menuPostReq) {
 
         int cnt = menuPostReq.getCount();
         long priceOfMenu = findMenuEntity(menuPostReq.getMenuId())
@@ -55,4 +54,119 @@ public class MenuService {
                 .orElseThrow(() -> new StoreException(StoreStatusCode.NO_MENU));
     }
 
+    @Transactional
+    public Long createMenuGroup(Long storeId, MenuPutPostDto.MenuGroupReq menuGroupReq) {
+
+        Store store = storeRepository.findById(storeId)
+                .orElseThrow(() -> new StoreException(StoreStatusCode.NO_STORE));
+
+        StoreMenuGroup menuGroup = storeMapper.mapPostDtoToMenuGroupEntity(menuGroupReq, store);
+
+        return storeMenuGroupRepository.save(menuGroup).getId();
+    }
+
+    @Transactional
+    public Long createMenu(Long menuGroupId, MenuPutPostDto.MenuReq menuReq) {
+
+        StoreMenuGroup storeMenuGroup = storeMenuGroupRepository.findById(menuGroupId)
+                .orElseThrow(() -> new StoreException(StoreStatusCode.NO_MENU_GROUP));
+
+        StoreMenu menuGroup = storeMapper.mapPostDtoToMenuEntity(menuReq, storeMenuGroup);
+
+        return storeMenuRepository.save(menuGroup).getId();
+    }
+
+    @Transactional
+    public Long createOptionGroup(Long menuId, MenuPutPostDto.OptionGroupReq optionGroupReq) {
+
+        StoreMenu storeMenu = storeMenuRepository.findById(menuId)
+                .orElseThrow(() -> new StoreException(StoreStatusCode.NO_MENU));
+
+        StoreMenuOptionGroup optionGroup = storeMapper.mapToMenuOptionGroupEntity(optionGroupReq, storeMenu);
+
+        return storeOptionGroupRepository.save(optionGroup).getId();
+    }
+
+    @Transactional
+    public Long createOption(Long optionGroupId, MenuPutPostDto.OptionReq optionReq) {
+
+        StoreMenuOptionGroup storeMenuOptionGroup = storeOptionGroupRepository.findById(optionGroupId)
+                .orElseThrow(() -> new StoreException(StoreStatusCode.NO_OPTION_GROUP));
+
+        StoreMenuOption menuGroup = storeMapper.mapPostDtoToMenuOptionEntity(optionReq, storeMenuOptionGroup);
+
+        return storeOptionRepository.save(menuGroup).getId();
+    }
+
+    @Transactional
+    public void updateMenuGroup(Long menuGroupId, MenuPutPostDto.MenuGroupReq menuGroupReq) {
+
+        StoreMenuGroup storeMenuGroup = storeMenuGroupRepository.findById(menuGroupId)
+                .orElseThrow(() -> new StoreException(StoreStatusCode.NO_MENU_GROUP));
+
+        storeMenuGroup.update(menuGroupReq);
+    }
+
+    @Transactional
+    public void updateMenu(Long menuId, MenuPutPostDto.MenuReq menuReq) {
+
+        StoreMenu storeMenu = storeMenuRepository.findById(menuId)
+                .orElseThrow(() -> new StoreException(StoreStatusCode.NO_MENU));
+
+        storeMenu.update(menuReq);
+    }
+
+    @Transactional
+    public void updateOptionGroup(Long optionGroupId, MenuPutPostDto.OptionGroupReq optionGroupReq) {
+
+        StoreMenuOptionGroup storeMenuOptionGroup = storeOptionGroupRepository.findById(optionGroupId)
+                .orElseThrow(() -> new StoreException(StoreStatusCode.NO_OPTION_GROUP));
+
+        storeMenuOptionGroup.update(optionGroupReq);
+    }
+
+    @Transactional
+    public void updateOption(Long optionId, MenuPutPostDto.OptionReq optionReq) {
+
+        StoreMenuOption storeMenuOption = storeOptionRepository.findById(optionId)
+                .orElseThrow(() -> new StoreException(StoreStatusCode.NO_MENU_GROUP));
+
+        storeMenuOption.update(optionReq);
+    }
+
+    @Transactional
+    public void deleteMenuGroup(Long menuGroupId) {
+
+        StoreMenuGroup storeMenuGroup = storeMenuGroupRepository.findById(menuGroupId)
+                .orElseThrow(() -> new StoreException(StoreStatusCode.NO_MENU_GROUP));
+
+        storeMenuGroupRepository.delete(storeMenuGroup);
+    }
+
+    @Transactional
+    public void deleteMenu(Long menuId) {
+
+        StoreMenu storeMenu = storeMenuRepository.findById(menuId)
+                .orElseThrow(() -> new StoreException(StoreStatusCode.NO_MENU));
+
+        storeMenuRepository.delete(storeMenu);
+    }
+
+    @Transactional
+    public void deleteOptionGroup(Long optionGroupId) {
+
+        StoreMenuOptionGroup storeMenuOptionGroup = storeOptionGroupRepository.findById(optionGroupId)
+                .orElseThrow(() -> new StoreException(StoreStatusCode.NO_OPTION_GROUP));
+
+        storeOptionGroupRepository.delete(storeMenuOptionGroup);
+    }
+
+    @Transactional
+    public void deleteOption(Long optionId) {
+
+        StoreMenuOption storeMenuOption = storeOptionRepository.findById(optionId)
+                .orElseThrow(() -> new StoreException(StoreStatusCode.NO_MENU_GROUP));
+
+        storeOptionRepository.delete(storeMenuOption);
+    }
 }

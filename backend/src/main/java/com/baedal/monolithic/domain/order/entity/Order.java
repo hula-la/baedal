@@ -37,26 +37,32 @@ public class Order {
     @NotNull
     private String menuSummary;
 
-    private Boolean disposableReq;
-    private Boolean kimchiReq;
-    private String riderMsg;
-    private String ownerMsg;
-
     @NotNull
     @Builder.Default
     @Enumerated(EnumType.STRING)
     private OrderStatus status = OrderStatus.WAIT;
 
-    private Long deliveryTip;
-    private Long orderPrice;
-    private Long totalPrice;
-
     @CreationTimestamp
     private Timestamp orderAt;
 
+    private Boolean disposableReq;
+    private Boolean kimchiReq;
+    private String riderMsg;
+    private String ownerMsg;
+    private Long deliveryTip;
+    private Long orderPrice;
+    private Long totalPrice;
     private Timestamp exArrivalTime;
 
     @OneToMany(mappedBy = "order")
     private List<OrderMenu> orderMenus;
+
+    public void updateStatus(OrderStatus status){
+        this.status = status;
+    }
+
+    public void updateArrivalTime(Timestamp exArrivalTime){
+        this.exArrivalTime = exArrivalTime;
+    }
 
 }

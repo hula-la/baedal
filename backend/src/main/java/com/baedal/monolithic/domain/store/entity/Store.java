@@ -1,5 +1,6 @@
 package com.baedal.monolithic.domain.store.entity;
 
+import com.baedal.monolithic.domain.store.dto.StoreDto;
 import lombok.*;
 
 import javax.persistence.*;
@@ -63,12 +64,27 @@ public class Store {
     private String info;
     private String img;
 
-    @OneToMany(mappedBy = "store")
+    @OneToMany(mappedBy = "store", orphanRemoval = true)
     @OrderBy("priority ASC")
     private Set<StoreMenuGroup> menuGroups;
 
     public void updateHeartNum(int plus) {
         this.heartNum += plus;
+    }
+
+    public void update(StoreDto.PostPutReq postPutReq) {
+        this.name = postPutReq.getName();
+        this.categoryId = postPutReq.getCategoryId();
+        this.minPrice = postPutReq.getMinPrice();
+        this.time = postPutReq.getTime();
+        this.closedDay = postPutReq.getClosedDay();
+        this.addressId = postPutReq.getAddressId();
+        this.tel = postPutReq.getTel();
+        this.deliveryRegion = postPutReq.getDeliveryRegion();
+        this.addressDetail = postPutReq.getAddressDetail();
+        this.img = postPutReq.getImg();
+        this.notice = postPutReq.getNotice();
+        this.info = postPutReq.getInfo();
     }
 
 }

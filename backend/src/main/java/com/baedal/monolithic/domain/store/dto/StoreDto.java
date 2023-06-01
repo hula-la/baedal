@@ -32,7 +32,7 @@ public class StoreDto {
         private String info;
         private StoreStatus storeStatus;
         private String img;
-        private List<MenuDto.Group> storeMenuGroups;
+        private List<MenuGetDto.MenuGroup> storeMenuGroups;
 
     }
 
@@ -71,6 +71,43 @@ public class StoreDto {
         private Long addressId;
 
         private PageVO pageVO = new PageVO();
+
+    }
+
+    @Getter
+    @Builder
+    public static class PostPutReq {
+
+        @NotNull
+        private String name;
+
+        @NotNull
+        private Long categoryId;
+
+        @NotNull
+        private int minPrice;
+
+        @NotNull
+        private String time;
+
+        @NotNull
+        private String closedDay;
+
+        @NotNull
+        private Long addressId;
+
+        @NotNull
+        private String tel;
+
+        @NotNull
+        private String deliveryRegion;
+
+        @NotNull
+        private String addressDetail;
+
+        private String img;
+        private String notice;
+        private String info;
 
     }
 }
