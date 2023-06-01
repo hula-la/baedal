@@ -1,5 +1,6 @@
 package com.baedal.monolithic.domain.store.entity;
 
+import com.baedal.monolithic.domain.store.dto.MenuPutPostDto;
 import com.baedal.monolithic.domain.store.exception.StoreException;
 import com.baedal.monolithic.domain.store.exception.StoreStatusCode;
 import com.baedal.monolithic.global.entity.BaseTime;
@@ -62,5 +63,15 @@ public class StoreMenu extends BaseTime {
         }
 
         return totalPrice;
+    }
+
+    public void update(MenuPutPostDto.MenuReq menuReq) {
+        this.name = menuReq.getName();
+        this.img = menuReq.getImg();
+        this.expIntro = menuReq.getExpIntro();
+        this.expDetail = menuReq.getExpDetail();
+        this.price = menuReq.getPrice();
+        this.priority = menuReq.getPriority();
+        this.status = menuReq.getStatus();
     }
 }

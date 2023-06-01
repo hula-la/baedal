@@ -1,11 +1,12 @@
 package com.baedal.monolithic.domain.store.dto;
 
+import com.baedal.monolithic.domain.store.entity.StoreMenuStatus;
 import lombok.Builder;
 import lombok.Getter;
 
 import javax.validation.constraints.NotNull;
 
-public class MenuPostDto {
+public class MenuPutPostDto {
 
     @Getter
     @Builder
@@ -36,6 +37,7 @@ public class MenuPostDto {
         private String img;
         private String expIntro;
         private String expDetail;
+        private StoreMenuStatus status;
     }
 
     @Getter

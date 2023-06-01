@@ -1,5 +1,6 @@
 package com.baedal.monolithic.domain.store.entity;
 
+import com.baedal.monolithic.domain.store.dto.MenuPutPostDto;
 import com.baedal.monolithic.global.entity.BaseTime;
 import lombok.*;
 
@@ -37,4 +38,9 @@ public class StoreMenuGroup extends BaseTime {
     @JoinColumn(name = "store_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private Store store;
 
+    public void update(MenuPutPostDto.MenuGroupReq menuGroupReq) {
+        this.name = menuGroupReq.getName();
+        this.priority = menuGroupReq.getPriority();
+        this.detail = menuGroupReq.getDetail();
+    }
 }

@@ -1,7 +1,7 @@
 package com.baedal.monolithic.domain.store.application;
 
 import com.baedal.monolithic.domain.store.dto.MenuGetDto;
-import com.baedal.monolithic.domain.store.dto.MenuPostDto;
+import com.baedal.monolithic.domain.store.dto.MenuPutPostDto;
 import com.baedal.monolithic.domain.store.dto.StoreCategoryDto;
 import com.baedal.monolithic.domain.store.dto.StoreDto;
 import com.baedal.monolithic.domain.store.entity.*;
@@ -130,7 +130,7 @@ class StoreMapper {
     }
 
     // 메뉴 엔티티 변환
-    protected StoreMenuGroup mapPostDtoToMenuGroupEntity(MenuPostDto.MenuGroupReq menuGroupDto, Store store){
+    protected StoreMenuGroup mapPostDtoToMenuGroupEntity(MenuPutPostDto.MenuGroupReq menuGroupDto, Store store){
 
         return  StoreMenuGroup.builder()
                 .name(menuGroupDto.getName())
@@ -140,7 +140,7 @@ class StoreMapper {
                 .build();
     }
 
-    protected StoreMenu mapPostDtoToMenuEntity(MenuPostDto.MenuReq menuReq, StoreMenuGroup storeMenuGroup){
+    protected StoreMenu mapPostDtoToMenuEntity(MenuPutPostDto.MenuReq menuReq, StoreMenuGroup storeMenuGroup){
         return  StoreMenu.builder()
                 .name(menuReq.getName())
                 .priority(menuReq.getPriority())
@@ -153,7 +153,7 @@ class StoreMapper {
                 .build();
     }
 
-    protected StoreMenuOptionGroup mapToMenuOptionGroupEntity(MenuPostDto.OptionGroupReq optionGroupReq,
+    protected StoreMenuOptionGroup mapToMenuOptionGroupEntity(MenuPutPostDto.OptionGroupReq optionGroupReq,
                                                               StoreMenu storeMenu){
 
         return  StoreMenuOptionGroup.builder()
@@ -166,7 +166,7 @@ class StoreMapper {
                 .build();
     }
 
-    protected StoreMenuOption mapPostDtoToMenuOptionEntity(MenuPostDto.OptionReq optionReq,
+    protected StoreMenuOption mapPostDtoToMenuOptionEntity(MenuPutPostDto.OptionReq optionReq,
                                                            StoreMenuOptionGroup storeMenuOptionGroup){
 
         return  StoreMenuOption.builder()

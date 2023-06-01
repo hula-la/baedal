@@ -1,5 +1,6 @@
 package com.baedal.monolithic.domain.store.entity;
 
+import com.baedal.monolithic.domain.store.dto.MenuPutPostDto;
 import lombok.*;
 
 import javax.persistence.*;
@@ -55,6 +56,14 @@ public class StoreMenuOptionGroup {
     public boolean isValidCntOfOptions(int cnt) {
         if (isRadio && cnt==1) return true;
         return !isRadio && min <= cnt && max >= cnt;
+    }
+
+    public void update(MenuPutPostDto.OptionGroupReq optionGroupReq) {
+        this.name = optionGroupReq.getName();
+        this.priority = optionGroupReq.getPriority();
+        this.isRadio = optionGroupReq.getIsRadio();
+        this.min = optionGroupReq.getMin();
+        this.max = optionGroupReq.getMax();
     }
 }
 
