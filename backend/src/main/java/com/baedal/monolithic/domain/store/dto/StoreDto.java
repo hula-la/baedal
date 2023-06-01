@@ -32,7 +32,7 @@ public class StoreDto {
         private String info;
         private StoreStatus storeStatus;
         private String img;
-        private List<MenuDto.Group> storeMenuGroups;
+        private List<MenuGetDto.MenuGroup> storeMenuGroups;
 
     }
 

@@ -1,10 +1,11 @@
 package com.baedal.monolithic.domain.store.application;
 
 import com.baedal.monolithic.domain.order.dto.OrderDto;
-import com.baedal.monolithic.domain.store.entity.StoreMenu;
+import com.baedal.monolithic.domain.store.dto.MenuPostDto;
+import com.baedal.monolithic.domain.store.entity.*;
 import com.baedal.monolithic.domain.store.exception.StoreException;
 import com.baedal.monolithic.domain.store.exception.StoreStatusCode;
-import com.baedal.monolithic.domain.store.repository.StoreMenuRepository;
+import com.baedal.monolithic.domain.store.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,7 +16,12 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MenuService {
 
+    private final StoreRepository storeRepository;
     private final StoreMenuRepository storeMenuRepository;
+    private final StoreMenuGroupRepository storeMenuGroupRepository;
+    private final StoreOptionRepository storeOptionRepository;
+    private final StoreOptionGroupRepository storeOptionGroupRepository;
+    private final StoreMapper storeMapper;
 
 
     @Transactional(readOnly = true)
@@ -46,6 +52,50 @@ public class MenuService {
 
         return storeMenuRepository.findById(menuId)
                 .orElseThrow(() -> new StoreException(StoreStatusCode.NO_MENU));
+    }
+
+    @Transactional
+    public Long createMenuGroup(Long storeId, MenuPostDto.MenuGroupReq menuGroupReq) {
+
+        Store store = storeRepository.findById(storeId)
+                .orElseThrow(() -> new StoreException(StoreStatusCode.NO_STORE));
+
+        StoreMenuGroup menuGroup = storeMapper.mapPostDtoToMenuGroupEntity(menuGroupReq, store);
+
+        return storeMenuGroupRepository.save(menuGroup).getId();
+    }
+
+    @Transactional
+    public Long createMenu(Long menuGroupId, MenuPostDto.MenuReq menuReq) {
+
+        StoreMenuGroup storeMenuGroup = storeMenuGroupRepository.findById(menuGroupId)
+                .orElseThrow(() -> new StoreException(StoreStatusCode.NO_MENU_GROUP));
+
+        StoreMenu menuGroup = storeMapper.mapPostDtoToMenuEntity(menuReq, storeMenuGroup);
+
+        return storeMenuRepository.save(menuGroup).getId();
+    }
+
+    @Transactional
+    public Long createOptionGroup(Long menuId, MenuPostDto.OptionGroupReq optionGroupReq) {
+
+        StoreMenu storeMenu = storeMenuRepository.findById(menuId)
+                .orElseThrow(() -> new StoreException(StoreStatusCode.NO_MENU_GROUP));
+
+        StoreMenuOptionGroup optionGroup = storeMapper.mapToMenuOptionGroupEntity(optionGroupReq, storeMenu);
+
+        return storeOptionGroupRepository.save(optionGroup).getId();
+    }
+
+    @Transactional
+    public Long createOption(Long optionGroupId, MenuPostDto.OptionReq optionReq) {
+
+        StoreMenuOptionGroup storeMenuOptionGroup = storeOptionGroupRepository.findById(optionGroupId)
+                .orElseThrow(() -> new StoreException(StoreStatusCode.NO_MENU_GROUP));
+
+        StoreMenuOption menuGroup = storeMapper.mapPostDtoToMenuOptionEntity(optionReq, storeMenuOptionGroup);
+
+        return storeOptionRepository.save(menuGroup).getId();
     }
 
 }

@@ -1,7 +1,7 @@
 package com.baedal.monolithic.domain.store.entity;
 
 import com.baedal.monolithic.global.entity.BaseTime;
-import lombok.Getter;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -9,6 +9,9 @@ import java.util.Set;
 
 @Entity
 @Getter
+@Builder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 @Table(indexes = {
         @Index(name = "IX_store_menu_group_01",columnList = "store_id")
 })

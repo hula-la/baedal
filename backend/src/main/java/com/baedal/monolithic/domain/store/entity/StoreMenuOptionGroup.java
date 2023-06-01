@@ -41,7 +41,7 @@ public class StoreMenuOptionGroup {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "menu_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
-    private StoreMenu menuGroup;
+    private StoreMenu menu;
 
     public long calculateTotalPrice(List<Long> checkedOptions) {
         Map<Long, Long> optionMap = options.stream()

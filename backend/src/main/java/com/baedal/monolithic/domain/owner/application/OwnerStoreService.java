@@ -1,5 +1,6 @@
 package com.baedal.monolithic.domain.owner.application;
 
+import com.baedal.monolithic.domain.store.application.MenuService;
 import com.baedal.monolithic.domain.store.application.StoreService;
 import com.baedal.monolithic.domain.store.dto.StoreDto;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +13,7 @@ import javax.transaction.Transactional;
 public class OwnerStoreService {
 
     private final StoreService storeService;
+    private final MenuService menuService;
 
 
     @Transactional
@@ -31,4 +33,5 @@ public class OwnerStoreService {
 
         storeService.deleteStore(reviewId);
     }
+
 }
