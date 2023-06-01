@@ -106,5 +106,37 @@ public class OwnerStoreMenuController {
         return ResponseEntity.noContent().build();
     }
 
+//    삭제
+    @DeleteMapping("/menu-group/{menuGroupId}")
+    public ResponseEntity<Void> deleteMenuGroup (@PathVariable Long menuGroupId) {
 
+        menuService.deleteMenuGroup(menuGroupId);
+
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/menu-group/{menuGroupId}/menu/{menuId}")
+    public ResponseEntity<Void> deleteMenu (@PathVariable Long menuId) {
+
+        menuService.deleteMenu(menuId);
+
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/menu-group/{menuGroupId}/menu/{menuId}/option-group/{optionGroupId}")
+    public ResponseEntity<Void> deleteptionGroup (@PathVariable Long optionGroupId) {
+
+        menuService.deleteOptionGroup(optionGroupId);
+
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/menu-group/{menuGroupId}/menu/{menuId}/option-group/{optionGroupId}/option/{optionId}")
+    public ResponseEntity<Void> deleteOption (@PathVariable Long optionId) {
+
+        menuService.deleteOption(optionId);
+
+        return ResponseEntity.noContent().build();
+    }
+    
 }

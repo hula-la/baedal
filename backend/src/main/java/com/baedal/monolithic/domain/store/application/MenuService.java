@@ -133,4 +133,40 @@ public class MenuService {
 
         storeMenuOption.update(optionReq);
     }
+
+    @Transactional
+    public void deleteMenuGroup(Long menuGroupId) {
+
+        StoreMenuGroup storeMenuGroup = storeMenuGroupRepository.findById(menuGroupId)
+                .orElseThrow(() -> new StoreException(StoreStatusCode.NO_MENU_GROUP));
+
+        storeMenuGroupRepository.delete(storeMenuGroup);
+    }
+
+    @Transactional
+    public void deleteMenu(Long menuId) {
+
+        StoreMenu storeMenu = storeMenuRepository.findById(menuId)
+                .orElseThrow(() -> new StoreException(StoreStatusCode.NO_MENU));
+
+        storeMenuRepository.delete(storeMenu);
+    }
+
+    @Transactional
+    public void deleteOptionGroup(Long optionGroupId) {
+
+        StoreMenuOptionGroup storeMenuOptionGroup = storeOptionGroupRepository.findById(optionGroupId)
+                .orElseThrow(() -> new StoreException(StoreStatusCode.NO_OPTION_GROUP));
+
+        storeOptionGroupRepository.delete(storeMenuOptionGroup);
+    }
+
+    @Transactional
+    public void deleteOption(Long optionId) {
+
+        StoreMenuOption storeMenuOption = storeOptionRepository.findById(optionId)
+                .orElseThrow(() -> new StoreException(StoreStatusCode.NO_MENU_GROUP));
+
+        storeOptionRepository.delete(storeMenuOption);
+    }
 }
